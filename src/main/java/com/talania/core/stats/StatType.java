@@ -39,6 +39,9 @@ public enum StatType {
     /** Attack speed multiplier */
     ATTACK_SPEED("attack_speed", 1.0f, 0.1f, 10.0f),
     
+    /** Lifesteal percent (0.0 = 0%, 1.0 = 100%) */
+    LIFESTEAL("lifesteal", 0.0f, 0.0f, 1.0f),
+    
     // ==================== DEFENSE ====================
     
     /** Physical damage reduction (0.0 = none, 1.0 = immune) */
@@ -46,12 +49,18 @@ public enum StatType {
     
     /** Magic damage reduction */
     MAGIC_RESIST("magic_resist", 0.0f, 0.0f, 1.0f),
-    
+
+    /** Dodge chance (0.0 = 0%, 1.0 = 100%) */
+    DODGE_CHANCE("dodge_chance", 0.0f, 0.0f, 1.0f),
+
     /** Fall damage reduction */
     FALL_RESISTANCE("fall_resistance", 0.0f, 0.0f, 1.0f),
-    
+
     /** Fire damage reduction */
     FIRE_RESISTANCE("fire_resistance", 0.0f, 0.0f, 1.0f),
+    
+    /** Blocking efficiency (higher = less stamina drain while blocking) */
+    BLOCKING_EFFICIENCY("blocking_efficiency", 1.0f, 0.0f, 5.0f),
     
     // ==================== MOBILITY ====================
     
