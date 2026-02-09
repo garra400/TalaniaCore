@@ -1,0 +1,65 @@
+name: Validate JSON Files
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '**.json'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**.json'
+
+jobs:
+  validate-json:
+    runs-on: ubuntu-latest
+    name: Validate JSON Syntax
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install jsonschema
+
+      - name: Validate JSON syntax
+        run: |
+          echo "Validating JSON files..."
+          find . -name "*.json" -type f | while read file; do
+            echo "Checking: $file"
+            python -c "import json; json.load(open('$file'))" || exit 1
+          done
+          echo "All JSON files are valid!"
+
+      - name: Validate language files against schema
+        run: |
+          python scripts/validate_languages.py
+
+  validate-gradle:
+    runs-on: ubuntu-latest
+    name: Validate Gradle Build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Build with Gradle
+        run: ./gradlew build --no-daemon
+
+      - name: Run tests
+        run: ./gradlew test --no-daemon

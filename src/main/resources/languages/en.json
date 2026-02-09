@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "language": "English",
+    "code": "en",
+    "version": "1.0.0"
+  },
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "load": "Load",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning"
+  },
+  "stats": {
+    "health": "Health",
+    "mana": "Mana",
+    "stamina": "Stamina",
+    "strength": "Strength",
+    "defense": "Defense"
+  },
+  "ui": {
+    "welcome": "Welcome to Orbis and Dungeons!",
+    "loading": "Loading...",
+    "select_option": "Select an option"
+  }
+}
