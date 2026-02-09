@@ -21,12 +21,12 @@ TalaniaCore is a **public domain shared library** designed for the Hytale moddin
 
 | Module | Description | Status |
 |--------|-------------|--------|
-| **Core Stats** | HP, mana, and global attribute modification system | 🚧 In Progress |
-| **Localization** | JSON-based translation system with fallback support | ✅ Ready |
-| **Technical Utilities** | Animation, input, and model modification helpers | 🚧 In Progress |
-| **UI Wrapper** | Abstraction layer for UI libraries (Simple UI, HyUI) | 📋 Planned |
-| **Config System** | Centralized configuration with hot-reload | 📋 Planned |
-| **Event System** | Inter-module event communication | 📋 Planned |
+| **Core Stats** | HP, mana, stamina, and 17+ attribute types with modifiers | ✅ Ready |
+| **Localization** | JSON-based translation system with fallback and hot-reload | ✅ Ready |
+| **Technical Utilities** | Animation, model modification, and color parsing helpers | ✅ Ready |
+| **UI Wrapper** | Fluent API abstraction layer for UI libraries | ✅ Ready |
+| **Config System** | JSON configuration with caching and hot-reload | ✅ Ready |
+| **Event System** | Prioritized event bus with cancellation support | ✅ Ready |
 
 ## Installation
 
@@ -53,43 +53,121 @@ dependencies {
 ### Core Stats System
 
 ```java
-import com.talania.core.stats.StatsManager;
-import com.talania.core.stats.StatType;
+import com.talania.core.stats.*;
 
-// Get entity stats
-EntityStats stats = StatsManager.getStats(entity);
+// Get or create stats for an entity
+EntityStats stats = StatsManager.getOrCreate(entityUUID);
 
-// Modify HP
-stats.setMaxHealth(100);
-stats.modifyAttribute(StatType.HEALTH, 1.5f, ModifierType.MULTIPLY);
+// Set base values
+stats.setBase(StatType.HEALTH, 100);
+stats.setBase(StatType.STAMINA, 10);
+
+// Add modifiers (race bonuses, buffs, etc.)
+stats.addModifier(StatModifier.add("race:orc", StatType.HEALTH, 100));
+stats.addModifier(StatModifier.multiplyBase("buff:strength", StatType.ATTACK, 1.5f));
+
+// Get final calculated value
+float maxHealth = stats.get(StatType.HEALTH); // 200 (100 base + 100 from orc)
 ```
 
 ### Localization System
 
 ```java
 import com.talania.core.localization.T;
+import com.talania.core.localization.TranslationManager;
+
+// Initialize once at startup
+TranslationManager.initialize(modsDirectory);
 
 // Simple translation
-String text = T.get("ui.welcome_message");
+String text = T.t("ui.welcome");
 
 // With parameters
-String formatted = T.get("combat.damage_dealt", damage, targetName);
+String formatted = T.t("combat.damage_dealt", 50, "Zombie");
 
 // Change language
-T.setLocale("pt_br");
+T.setLang("pt_br");
+
+// Set custom formatter (e.g., for color codes)
+T.setFormatter(ColorParser::strip);
+```
+
+### Event System
+
+```java
+import com.talania.core.events.EventBus;
+
+// Subscribe to events
+EventBus.subscribe(PlayerDamageEvent.class, event -> {
+    if (event.getAmount() > 100) {
+        event.setCancelled(true); // Block excessive damage
+    }
+});
+
+// Publish events
+PlayerDamageEvent event = new PlayerDamageEvent(player, 50);
+EventBus.publish(event);
+```
+
+### Config System
+
+```java
+import com.talania.core.config.ConfigManager;
+
+// Initialize
+ConfigManager.initialize(modsDirectory);
+
+// Load a config class
+MyConfig config = ConfigManager.load("my_config.json", MyConfig.class);
+
+// Save changes
+ConfigManager.save("my_config.json", config);
 ```
 
 ### UI Wrapper
 
 ```java
 import com.talania.core.ui.UIFactory;
-import com.talania.core.ui.ComponentBuilder;
 
-// Create a button with the abstraction layer
+// Create a button with the fluent API
 UIComponent button = UIFactory.button()
-    .text(T.get("ui.confirm"))
-    .onClick(this::handleConfirm)
+    .text(T.t("ui.confirm"))
+    .position(100, 50)
+    .size(120, 40)
+    .onClick(() -> System.out.println("Clicked!"))
     .build();
+```
+
+### Model Modification (e.g., Elf Ears)
+
+```java
+import com.talania.core.utils.model.ModelModifier;
+
+// Attach elf ears to player head
+ModelModifier.Attachment ears = ModelModifier.attach(
+    playerId, 
+    "head", 
+    "elf_ears",
+    AttachOptions.defaults().offset(0, 0.1f, 0)
+);
+
+// Later: remove ears
+ears.detach();
+```
+
+### Color Parsing
+
+```java
+import com.talania.core.utils.text.ColorParser;
+
+// Parse color codes
+List<TextSegment> segments = ColorParser.parse("&6Gold &cRed &lBold");
+
+// Strip colors for plain text
+String plain = ColorParser.strip("&6Colored"); // "Colored"
+
+// Convert to ANSI for terminal
+String ansi = ColorParser.toAnsi("&cError!");
 ```
 
 ## Project Structure
@@ -101,8 +179,8 @@ TalaniaCore/
 │   ├── localization/   # Translation system
 │   ├── utils/          # Technical utilities
 │   │   ├── animation/  # Animation helpers
-│   │   ├── input/      # Input management
-│   │   └── model/      # Model modification
+│   │   ├── model/      # Model modification
+│   │   └── text/       # Color parsing
 │   ├── ui/             # UI abstraction layer
 │   ├── config/         # Configuration system
 │   └── events/         # Event bus
