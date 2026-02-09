@@ -1,12 +1,143 @@
 package com.talania.core.stats;
 
 /**
- * TODO: Implement StatType
+ * Core stat types used across the Orbis and Dungeons ecosystem.
  * 
- * This is a stub file. Implementation pending.
+ * <p>Defines the fundamental attributes that can be modified by
+ * races, classes, equipment, and effects.
+ * 
+ * @author TalaniaCore Team
+ * @since 0.1.0
  */
-public class StatType {
+public enum StatType {
     
-    // TODO: Add implementation
+    // ==================== VITALS ====================
     
+    /** Maximum health points */
+    HEALTH("health", 100.0f, 0.0f, 10000.0f),
+    
+    /** Maximum mana/magic points */
+    MANA("mana", 100.0f, 0.0f, 10000.0f),
+    
+    /** Maximum stamina/energy */
+    STAMINA("stamina", 10.0f, 0.0f, 1000.0f),
+    
+    // ==================== OFFENSE ====================
+    
+    /** Physical attack power multiplier */
+    ATTACK("attack", 1.0f, 0.0f, 100.0f),
+    
+    /** Magic attack power multiplier */
+    MAGIC_ATTACK("magic_attack", 1.0f, 0.0f, 100.0f),
+    
+    /** Critical hit chance (0.0 = 0%, 1.0 = 100%) */
+    CRIT_CHANCE("crit_chance", 0.05f, 0.0f, 1.0f),
+    
+    /** Critical hit damage multiplier */
+    CRIT_DAMAGE("crit_damage", 1.5f, 1.0f, 10.0f),
+    
+    /** Attack speed multiplier */
+    ATTACK_SPEED("attack_speed", 1.0f, 0.1f, 10.0f),
+    
+    // ==================== DEFENSE ====================
+    
+    /** Physical damage reduction (0.0 = none, 1.0 = immune) */
+    ARMOR("armor", 0.0f, 0.0f, 1.0f),
+    
+    /** Magic damage reduction */
+    MAGIC_RESIST("magic_resist", 0.0f, 0.0f, 1.0f),
+    
+    /** Fall damage reduction */
+    FALL_RESISTANCE("fall_resistance", 0.0f, 0.0f, 1.0f),
+    
+    /** Fire damage reduction */
+    FIRE_RESISTANCE("fire_resistance", 0.0f, 0.0f, 1.0f),
+    
+    // ==================== MOBILITY ====================
+    
+    /** Movement speed multiplier */
+    MOVE_SPEED("move_speed", 1.0f, 0.0f, 10.0f),
+    
+    /** Jump height multiplier */
+    JUMP_HEIGHT("jump_height", 1.0f, 0.0f, 10.0f),
+    
+    // ==================== UTILITY ====================
+    
+    /** Health regeneration per second */
+    HEALTH_REGEN("health_regen", 0.0f, 0.0f, 100.0f),
+    
+    /** Mana regeneration per second */
+    MANA_REGEN("mana_regen", 0.0f, 0.0f, 100.0f),
+    
+    /** Stamina regeneration per second */
+    STAMINA_REGEN("stamina_regen", 1.0f, 0.0f, 100.0f),
+    
+    /** Experience gain multiplier */
+    XP_BONUS("xp_bonus", 1.0f, 0.0f, 10.0f),
+    
+    /** Loot drop rate multiplier */
+    LUCK("luck", 1.0f, 0.0f, 10.0f);
+
+    private final String id;
+    private final float defaultValue;
+    private final float minValue;
+    private final float maxValue;
+
+    StatType(String id, float defaultValue, float minValue, float maxValue) {
+        this.id = id;
+        this.defaultValue = defaultValue;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+    }
+
+    /**
+     * Get the string identifier for this stat.
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Get the default value for this stat.
+     */
+    public float getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * Get the minimum allowed value for this stat.
+     */
+    public float getMinValue() {
+        return minValue;
+    }
+
+    /**
+     * Get the maximum allowed value for this stat.
+     */
+    public float getMaxValue() {
+        return maxValue;
+    }
+
+    /**
+     * Clamp a value to the valid range for this stat.
+     */
+    public float clamp(float value) {
+        return Math.max(minValue, Math.min(maxValue, value));
+    }
+
+    /**
+     * Find a StatType by its string ID.
+     * 
+     * @param id The stat ID (e.g., "health", "attack")
+     * @return The StatType, or null if not found
+     */
+    public static StatType fromId(String id) {
+        if (id == null) return null;
+        for (StatType type : values()) {
+            if (type.id.equalsIgnoreCase(id)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }
