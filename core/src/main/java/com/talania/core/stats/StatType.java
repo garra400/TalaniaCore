@@ -38,6 +38,15 @@ public enum StatType {
 
     /** Magic damage multiplier (attack channel is magic) */
     MAGIC_DAMAGE_MULT("magic_damage_mult", 1.0f, 0.0f, 10.0f),
+
+    /** Sprint damage multiplier */
+    SPRINT_DAMAGE_MULT("sprint_damage_mult", 1.0f, 0.0f, 10.0f),
+
+    /** Flat damage reduction applied after other reductions */
+    FLAT_DAMAGE_REDUCTION("flat_damage_reduction", 0.0f, 0.0f, 1000.0f),
+
+    /** Stamina drain multiplier while blocking */
+    STAMINA_DRAIN_MULT("stamina_drain_mult", 1.0f, 0.0f, 10.0f),
     
     /** Critical hit chance (0.0 = 0%, 1.0 = 100%) */
     CRIT_CHANCE("crit_chance", 0.05f, 0.0f, 1.0f),

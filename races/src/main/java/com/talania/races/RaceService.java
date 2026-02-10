@@ -19,10 +19,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class RaceService {
     private final Map<UUID, RaceType> assigned = new ConcurrentHashMap<>();
 
+    /**
+     * Get the assigned race for a player, if present.
+     */
     public RaceType getRace(UUID entityId) {
         return entityId != null ? assigned.get(entityId) : null;
     }
 
+    /**
+     * Assign a race to a player and apply the race's base stat modifiers.
+     */
     public void setRace(UUID entityId, RaceType race) {
         if (entityId == null || race == null) {
             return;
@@ -38,6 +44,9 @@ public final class RaceService {
         }
     }
 
+    /**
+     * Clear a player's race assignment and remove its modifiers.
+     */
     public void clearRace(UUID entityId) {
         if (entityId == null) {
             return;

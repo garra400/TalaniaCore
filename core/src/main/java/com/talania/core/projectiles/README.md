@@ -7,6 +7,7 @@ Helpers for spawning and tuning projectiles.
 ## Files
 
 - `RainOfArrowsUtil.java`
+- `ProjectileTargetingUtil.java`
 - `../events/entity/ProjectileFiredEvent.java`
 - `ProjectileOwnerResolver.java`
 - `ProjectileDetectSystem.java`

@@ -13,10 +13,10 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
-import com.hypixel.hytale.server.core.entity.component.HeadRotation;
-import com.hypixel.hytale.server.core.entity.component.ModelComponent;
-import com.hypixel.hytale.server.core.entity.component.PropComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
+import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.PropComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.PreventItemMerging;
@@ -31,65 +31,78 @@ import java.util.List;
 
 /**
  * Spawns and animates orbiting sword entities.
+ *
+ * <p>For timed effects, prefer {@link SwordOrbitEffect} with {@link EntityAnimationManager}:</p>
+ *
+ * <pre>{@code
+ * SwordOrbit orbit = new SwordOrbit("Weapon_Sword_Iron", 6, 1.2, 0.004f);
+ * SwordOrbitEffect effect = new SwordOrbitEffect(playerRef, orbit, 6_000L);
+ * animationManager.add(effect, store, System.currentTimeMillis());
+ * }</pre>
  */
 public final class SwordOrbit {
     private final List<SwordInstance> swords = new ArrayList<>();
 
-    private String itemId = "Weapon_Sword_Iron";
-    private int swordCount = 6;
-    private float swordScale = 1.0f;
-    private double orbitRadius = 1.0;
-    private double yOffset = 1.05;
-    private float yawOffset = 0.0f;
-    private float roll = (float) (-Math.PI * 0.5);
-    private float rotationRadiansPerMs = (float) (Math.PI * 2.0 / 6000.0) * 2.55f;
+    private static final float DEFAULT_SWORD_SCALE = 1.0f;
+    private static final double DEFAULT_ORBIT_RADIUS = 1.0;
+    private static final double DEFAULT_Y_OFFSET = 1.05;
+    private static final float DEFAULT_YAW_OFFSET = 0.0f;
+    private static final float DEFAULT_ROLL = (float) (-Math.PI * 0.5);
+    private static final float DEFAULT_ROTATION_RADIANS_PER_MS =
+            (float) (Math.PI * 2.0 / 6000.0) * 2.55f;
+
+    private final String itemId;
+    private final int swordCount;
+    private final float swordScale;
+    private final double orbitRadius;
+    private final double yOffset;
+    private final float yawOffset;
+    private final float roll;
+    private final float rotationRadiansPerMs;
 
     private long startAtMs;
 
-    public SwordOrbit itemId(String itemId) {
-        this.itemId = itemId;
-        return this;
+    /**
+     * Create a sword orbit effect with the default tuning values.
+     *
+     * @param itemId Item asset ID used for each sword.
+     * @param swordCount Number of swords to spawn.
+     */
+    public SwordOrbit(String itemId, int swordCount) {
+        this(itemId, swordCount, DEFAULT_ORBIT_RADIUS, DEFAULT_ROTATION_RADIANS_PER_MS);
     }
 
-    public SwordOrbit swordCount(int swordCount) {
+    /**
+     * Create a sword orbit effect with custom radius and rotation speed.
+     *
+     * @param itemId Item asset ID used for each sword.
+     * @param swordCount Number of swords to spawn.
+     * @param orbitRadius Distance from the player center.
+     * @param rotationRadiansPerMs Orbit rotation speed.
+     */
+    public SwordOrbit(String itemId, int swordCount, double orbitRadius, float rotationRadiansPerMs) {
+        this.itemId = itemId != null ? itemId : "Weapon_Sword_Iron";
         this.swordCount = Math.max(1, swordCount);
-        return this;
-    }
-
-    public SwordOrbit swordScale(float swordScale) {
-        this.swordScale = Math.max(0.1f, swordScale);
-        return this;
-    }
-
-    public SwordOrbit orbitRadius(double orbitRadius) {
+        this.swordScale = DEFAULT_SWORD_SCALE;
         this.orbitRadius = Math.max(0.1, orbitRadius);
-        return this;
+        this.yOffset = DEFAULT_Y_OFFSET;
+        this.yawOffset = DEFAULT_YAW_OFFSET;
+        this.roll = DEFAULT_ROLL;
+        this.rotationRadiansPerMs = rotationRadiansPerMs <= 0.0f
+                ? DEFAULT_ROTATION_RADIANS_PER_MS
+                : rotationRadiansPerMs;
     }
 
-    public SwordOrbit yOffset(double yOffset) {
-        this.yOffset = yOffset;
-        return this;
-    }
-
-    public SwordOrbit yawOffset(float yawOffset) {
-        this.yawOffset = yawOffset;
-        return this;
-    }
-
-    public SwordOrbit roll(float roll) {
-        this.roll = roll;
-        return this;
-    }
-
-    public SwordOrbit rotationRadiansPerMs(float rotationRadiansPerMs) {
-        this.rotationRadiansPerMs = rotationRadiansPerMs;
-        return this;
-    }
-
+    /**
+     * Record the start time used for orbital rotation.
+     */
     public void start(long nowMs) {
         this.startAtMs = nowMs;
     }
 
+    /**
+     * Spawn orbiting sword entities around the target player.
+     */
     public void spawn(Ref<EntityStore> ref, Store<EntityStore> store) {
         if (ref == null || store == null) {
             return;
@@ -145,6 +158,9 @@ public final class SwordOrbit {
         }
     }
 
+    /**
+     * Update sword positions and rotations. Call from your tick loop.
+     */
     public void update(Ref<EntityStore> ref, Store<EntityStore> store, long nowMs) {
         if (ref == null || store == null || swords.isEmpty()) {
             return;
@@ -190,6 +206,9 @@ public final class SwordOrbit {
         }
     }
 
+    /**
+     * Remove all spawned sword entities.
+     */
     public void clear(Store<EntityStore> store) {
         if (store == null || swords.isEmpty()) {
             swords.clear();
@@ -216,6 +235,9 @@ public final class SwordOrbit {
         return position;
     }
 
+    /**
+     * Resolve the player's yaw, preferring look rotation when available.
+     */
     private static float resolvePlayerYaw(Ref<EntityStore> ref, Store<EntityStore> store) {
         Transform look = TargetUtil.getLook(ref, store);
         if (look == null) {
@@ -227,11 +249,17 @@ public final class SwordOrbit {
         return lookRotation != null ? lookRotation.getYaw() : 0.0F;
     }
 
+    /**
+     * Compute a sword rotation that faces away from the center.
+     */
     private static Vector3f resolveSwordRotation(Vector3d position, Vector3d center, float yawOffset, float roll) {
         float baseYaw = yawAwayFromCenter(position, center) + yawOffset;
         return new Vector3f(0.0F, baseYaw, roll);
     }
 
+    /**
+     * Compute yaw angle pointing away from the orbit center.
+     */
     private static float yawAwayFromCenter(Vector3d position, Vector3d center) {
         if (position == null || center == null) {
             return 0.0F;

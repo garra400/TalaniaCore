@@ -7,20 +7,10 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.ProjectileComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
-import com.hypixel.hytale.component.spatial.SpatialResource;
-import com.hypixel.hytale.server.core.modules.entity.EntityModule;
 import com.hypixel.hytale.server.core.modules.time.TimeResource;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 
 /**
  * Utilities for spawning rain-of-arrows style projectiles.
@@ -28,39 +18,25 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 public final class RainOfArrowsUtil {
     private RainOfArrowsUtil() {}
 
+    /**
+     * Select a random valid target within range for a rain-of-arrows strike.
+     *
+     * <p>See {@link ProjectileTargetingUtil#pickRandomTarget} for the selection rules.</p>
+     */
     public static Ref<EntityStore> pickRandomTarget(Ref<EntityStore> attackerRef,
                                                     Store<EntityStore> store,
                                                     Vector3d origin,
                                                     double range,
                                                     boolean includePlayers,
                                                     Ref<EntityStore> excludeRef) {
-        if (attackerRef == null || store == null || origin == null) {
-            return null;
-        }
-        List<Ref<EntityStore>> candidates = TargetUtil.getAllEntitiesInSphere(origin, range, store);
-        if (candidates == null || candidates.isEmpty()) {
-            return null;
-        }
-        List<Ref<EntityStore>> filtered = new ArrayList<>();
-        for (Ref<EntityStore> targetRef : candidates) {
-            if (targetRef == null || !targetRef.isValid() || targetRef.equals(attackerRef)) {
-                continue;
-            }
-            if (excludeRef != null && excludeRef.equals(targetRef)) {
-                continue;
-            }
-            Player targetPlayer = (Player) store.getComponent(targetRef, Player.getComponentType());
-            if (targetPlayer != null && !includePlayers) {
-                continue;
-            }
-            filtered.add(targetRef);
-        }
-        if (filtered.isEmpty()) {
-            return null;
-        }
-        return filtered.get(ThreadLocalRandom.current().nextInt(filtered.size()));
+        return ProjectileTargetingUtil.pickRandomTarget(attackerRef, store, origin, range, includePlayers, excludeRef);
     }
 
+    /**
+     * Pick a landing position within range for a rain-of-arrows strike.
+     *
+     * <p>See {@link ProjectileTargetingUtil#pickRandomLandingPosition} for the selection rules.</p>
+     */
     public static Vector3d pickRandomLandingPosition(Ref<EntityStore> attackerRef,
                                                      Store<EntityStore> store,
                                                      Vector3d center,
@@ -69,34 +45,13 @@ public final class RainOfArrowsUtil {
                                                      double minPlayerDistance,
                                                      double minOtherPlayerDistance,
                                                      int attempts) {
-        if (attackerRef == null || store == null || center == null) {
-            return null;
-        }
-        Vector3d attackerPos = resolvePlayerPosition(attackerRef, store);
-        double minDistanceSq = minPlayerDistance * minPlayerDistance;
-        double otherPlayerMinSq = minOtherPlayerDistance * minOtherPlayerDistance;
-        for (int i = 0; i < attempts; i++) {
-            double angle = ThreadLocalRandom.current().nextDouble(0.0, Math.PI * 2.0);
-            double radius = Math.sqrt(ThreadLocalRandom.current().nextDouble()) * range;
-            Vector3d candidate = new Vector3d(
-                    center.x + Math.cos(angle) * radius,
-                    center.y,
-                    center.z + Math.sin(angle) * radius
-            );
-            if (attackerPos != null) {
-                Vector3d delta = new Vector3d(candidate).subtract(attackerPos);
-                if (delta.squaredLength() < minDistanceSq) {
-                    continue;
-                }
-            }
-            if (!includePlayers && hasOtherPlayerNear(candidate, attackerRef, store, otherPlayerMinSq)) {
-                continue;
-            }
-            return candidate;
-        }
-        return null;
+        return ProjectileTargetingUtil.pickRandomLandingPosition(attackerRef, store, center, range, includePlayers,
+                minPlayerDistance, minOtherPlayerDistance, attempts);
     }
 
+    /**
+     * Spawn a rain projectile aimed at a moving target, using simple lead prediction.
+     */
     public static boolean spawnRainProjectileAtTarget(Ref<EntityStore> attackerRef,
                                                       Store<EntityStore> store,
                                                       Ref<EntityStore> targetRef,
@@ -130,6 +85,9 @@ public final class RainOfArrowsUtil {
         return spawnRainProjectileAt(attackerRef, store, targetPos, settings);
     }
 
+    /**
+     * Spawn a rain projectile aimed at a fixed world position.
+     */
     public static boolean spawnRainProjectileAt(Ref<EntityStore> attackerRef,
                                                 Store<EntityStore> store,
                                                 Vector3d targetPos,
@@ -138,7 +96,7 @@ public final class RainOfArrowsUtil {
             return false;
         }
         Vector3d origin = new Vector3d(targetPos.x, targetPos.y + settings.spawnHeight, targetPos.z);
-        Vector3f rotation = rotationToward(origin, targetPos);
+        Vector3f rotation = ProjectileTargetingUtil.rotationToward(origin, targetPos);
         if (rotation == null) {
             return false;
         }
@@ -170,6 +128,9 @@ public final class RainOfArrowsUtil {
         return true;
     }
 
+    /**
+     * Boost downward velocity to make the rain feel snappier.
+     */
     private static void applyRainVelocityTuning(Holder<EntityStore> holder, double fallSpeedMultiplier) {
         if (holder == null) {
             return;
@@ -186,64 +147,9 @@ public final class RainOfArrowsUtil {
         }
     }
 
-    private static Vector3f rotationToward(Vector3d origin, Vector3d target) {
-        if (origin == null || target == null) {
-            return null;
-        }
-        Vector3d direction = new Vector3d(target).subtract(origin);
-        if (direction.squaredLength() <= 0.0001) {
-            return null;
-        }
-        direction.normalize();
-        float pitch = (float) Math.asin(direction.getY());
-        float yaw = (float) Math.atan2(-direction.getX(), -direction.getZ());
-        return new Vector3f(pitch, yaw, 0.0F);
-    }
-
-    private static Vector3d resolvePlayerPosition(Ref<EntityStore> ref, Store<EntityStore> store) {
-        TransformComponent transform = (TransformComponent) store.getComponent(ref, TransformComponent.getComponentType());
-        if (transform == null) {
-            return null;
-        }
-        return new Vector3d(transform.getPosition());
-    }
-
-    private static boolean hasOtherPlayerNear(Vector3d position, Ref<EntityStore> attackerRef, Store<EntityStore> store,
-                                              double minDistanceSq) {
-        if (position == null || store == null) {
-            return false;
-        }
-        List<Ref<EntityStore>> players = collectPlayersNear(position, store);
-        for (Ref<EntityStore> playerRef : players) {
-            if (playerRef == null || !playerRef.isValid() || playerRef.equals(attackerRef)) {
-                continue;
-            }
-            TransformComponent transform = store.getComponent(playerRef, TransformComponent.getComponentType());
-            if (transform == null) {
-                continue;
-            }
-            Vector3d delta = new Vector3d(transform.getPosition()).subtract(position);
-            if (delta.squaredLength() < minDistanceSq) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static List<Ref<EntityStore>> collectPlayersNear(Vector3d position, Store<EntityStore> store) {
-        ObjectList<Ref<EntityStore>> playerRefs = SpatialResource.getThreadLocalReferenceList();
-        if (position == null || store == null) {
-            return playerRefs;
-        }
-        SpatialResource<Ref<EntityStore>, EntityStore> playerSpatialResource =
-                (SpatialResource) store.getResource(EntityModule.get().getPlayerSpatialResourceType());
-        if (playerSpatialResource == null) {
-            return playerRefs;
-        }
-        playerSpatialResource.getSpatialStructure().collect(position, 75.0, playerRefs);
-        return playerRefs;
-    }
-
+    /**
+     * Tunable parameters for rain-of-arrows spawning.
+     */
     public static final class Settings {
         private String projectileId = "Arrow_FullCharge";
         private double spawnHeight = 12.0;
@@ -251,26 +157,31 @@ public final class RainOfArrowsUtil {
         private double leadSeconds = 0.15;
         private double maxLeadDistance = 2.5;
 
+        /** Projectile asset ID to spawn. */
         public Settings projectileId(String projectileId) {
             this.projectileId = projectileId;
             return this;
         }
 
+        /** Height above target to spawn projectiles. */
         public Settings spawnHeight(double spawnHeight) {
             this.spawnHeight = spawnHeight;
             return this;
         }
 
+        /** Multiplier for downward velocity after spawn. */
         public Settings fallSpeedMultiplier(double fallSpeedMultiplier) {
             this.fallSpeedMultiplier = fallSpeedMultiplier;
             return this;
         }
 
+        /** Seconds of target velocity to lead. */
         public Settings leadSeconds(double leadSeconds) {
             this.leadSeconds = leadSeconds;
             return this;
         }
 
+        /** Maximum distance the lead prediction is allowed to shift. */
         public Settings maxLeadDistance(double maxLeadDistance) {
             this.maxLeadDistance = maxLeadDistance;
             return this;

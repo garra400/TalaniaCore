@@ -7,6 +7,9 @@ Helpers for spawning and managing temporary entities.
 ## Files
 
 - `SwordOrbit.java`
+- `EntityAnimationEffect.java`
+- `EntityAnimationManager.java`
+- `SwordOrbitEffect.java`
 
 ## Usage
 

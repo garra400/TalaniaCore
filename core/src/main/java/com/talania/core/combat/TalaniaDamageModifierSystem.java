@@ -39,14 +39,15 @@ import java.util.concurrent.ThreadLocalRandom;
  *   <li>Uses Talania {@link com.talania.core.stats.StatType} for dodge, crit, lifesteal,
  *       fall resistance, attack-type scaling, and blocking efficiency.</li>
  *   <li>Optionally applies {@link DamageType} resistance if a damage type is attached.</li>
- *   <li>Applies rule-based multipliers (PVP scaling, sprint damage, flat reduction).</li>
+ *   <li>Applies global combat settings (PVP scaling) and per-player stats
+ *       (sprint damage, flat reduction, stamina drain).</li>
  *   <li>Optionally applies weapon-category modifiers if a service is installed.</li>
  * </ul>
  *
  * <p>How to use it:</p>
  * <ul>
  *   <li>Register the system with the entity store registry.</li>
- *   <li>Install {@link CombatRuleProvider} and optional services in {@link CombatRuntime}.</li>
+ *   <li>Configure global settings via {@link CombatRuntime#settings()} and optional services.</li>
  * </ul>
  *
  * <p>Integration with Hytale:</p>
@@ -95,7 +96,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         UUID attackerUuid = attackerRef != null ? uuidFor(attackerRef, commandBuffer) : null;
         boolean targetIsPlayer = isPlayer(store, targetRef);
         boolean attackerIsPlayer = isPlayer(store, attackerRef);
-        if (attackerIsPlayer && targetIsPlayer && !CombatRuntime.pvpEnabled()) {
+        if (attackerIsPlayer && targetIsPlayer && !CombatRuntime.settings().pvpEnabled()) {
             return;
         }
 
@@ -139,24 +140,22 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             }
         }
 
-        // Sprint damage multiplier (rules)
+        // Sprint damage multiplier (per-player stat)
         if (attackerRef != null) {
             com.hypixel.hytale.protocol.MovementStates movementStates = movementStates(store, attackerRef);
             if (movementStates != null && movementStates.sprinting) {
-                CombatRules rules = CombatRuntime.rulesFor(attackerUuid);
-                float sprintMultiplier = rules.sprintDamageMultiplier();
+                float sprintMultiplier = StatsManager.getStat(attackerUuid, StatType.SPRINT_DAMAGE_MULT);
                 if (sprintMultiplier > 1.0F) {
                     damage.setAmount(damage.getAmount() * sprintMultiplier);
                 }
             }
         }
 
-        // Player damage multipliers
+        // Player damage multipliers (global settings)
         if (attackerIsPlayer && attackerUuid != null) {
-            CombatRules rules = CombatRuntime.rulesFor(attackerUuid);
             float multiplier = targetIsPlayer
-                    ? rules.playerDamageToPlayerMultiplier()
-                    : rules.playerDamageMultiplier();
+                    ? CombatRuntime.settings().playerDamageToPlayerMultiplier()
+                    : CombatRuntime.settings().playerDamageMultiplier();
             if (multiplier != 1.0F) {
                 damage.setAmount(damage.getAmount() * multiplier);
             }
@@ -179,15 +178,14 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             }
         }
 
-        // Flat damage reduction (rules) + armor stat (percent)
+        // Flat damage reduction (per-player stat) + armor stat (percent)
         if (targetUuid != null) {
             float armorReduction = StatsManager.getStat(targetUuid, StatType.ARMOR);
             if (armorReduction > 0.0F) {
                 float clamped = Math.max(0.0F, Math.min(1.0F, armorReduction));
                 damage.setAmount(damage.getAmount() * (1.0F - clamped));
             }
-            CombatRules rules = CombatRuntime.rulesFor(targetUuid);
-            float flatReduction = rules.flatDamageReduction();
+            float flatReduction = StatsManager.getStat(targetUuid, StatType.FLAT_DAMAGE_REDUCTION);
             if (flatReduction > 0.0F) {
                 float reduced = Math.max(0.0F, damage.getAmount() - flatReduction);
                 damage.setAmount(reduced);
@@ -217,11 +215,10 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             }
         }
 
-        // Blocking efficiency & stamina drain scaling
+        // Blocking efficiency & stamina drain scaling (per-player stat)
         Float existing = (Float) damage.getIfPresentMetaObject(Damage.STAMINA_DRAIN_MULTIPLIER);
         if (existing == null) {
-            CombatRules rules = CombatRuntime.rulesFor(targetUuid);
-            float staminaMult = rules.staminaDrainMultiplier();
+            float staminaMult = StatsManager.getStat(targetUuid, StatType.STAMINA_DRAIN_MULT);
             Boolean blocked = damage.getIfPresentMetaObject(Damage.BLOCKED);
             if (blocked != null && blocked.booleanValue()) {
                 float blockingEfficiency = StatsManager.getStat(targetUuid, StatType.BLOCKING_EFFICIENCY);

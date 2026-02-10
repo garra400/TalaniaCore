@@ -7,7 +7,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
  * Meta keys used by Talania combat systems.
  *
  * <p>These are attached to {@code Damage} instances to avoid double-processing
- * and to mark critical hits for downstream systems.</p>
+ * and to mark critical hits / attack typing for downstream systems.</p>
  */
 public final class CombatMetaKeys {
     private CombatMetaKeys() {}

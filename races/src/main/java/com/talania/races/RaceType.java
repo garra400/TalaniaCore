@@ -85,10 +85,16 @@ public enum RaceType {
         return id;
     }
 
+    /**
+     * Human-readable display name for UI and logs.
+     */
     public String displayName() {
         return displayName;
     }
 
+    /**
+     * Short thematic label (from design docs).
+     */
     public String theme() {
         return theme;
     }
@@ -104,14 +110,23 @@ public enum RaceType {
         return refreshed;
     }
 
+    /**
+     * Notes for conditional effects that require dedicated systems to implement.
+     */
     public List<String> conditionalNotes() {
         return conditionalNotes;
     }
 
+    /**
+     * Modifier source key used for add/remove operations.
+     */
     public String sourceKey() {
         return "race:" + id;
     }
 
+    /**
+     * Base modifiers for the Human race.
+     */
     private static List<ModifierSpec> modifiersForHuman() {
         String source = "race:human";
         List<ModifierSpec> mods = new ArrayList<>();
@@ -120,6 +135,9 @@ public enum RaceType {
         return mods;
     }
 
+    /**
+     * Base modifiers for the High Elf race.
+     */
     private static List<ModifierSpec> modifiersForHighElf() {
         String source = "race:high_elf";
         List<ModifierSpec> mods = new ArrayList<>();
@@ -128,6 +146,9 @@ public enum RaceType {
         return mods;
     }
 
+    /**
+     * Base modifiers for the Orc race.
+     */
     private static List<ModifierSpec> modifiersForOrc() {
         String source = "race:orc";
         List<ModifierSpec> mods = new ArrayList<>();
@@ -136,6 +157,9 @@ public enum RaceType {
         return mods;
     }
 
+    /**
+     * Base modifiers for the Dwarf race.
+     */
     private static List<ModifierSpec> modifiersForDwarf() {
         String source = "race:dwarf";
         List<ModifierSpec> mods = new ArrayList<>();
@@ -145,6 +169,9 @@ public enum RaceType {
         return mods;
     }
 
+    /**
+     * Base modifiers for the Beastkin race.
+     */
     private static List<ModifierSpec> modifiersForBeastkin() {
         String source = "race:beastkin";
         List<ModifierSpec> mods = new ArrayList<>();
@@ -153,6 +180,9 @@ public enum RaceType {
         return mods;
     }
 
+    /**
+     * Lightweight definition used to build fresh StatModifiers per player.
+     */
     private static final class ModifierSpec {
         private final String source;
         private final StatType type;
