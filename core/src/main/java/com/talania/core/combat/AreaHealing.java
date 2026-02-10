@@ -2,17 +2,14 @@ package com.talania.core.combat;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.entity.EntityModule;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
-import it.unimi.dsi.fastutil.objects.ObjectList;
+import com.talania.core.combat.targeting.AreaOfEffect;
 
 import java.util.List;
 
@@ -66,7 +63,7 @@ public final class AreaHealing {
             state.vfxSpawned = true;
         }
         List<Ref<EntityStore>> targets =
-                TargetUtil.getAllEntitiesInSphere(state.center, settings.radius, store);
+                AreaOfEffect.collectSphere(null, store, state.center, settings.radius, true, null);
         for (Ref<EntityStore> targetRef : targets) {
             if (targetRef == null || !targetRef.isValid()) {
                 continue;
@@ -103,18 +100,8 @@ public final class AreaHealing {
         state.center = null;
     }
 
-    private static ObjectList<Ref<EntityStore>> collectPlayersNear(Vector3d position, Store<EntityStore> store) {
-        ObjectList<Ref<EntityStore>> playerRefs = SpatialResource.getThreadLocalReferenceList();
-        if (position == null || store == null) {
-            return playerRefs;
-        }
-        SpatialResource<Ref<EntityStore>, EntityStore> playerSpatialResource =
-                (SpatialResource) store.getResource(EntityModule.get().getPlayerSpatialResourceType());
-        if (playerSpatialResource == null) {
-            return playerRefs;
-        }
-        playerSpatialResource.getSpatialStructure().collect(position, 75.0, playerRefs);
-        return playerRefs;
+    private static java.util.List<Ref<EntityStore>> collectPlayersNear(Vector3d position, Store<EntityStore> store) {
+        return AreaOfEffect.collectSphere(null, store, position, 75.0, true, null);
     }
 
     public static final class State {

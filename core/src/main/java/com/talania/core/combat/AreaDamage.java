@@ -4,12 +4,11 @@ import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
+import com.talania.core.combat.targeting.AreaOfEffect;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.function.Predicate;
  *
  * <p>How it works:</p>
  * <ul>
- *   <li>Collects entities within a radius.</li>
+ *   <li>Collects entities within a radius using {@link AreaOfEffect}.</li>
  *   <li>Optionally filters and/or excludes players.</li>
  *   <li>Executes {@code DamageSystems.executeDamage} for each target.</li>
  * </ul>
@@ -39,22 +38,11 @@ public final class AreaDamage {
         if (store == null || center == null || radius <= 0.0 || amount <= 0.0F) {
             return 0;
         }
-        List<Ref<EntityStore>> targets = TargetUtil.getAllEntitiesInSphere(center, radius, store);
+        List<Ref<EntityStore>> targets =
+                AreaOfEffect.collectSphere(sourceRef, store, center, radius, includePlayers, filter);
         int hits = 0;
         for (Ref<EntityStore> targetRef : targets) {
             if (targetRef == null || !targetRef.isValid()) {
-                continue;
-            }
-            if (sourceRef != null && sourceRef.equals(targetRef)) {
-                continue;
-            }
-            if (!includePlayers) {
-                Player player = (Player) store.getComponent(targetRef, Player.getComponentType());
-                if (player != null) {
-                    continue;
-                }
-            }
-            if (filter != null && !filter.test(targetRef)) {
                 continue;
             }
             Damage.Source source = sourceRef == null ? Damage.NULL_SOURCE : new Damage.EntitySource(sourceRef);
@@ -76,22 +64,11 @@ public final class AreaDamage {
         if (accessor == null || center == null || radius <= 0.0 || amount <= 0.0F) {
             return 0;
         }
-        List<Ref<EntityStore>> targets = TargetUtil.getAllEntitiesInSphere(center, radius, accessor);
+        List<Ref<EntityStore>> targets =
+                AreaOfEffect.collectSphere(sourceRef, accessor, center, radius, includePlayers, filter);
         int hits = 0;
         for (Ref<EntityStore> targetRef : targets) {
             if (targetRef == null || !targetRef.isValid()) {
-                continue;
-            }
-            if (sourceRef != null && sourceRef.equals(targetRef)) {
-                continue;
-            }
-            if (!includePlayers) {
-                Player player = (Player) accessor.getComponent(targetRef, Player.getComponentType());
-                if (player != null) {
-                    continue;
-                }
-            }
-            if (filter != null && !filter.test(targetRef)) {
                 continue;
             }
             Damage.Source source = sourceRef == null ? Damage.NULL_SOURCE : new Damage.EntitySource(sourceRef);

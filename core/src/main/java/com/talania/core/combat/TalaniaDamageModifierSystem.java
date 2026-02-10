@@ -47,7 +47,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>How to use it:</p>
  * <ul>
  *   <li>Register the system with the entity store registry.</li>
- *   <li>Configure global settings via {@link CombatRuntime#settings()} and optional services.</li>
+ *   <li>Configure global settings via {@link CombatManager#settings()} and optional services.</li>
  * </ul>
  *
  * <p>Integration with Hytale:</p>
@@ -96,7 +96,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         UUID attackerUuid = attackerRef != null ? uuidFor(attackerRef, commandBuffer) : null;
         boolean targetIsPlayer = isPlayer(store, targetRef);
         boolean attackerIsPlayer = isPlayer(store, attackerRef);
-        if (attackerIsPlayer && targetIsPlayer && !CombatRuntime.settings().pvpEnabled()) {
+        if (attackerIsPlayer && targetIsPlayer && !CombatManager.settings().pvpEnabled()) {
             return;
         }
 
@@ -154,8 +154,8 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         // Player damage multipliers (global settings)
         if (attackerIsPlayer && attackerUuid != null) {
             float multiplier = targetIsPlayer
-                    ? CombatRuntime.settings().playerDamageToPlayerMultiplier()
-                    : CombatRuntime.settings().playerDamageMultiplier();
+                    ? CombatManager.settings().playerDamageToPlayerMultiplier()
+                    : CombatManager.settings().playerDamageMultiplier();
             if (multiplier != 1.0F) {
                 damage.setAmount(damage.getAmount() * multiplier);
             }
@@ -163,7 +163,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Weapon category damage modifiers (optional service)
         if (attackerUuid != null) {
-            WeaponCategoryDamageService service = CombatRuntime.weaponCategoryDamageService();
+            WeaponCategoryDamageService service = CombatManager.weaponCategoryDamageService();
             if (service != null && attackerRef != null) {
                 String category = resolveWeaponCategory(store, attackerRef);
                 WeaponCategoryDamage weaponDamage = service.get(attackerUuid, category);

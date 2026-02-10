@@ -7,19 +7,15 @@ API types for interacting with Talania player data.
 ## Files
 
 - `TalaniaApi.java`
-- `TalaniaApiProvider.java`
 - `TalaniaPlayerInfo.java`
 - `TalaniaProfileApi.java`
-- `TalaniaProfileApiProvider.java`
 - `TalaniaProfileInfo.java`
 
 ## Usage
 
 ```java
-TalaniaApi api = TalaniaApiProvider.get();
-if (api != null) {
-    TalaniaPlayerInfo info = api.getPlayerInfo(playerUuid);
-}
+TalaniaApi api = /* obtain from plugin instance */;
+TalaniaPlayerInfo info = api.getPlayerInfo(playerUuid);
 ```
 
 ## API Reference

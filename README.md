@@ -19,11 +19,11 @@ TalaniaCore is a **public domain shared library** designed for the Hytale moddin
 
 ## Modules
 
-| Module | Description | Status |
-|--------|-------------|--------|
+| Module | Description                                                                                         | Status |
+|--------|-----------------------------------------------------------------------------------------------------|--------|
 | **core** | Shared library with stats, combat, events, input, movement, projectiles, entity utilities, profiles | ✅ Active |
-| **races** | Race definitions and modifiers (based on design docs) | ✅ Active |
-| **boss-fights** | Placeholder module for future boss systems | 🚧 Planned |
+| **races** | Race definitions and modifiers                                                                      | ✅ Active |
+| **boss-fights** | Placeholder module for future boss systems                                                          | 🚧 Planned |
 
 ### Core Submodules
 

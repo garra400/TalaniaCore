@@ -4,13 +4,14 @@
 
 Combat utilities and systems that apply Talania stats in the damage pipeline.
 
-Global settings are stored in `CombatSettings` and accessed via `CombatRuntime.settings()`.
+Global settings are stored in `CombatSettings` and accessed via `CombatManager.settings()`.
 
 ## Files
 
 - `TalaniaDamageModifierSystem.java`
 - `CombatSettings.java`
-- `CombatRuntime.java`
+- `CombatManager.java`
+- `targeting/AreaOfEffect.java`
 - `CombatMetaKeys.java`
 - `AttackType.java`
 - `AreaDamage.java`

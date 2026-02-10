@@ -2,11 +2,11 @@ package com.talania.core.combat;
 
 import java.util.UUID;
 
-public final class CombatRuntime {
+public final class CombatManager {
     private static final CombatSettings SETTINGS = new CombatSettings();
     private static volatile WeaponCategoryDamageService weaponCategoryDamageService;
 
-    private CombatRuntime() {}
+    private CombatManager() {}
 
     public static void setWeaponCategoryDamageService(WeaponCategoryDamageService service) {
         weaponCategoryDamageService = service;
