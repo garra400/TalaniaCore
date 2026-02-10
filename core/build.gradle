@@ -1,0 +1,50 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    withSourcesJar()
+    withJavadocJar()
+}
+
+dependencies {
+    // JSON processing
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            pom {
+                name = 'TalaniaCore'
+                description = 'Shared library for Orbis and Dungeons ecosystem'
+                url = 'https://github.com/garra400/TalaniaCore'
+
+                licenses {
+                    license {
+                        name = 'The Unlicense'
+                        url = 'https://unlicense.org/'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'garra400'
+                        name = 'Garra400'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/garra400/TalaniaCore.git'
+                    developerConnection = 'scm:git:ssh://github.com/garra400/TalaniaCore.git'
+                    url = 'https://github.com/garra400/TalaniaCore'
+                }
+            }
+        }
+    }
+}
