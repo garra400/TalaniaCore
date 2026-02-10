@@ -1,4 +1,4 @@
-package com.talania.core.combat;
+package com.talania.core.combat.damage;
 
 import java.util.Map;
 import java.util.UUID;

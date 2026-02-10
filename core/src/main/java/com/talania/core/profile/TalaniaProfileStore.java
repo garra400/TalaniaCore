@@ -89,7 +89,7 @@ public final class TalaniaProfileStore {
                 if (stat == null || entry.getValue() == null || !entry.getValue().isNumber()) {
                     continue;
                 }
-                profile.setBaseStat(stat, entry.getValue().asNumber().floatValue());
+                profile.setBaseStat(stat, (float) entry.getValue().asNumber().doubleValue());
             }
         }
         return profile;

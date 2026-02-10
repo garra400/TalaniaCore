@@ -1,4 +1,4 @@
-package com.talania.core.combat;
+package com.talania.core.combat.damage;
 
 import com.hypixel.hytale.server.core.meta.MetaKey;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
@@ -9,8 +9,8 @@ import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
  * <p>These are attached to {@code Damage} instances to avoid double-processing
  * and to mark critical hits / attack typing for downstream systems.</p>
  */
-public final class CombatMetaKeys {
-    private CombatMetaKeys() {}
+public final class DamageMetaKeys {
+    private DamageMetaKeys() {}
 
     public static final MetaKey TALANIA_APPLIED = Damage.META_REGISTRY.registerMetaObject();
     public static final MetaKey CRIT_HIT = Damage.META_REGISTRY.registerMetaObject();

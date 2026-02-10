@@ -1,4 +1,4 @@
-package com.talania.core.combat;
+package com.talania.core.combat.damage;
 
 /**
  * Damage modifier for a specific weapon category.

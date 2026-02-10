@@ -1,4 +1,4 @@
-package com.talania.core.combat;
+package com.talania.core.combat.utils;
 
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;

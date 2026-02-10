@@ -1,4 +1,4 @@
-package com.talania.core.combat;
+package com.talania.core.combat.utils;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -10,6 +10,8 @@ import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntitySta
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.talania.core.combat.targeting.AreaOfEffect;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import java.util.List;
 
@@ -100,8 +102,8 @@ public final class AreaHealing {
         state.center = null;
     }
 
-    private static java.util.List<Ref<EntityStore>> collectPlayersNear(Vector3d position, Store<EntityStore> store) {
-        return AreaOfEffect.collectSphere(null, store, position, 75.0, true, null);
+    private static ObjectList<Ref<EntityStore>> collectPlayersNear(Vector3d position, Store<EntityStore> store) {
+        return new ObjectArrayList<>(AreaOfEffect.collectSphere(null, store, position, 75.0, true, null));
     }
 
     public static final class State {

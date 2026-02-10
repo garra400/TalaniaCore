@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.protocol.MovementSettings;
+import com.talania.core.utils.PlayerRefUtil;
 
 /**
  * Helper for timed flight windows.
@@ -96,7 +97,7 @@ public final class TimedFlightUtil {
         }
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player != null) {
-            PlayerRef playerRef = player.getPlayerRef();
+            PlayerRef playerRef = PlayerRefUtil.resolve(ref, store);
             if (playerRef != null && playerRef.getPacketHandler() != null) {
                 playerRef.getPacketHandler().writeNoCache(new SetMovementStates(new SavedMovementStates(enabled)));
             }
@@ -109,7 +110,7 @@ public final class TimedFlightUtil {
         if (player == null) {
             return;
         }
-        PlayerRef playerRef = player.getPlayerRef();
+        PlayerRef playerRef = PlayerRefUtil.resolve(ref, store);
         if (playerRef == null) {
             return;
         }

@@ -7,6 +7,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.talania.core.utils.PlayerRefUtil;
 
 /**
  * Helpers for applying movement-related stat changes.
@@ -41,7 +42,7 @@ public final class MovementStatUtil {
         if (player == null) {
             return;
         }
-        PlayerRef playerRef = player.getPlayerRef();
+        PlayerRef playerRef = PlayerRefUtil.resolve(ref, store);
         if (playerRef == null) {
             return;
         }

@@ -1,6 +1,6 @@
 package com.talania.core.combat;
 
-import java.util.UUID;
+import com.talania.core.combat.damage.WeaponCategoryDamageService;
 
 public final class CombatManager {
     private static final CombatSettings SETTINGS = new CombatSettings();

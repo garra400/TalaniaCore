@@ -1,4 +1,4 @@
-package com.talania.core.combat;
+package com.talania.core.combat.damage;
 
 import com.hypixel.hytale.component.Archetype;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -23,6 +23,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.talania.core.combat.CombatManager;
 import com.talania.core.stats.StatsManager;
 import com.talania.core.stats.DamageType;
 import com.talania.core.stats.StatType;
@@ -81,10 +82,10 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         if (damage.getAmount() <= 0.0F) {
             return;
         }
-        if (damage.hasMetaObject(CombatMetaKeys.TALANIA_APPLIED)) {
+        if (damage.hasMetaObject(DamageMetaKeys.TALANIA_APPLIED)) {
             return;
         }
-        damage.putMetaObject(CombatMetaKeys.TALANIA_APPLIED, Boolean.TRUE);
+        damage.putMetaObject(DamageMetaKeys.TALANIA_APPLIED, Boolean.TRUE);
 
         Ref<EntityStore> targetRef = archetypeChunk.getReferenceTo(index);
         UUID targetUuid = uuidFor(targetRef, commandBuffer);
@@ -119,12 +120,12 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
                     critMultiplier = 1.5F;
                 }
                 damage.setAmount(damage.getAmount() * critMultiplier);
-                damage.putMetaObject(CombatMetaKeys.CRIT_HIT, Boolean.TRUE);
+                damage.putMetaObject(DamageMetaKeys.CRIT_HIT, Boolean.TRUE);
             }
         }
 
         // Attack-type multipliers (optional meta)
-        AttackType attackType = (AttackType) damage.getIfPresentMetaObject(CombatMetaKeys.ATTACK_TYPE);
+        AttackType attackType = (AttackType) damage.getIfPresentMetaObject(DamageMetaKeys.ATTACK_TYPE);
         if (attackType != null) {
             if (attackerUuid != null) {
                 float outgoing = StatsManager.getStat(attackerUuid, attackType.damageStat());
@@ -197,7 +198,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         }
 
         // Damage-type resistances (optional meta)
-        DamageType damageType = (DamageType) damage.getIfPresentMetaObject(CombatMetaKeys.DAMAGE_TYPE);
+        DamageType damageType = (DamageType) damage.getIfPresentMetaObject(DamageMetaKeys.DAMAGE_TYPE);
         if (damageType != null && damageType != DamageType.PHYSICAL) {
             float resist = StatsManager.getStat(targetUuid, damageType.resistanceStat());
             if (resist > 0.0F) {

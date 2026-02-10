@@ -1,10 +1,12 @@
 package com.talania.core.entities;
 
+import com.hypixel.hytale.component.Archetype;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 /**
@@ -13,7 +15,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 public final class EntityAnimationSystem extends EntityTickingSystem<EntityStore> {
     @Override
     public Query<EntityStore> getQuery() {
-        return Query.all();
+        return Query.and(Archetype.of(UUIDComponent.getComponentType()));
     }
 
     @Override
