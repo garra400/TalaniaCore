@@ -16,6 +16,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public final class EntityAnimationManager {
     private final List<EntityAnimationEffect> effects = new CopyOnWriteArrayList<>();
 
+    private static final EntityAnimationManager INSTANCE = new EntityAnimationManager();
+
+    public static EntityAnimationManager get() {
+        return INSTANCE;
+    }
+
+    private EntityAnimationManager() {}
+
     /**
      * Register and start an effect immediately.
      */

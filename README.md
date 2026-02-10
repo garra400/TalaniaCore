@@ -25,6 +25,24 @@ TalaniaCore is a **public domain shared library** designed for the Hytale moddin
 | **races** | Race definitions and modifiers (based on design docs) | ✅ Active |
 | **boss-fights** | Placeholder module for future boss systems | 🚧 Planned |
 
+### Core Submodules
+
+| Submodule | Description | Status |
+|-----------|-------------|--------|
+| **stats** | Base stats + modifiers | ✅ Active |
+| **combat** | Damage modifiers, attack/damage typing, settings | 🧪 In Progress |
+| **events** | Event bus + entity events | ✅ Active |
+| **input** | Input pattern helpers | 🧪 In Progress |
+| **movement** | Movement utilities (jump, flight) | 🧪 In Progress |
+| **projectiles** | Projectile helpers + detection systems | 🧪 In Progress |
+| **entities** | Temporary entity effects + animation manager | 🧪 In Progress |
+| **profile** | Player profile storage + API | 🧪 In Progress |
+| **hytale** | Hytale API bridges (stats sync, teleport, etc.) | 🧪 In Progress |
+| **localization** | Translation system | ✅ Active |
+| **config** | JSON config + hot-reload | ✅ Active |
+| **ui** | UI wrapper abstractions | ✅ Active |
+| **utils** | Animation/model/text helpers | ✅ Active |
+
 ## Installation
 
 ### Gradle (Recommended)
