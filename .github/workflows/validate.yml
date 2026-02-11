@@ -42,28 +42,6 @@ jobs:
         run: |
           python scripts/validate_languages.py
 
-  validate-gradle:
-    runs-on: ubuntu-latest
-    name: Validate Gradle Build
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v2
-
-      - name: Make Gradle wrapper executable
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew build --no-daemon
-
-      - name: Run tests
-        run: ./gradlew test --no-daemon
+  # NOTE: Gradle build validation is disabled because Hytale SDK 
+  # (com.hypixel.hytale.*) is not publicly available.
+  # Build must be done locally with the SDK installed.
