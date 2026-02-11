@@ -90,7 +90,7 @@ public class EntityStats {
     }
 
     /**
-     * Remove a modifier by its ID.
+     * Remove a modifier by its UUID.
      * 
      * @param modifierId The modifier's unique ID
      * @return true if a modifier was removed
@@ -98,6 +98,23 @@ public class EntityStats {
     public boolean removeModifier(UUID modifierId) {
         for (Map.Entry<StatType, List<StatModifier>> entry : modifiers.entrySet()) {
             if (entry.getValue().removeIf(m -> m.getId().equals(modifierId))) {
+                invalidateCache(entry.getKey());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Remove a modifier by its string ID.
+     * This searches for modifiers whose source matches the given ID.
+     * 
+     * @param modifierId The modifier's source identifier (e.g., "race:orc")
+     * @return true if a modifier was removed
+     */
+    public boolean removeModifier(String modifierId) {
+        for (Map.Entry<StatType, List<StatModifier>> entry : modifiers.entrySet()) {
+            if (entry.getValue().removeIf(m -> m.getSource().equals(modifierId))) {
                 invalidateCache(entry.getKey());
                 return true;
             }

@@ -65,8 +65,20 @@ public final class StatsManager {
      * Unregister an entity's stats.
      * 
      * @return The removed stats, or null if not registered
+     * @deprecated Use {@link #remove(UUID)} instead
      */
+    @Deprecated
     public static EntityStats unregister(UUID entityId) {
+        return statsRegistry.remove(entityId);
+    }
+
+    /**
+     * Remove an entity's stats from the registry.
+     * 
+     * @param entityId The entity's UUID
+     * @return The removed stats, or null if not registered
+     */
+    public static EntityStats remove(UUID entityId) {
         return statsRegistry.remove(entityId);
     }
 
