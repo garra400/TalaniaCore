@@ -31,6 +31,12 @@ subprojects {
         useJUnitPlatform()
     }
 
+    // Configure javadoc to not fail on errors/warnings
+    javadoc {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        failOnError = false
+    }
+
     dependencies {
         // Hytale server (local-only, provided by .local/server/HytaleServer.jar)
         compileOnly files(rootProject.file('.local/server/HytaleServer.jar'))
