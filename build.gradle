@@ -1,6 +1,6 @@
 allprojects {
     group = 'com.talania'
-    version = '0.1.0-SNAPSHOT'
+    version = '0.1.0'
 
     repositories {
         mavenCentral()
@@ -9,6 +9,18 @@ allprojects {
 
 subprojects {
     apply plugin: 'java-library'
+
+    tasks.named('jar') {
+        def baseName = project.name
+        if (project.name == 'core') {
+            baseName = 'TalaniaCore'
+        } else if (project.name == 'races') {
+            baseName = 'TalaniaRaces'
+        } else if (project.name == 'boss-fights') {
+            baseName = 'TalaniaBossFights'
+        }
+        archiveBaseName.set(baseName)
+    }
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17

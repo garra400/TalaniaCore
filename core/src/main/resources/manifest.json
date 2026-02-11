@@ -1,0 +1,20 @@
+{
+  "Group": "Talania",
+  "Name": "TalaniaCore",
+  "Version": "0.1.0",
+  "Description": "Shared core systems for Talania mods.",
+  "Authors": [
+    {
+      "Name": "Talania Team",
+      "Email": "",
+      "Url": ""
+    }
+  ],
+  "Website": "",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "IncludesAssetPack": false,
+  "Main": "com.talania.core.TalaniaCorePlugin"
+}
