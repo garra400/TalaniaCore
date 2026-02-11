@@ -44,3 +44,5 @@ logs/
 # Local configuration
 local.properties
 *.local.json
+.local/
+.metadata/
