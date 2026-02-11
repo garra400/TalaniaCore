@@ -57,10 +57,26 @@ public final class EventBus {
      * 
      * @param eventType The event class to listen for
      * @param handler The handler to call
-     * @param priority Execution priority
+     * @param priority Execution priority (use EventPriority for new code)
      * @param <T> Event type
      * @return A registration that can be used to unsubscribe
      */
+    public static <T> EventRegistration subscribe(Class<T> eventType, Consumer<T> handler, EventPriority priority) {
+        return subscribe(eventType, handler, priority.toLegacy());
+    }
+
+    /**
+     * Subscribe with a specific priority (legacy).
+     * Higher priority listeners are called first.
+     * 
+     * @param eventType The event class to listen for
+     * @param handler The handler to call
+     * @param priority Execution priority
+     * @param <T> Event type
+     * @return A registration that can be used to unsubscribe
+     * @deprecated Use {@link #subscribe(Class, Consumer, EventPriority)} instead
+     */
+    @Deprecated
     public static <T> EventRegistration subscribe(Class<T> eventType, Consumer<T> handler, Priority priority) {
         Objects.requireNonNull(eventType, "eventType cannot be null");
         Objects.requireNonNull(handler, "handler cannot be null");
@@ -163,7 +179,9 @@ public final class EventBus {
 
     /**
      * Event execution priority.
+     * @deprecated Use {@link EventPriority} instead
      */
+    @Deprecated
     public enum Priority {
         LOWEST,
         LOW,
@@ -172,6 +190,30 @@ public final class EventBus {
         HIGHEST,
         /** Monitor priority - should not modify events, only observe */
         MONITOR
+    }
+
+    /**
+     * Event execution priority levels.
+     * Higher priority listeners are called first.
+     */
+    public enum EventPriority {
+        LOWEST,
+        LOW,
+        NORMAL,
+        HIGH,
+        HIGHEST,
+        /** Monitor priority - should not modify events, only observe */
+        MONITOR;
+
+        /** Convert to legacy Priority enum */
+        Priority toLegacy() {
+            return Priority.valueOf(this.name());
+        }
+
+        /** Convert from legacy Priority enum */
+        static EventPriority fromLegacy(Priority p) {
+            return EventPriority.valueOf(p.name());
+        }
     }
 
     /**
