@@ -1,9 +1,11 @@
 package com.talania.core.profile;
 
+import com.talania.core.progression.LevelProgress;
 import com.talania.core.stats.StatType;
 import org.bson.BsonDocument;
 import org.bson.BsonDouble;
 import org.bson.BsonInt32;
+import org.bson.BsonInt64;
 import org.bson.BsonString;
 import org.bson.BsonValue;
 
@@ -22,7 +24,7 @@ import java.util.UUID;
  * multiclass-leveling approach.</p>
  */
 public final class TalaniaProfileStore {
-    private static final int CURRENT_VERSION = 1;
+    private static final int CURRENT_VERSION = 2;
     private final Path profilesDirectory;
 
     public TalaniaProfileStore(Path dataDirectory) {
@@ -81,6 +83,7 @@ public final class TalaniaProfileStore {
         int version = readInt(document.get("version"), CURRENT_VERSION);
         profile.setProfileVersion(version);
         profile.setRaceId(readString(document.get("race"), null));
+        profile.setClassId(readString(document.get("class"), null));
 
         BsonDocument statsDoc = readDocument(document.get("baseStats"));
         if (statsDoc != null) {
@@ -90,6 +93,20 @@ public final class TalaniaProfileStore {
                     continue;
                 }
                 profile.setBaseStat(stat, (float) entry.getValue().asNumber().doubleValue());
+            }
+        }
+
+        BsonDocument classDoc = readDocument(document.get("classLevels"));
+        if (classDoc != null) {
+            for (Map.Entry<String, BsonValue> entry : classDoc.entrySet()) {
+                String classId = entry.getKey();
+                BsonDocument progressDoc = readDocument(entry.getValue());
+                if (progressDoc == null || classId == null || classId.isBlank()) {
+                    continue;
+                }
+                int level = readInt(progressDoc.get("level"), 0);
+                long xp = readLong(progressDoc.get("xp"), 0L);
+                profile.classProgress().put(classId, new LevelProgress(level, xp));
             }
         }
         return profile;
@@ -104,12 +121,30 @@ public final class TalaniaProfileStore {
         if (profile.raceId() != null) {
             document.put("race", new BsonString(profile.raceId()));
         }
+        if (profile.classId() != null) {
+            document.put("class", new BsonString(profile.classId()));
+        }
 
         BsonDocument stats = new BsonDocument();
         for (StatType stat : StatType.values()) {
             stats.put(stat.getId(), new BsonDouble(profile.getBaseStat(stat, 0.0f)));
         }
         document.put("baseStats", stats);
+
+        BsonDocument classLevels = new BsonDocument();
+        for (Map.Entry<String, LevelProgress> entry : profile.classProgress().entrySet()) {
+            LevelProgress progress = entry.getValue();
+            if (progress == null) {
+                continue;
+            }
+            BsonDocument progressDoc = new BsonDocument();
+            progressDoc.put("level", new BsonInt32(progress.level()));
+            progressDoc.put("xp", new BsonInt64(progress.xp()));
+            classLevels.put(entry.getKey(), progressDoc);
+        }
+        if (!classLevels.isEmpty()) {
+            document.put("classLevels", classLevels);
+        }
         return document;
     }
 
@@ -121,6 +156,16 @@ public final class TalaniaProfileStore {
             return fallback;
         }
         return value.asNumber().intValue();
+    }
+
+    /**
+     * Read a long from a BSON value with fallback.
+     */
+    private long readLong(BsonValue value, long fallback) {
+        if (value == null || !value.isNumber()) {
+            return fallback;
+        }
+        return value.asNumber().longValue();
     }
 
     /**

@@ -10,6 +10,8 @@ Detect input patterns and emit high-level events.
 - `InputPatternEvent.java`
 - `InputPattern.java`
 - `InputSnapshot.java`
+- `InputAction.java`
+- `InputActionEvent.java`
 
 ## Usage
 

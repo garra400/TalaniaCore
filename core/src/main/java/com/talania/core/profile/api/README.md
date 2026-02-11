@@ -10,6 +10,7 @@ API types for interacting with Talania player data.
 - `TalaniaPlayerInfo.java`
 - `TalaniaProfileApi.java`
 - `TalaniaProfileInfo.java`
+- `ClassProgressInfo.java`
 
 ## Usage
 

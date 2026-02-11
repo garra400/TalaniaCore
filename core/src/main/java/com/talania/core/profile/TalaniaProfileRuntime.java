@@ -1,7 +1,9 @@
 package com.talania.core.profile;
 
 import com.talania.core.profile.api.TalaniaProfileApi;
+import com.talania.core.profile.api.ClassProgressInfo;
 import com.talania.core.profile.api.TalaniaProfileInfo;
+import com.talania.core.progression.LevelProgress;
 import com.talania.core.stats.StatType;
 
 import java.nio.file.Path;
@@ -79,6 +81,14 @@ public final class TalaniaProfileRuntime implements TalaniaProfileApi {
         for (Map.Entry<StatType, Float> entry : profile.baseStats().entrySet()) {
             stats.put(entry.getKey().getId(), entry.getValue());
         }
-        return new TalaniaProfileInfo(profile.playerId(), profile.raceId(), stats);
+        Map<String, ClassProgressInfo> classProgress = new HashMap<>();
+        for (Map.Entry<String, LevelProgress> entry : profile.classProgress().entrySet()) {
+            LevelProgress progress = entry.getValue();
+            if (progress == null) {
+                continue;
+            }
+            classProgress.put(entry.getKey(), new ClassProgressInfo(progress.level(), progress.xp()));
+        }
+        return new TalaniaProfileInfo(profile.playerId(), profile.raceId(), profile.classId(), stats, classProgress);
     }
 }
