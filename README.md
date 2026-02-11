@@ -15,18 +15,33 @@
 
 ## Overview
 
-TalaniaCore is a **public domain shared library** designed for the Hytale modding ecosystem. It provides a collection of reusable utilities and systems that serve as the foundation for the "Orbis and Dungeons" mod series.
+TalaniaCore is a **public domain shared library** designed for the Hytale modding ecosystem. It provides reusable utilities and systems that serve as the foundation for the Talania server mods. The repo is now a Gradle multi-project with a shared `core` module and optional gameplay modules.
 
 ## Modules
 
-| Module | Description | Status |
-|--------|-------------|--------|
-| **Core Stats** | HP, mana, stamina, and 17+ attribute types with modifiers | ✅ Ready |
-| **Localization** | JSON-based translation system with fallback and hot-reload | ✅ Ready |
-| **Technical Utilities** | Animation, model modification, and color parsing helpers | ✅ Ready |
-| **UI Wrapper** | Fluent API abstraction layer for UI libraries | ✅ Ready |
-| **Config System** | JSON configuration with caching and hot-reload | ✅ Ready |
-| **Event System** | Prioritized event bus with cancellation support | ✅ Ready |
+| Module | Description                                                                                         | Status |
+|--------|-----------------------------------------------------------------------------------------------------|--------|
+| **core** | Shared library with stats, combat, events, input, movement, projectiles, entity utilities, profiles | ✅ Active |
+| **races** | Race definitions and modifiers                                                                      | ✅ Active |
+| **boss-fights** | Placeholder module for future boss systems                                                          | 🚧 Planned |
+
+### Core Submodules
+
+| Submodule | Description | Status |
+|-----------|-------------|--------|
+| **stats** | Base stats + modifiers | ✅ Active |
+| **combat** | Damage modifiers, attack/damage typing, settings | 🧪 In Progress |
+| **events** | Event bus + entity events | ✅ Active |
+| **input** | Input pattern helpers | 🧪 In Progress |
+| **movement** | Movement utilities (jump, flight) | 🧪 In Progress |
+| **projectiles** | Projectile helpers + detection systems | 🧪 In Progress |
+| **entities** | Temporary entity effects + animation manager | 🧪 In Progress |
+| **profile** | Player profile storage + API | 🧪 In Progress |
+| **hytale** | Hytale API bridges (stats sync, teleport, etc.) | 🧪 In Progress |
+| **localization** | Translation system | ✅ Active |
+| **config** | JSON config + hot-reload | ✅ Active |
+| **ui** | UI wrapper abstractions | ✅ Active |
+| **utils** | Animation/model/text helpers | ✅ Active |
 
 ## Installation
 
@@ -174,22 +189,28 @@ String ansi = ColorParser.toAnsi("&cError!");
 
 ```
 TalaniaCore/
-├── src/main/java/com/talania/core/
-│   ├── stats/          # Core stats system
-│   ├── localization/   # Translation system
-│   ├── utils/          # Technical utilities
-│   │   ├── animation/  # Animation helpers
-│   │   ├── model/      # Model modification
-│   │   └── text/       # Color parsing
-│   ├── ui/             # UI abstraction layer
-│   ├── config/         # Configuration system
-│   └── events/         # Event bus
-├── src/main/resources/
-│   ├── languages/      # Default translations
-│   └── schemas/        # JSON validation schemas
-├── docs/               # Documentation
-├── examples/           # Usage examples
-└── tests/              # Test suite
+├── core/                       # Shared library module
+│   ├── src/main/java/com/talania/core/
+│   │   ├── stats/              # Core stats system
+│   │   ├── combat/             # Damage modifiers and combat helpers
+│   │   ├── events/             # Event bus + entity events
+│   │   ├── input/              # Input pattern helpers
+│   │   ├── movement/           # Movement utilities
+│   │   ├── projectiles/        # Projectile helpers
+│   │   ├── entities/           # Temporary entity effects
+│   │   ├── profile/            # Player profile storage + API
+│   │   ├── localization/       # Translation system
+│   │   ├── utils/              # Technical utilities
+│   │   ├── ui/                 # UI abstraction layer
+│   │   └── config/             # Configuration system
+│   ├── src/main/resources/
+│   │   ├── languages/          # Default translations
+│   │   └── schemas/            # JSON validation schemas
+│   └── tests/                  # Test suite
+├── races/                      # Races module
+├── boss-fights/                # Boss fights module
+├── docs/                       # Documentation
+└── examples/                   # Usage examples
 ```
 
 ## Contributing
