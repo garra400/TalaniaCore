@@ -9,8 +9,14 @@ import com.talania.core.combat.damage.TalaniaDamageModifierSystem;
 import com.talania.core.entities.EntityAnimationSystem;
 import com.talania.core.events.entity.npc.NpcDeathEventSystem;
 import com.talania.core.events.entity.npc.NpcDeathHandledComponent;
+import com.talania.core.input.InputPatternMovementSystem;
+import com.talania.core.input.InputPatternPlaceBlockSystem;
 import com.talania.core.projectiles.ProjectileDetectSystem;
 import com.talania.core.projectiles.ProjectileOwnerDetectSystem;
+import com.talania.core.runtime.TalaniaCoreRuntime;
+import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
+import com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent;
+import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 
 import javax.annotation.Nonnull;
 
@@ -26,6 +32,7 @@ public final class TalaniaCorePlugin extends JavaPlugin {
 
     @Override
     protected void setup() {
+        TalaniaCoreRuntime runtime = TalaniaCoreRuntime.init(getDataDirectory());
         ComponentRegistryProxy<EntityStore> registry = getEntityStoreRegistry();
         this.npcDeathHandledType = registry.registerComponent(
                 NpcDeathHandledComponent.class, NpcDeathHandledComponent::new);
@@ -35,5 +42,11 @@ public final class TalaniaCorePlugin extends JavaPlugin {
         registry.registerSystem(new ProjectileOwnerDetectSystem());
         registry.registerSystem(new NpcDeathEventSystem(npcDeathHandledType));
         registry.registerSystem(new EntityAnimationSystem());
+        registry.registerSystem(new InputPatternMovementSystem(runtime.inputPatternTracker()));
+        registry.registerSystem(new InputPatternPlaceBlockSystem(runtime.inputPatternTracker()));
+
+        getEventRegistry().registerGlobal(PlayerReadyEvent.class, runtime::handlePlayerReady);
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, runtime::handlePlayerDisconnect);
+        getEventRegistry().registerGlobal(PlayerMouseButtonEvent.class, runtime::handleMouseButton);
     }
 }
