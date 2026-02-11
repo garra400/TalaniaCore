@@ -9,6 +9,7 @@ on:
     branches: [ main ]
     paths:
       - '**.json'
+  workflow_dispatch:
 
 jobs:
   validate-json:
