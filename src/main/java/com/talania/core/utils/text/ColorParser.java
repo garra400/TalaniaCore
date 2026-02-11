@@ -8,17 +8,17 @@ import java.util.regex.Pattern;
 /**
  * Utility for parsing and processing color codes in text.
  * 
- * <p>Supports Minecraft-style color codes (&0-&f) and hex colors (&#RRGGBB).
+ * <p>Supports Minecraft-style color codes ({@code &0-&f}) and hex colors ({@code &#RRGGBB}).
  * Can be extended to work with any message system.
  * 
  * <p>Color Codes:
  * <ul>
- *   <li>&0-&9, &a-&f - Standard colors</li>
- *   <li>&#RRGGBB - Hex colors</li>
- *   <li>&l - Bold</li>
- *   <li>&o - Italic</li>
- *   <li>&m - Monospace</li>
- *   <li>&r - Reset</li>
+ *   <li>{@code &0-&9, &a-&f} - Standard colors</li>
+ *   <li>{@code &#RRGGBB} - Hex colors</li>
+ *   <li>{@code &l} - Bold</li>
+ *   <li>{@code &o} - Italic</li>
+ *   <li>{@code &m} - Monospace</li>
+ *   <li>{@code &r} - Reset</li>
  * </ul>
  * 
  * <p>Usage:

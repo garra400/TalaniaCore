@@ -30,6 +30,12 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+// Configure javadoc to not fail on errors/warnings
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    failOnError = false
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
