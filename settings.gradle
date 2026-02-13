@@ -1,1 +1,5 @@
 rootProject.name = 'TalaniaCore'
+
+include 'core'
+include 'races'
+include 'boss-fights'
