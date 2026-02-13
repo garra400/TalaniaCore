@@ -11,11 +11,15 @@ Complete API reference for the TalaniaCore library for the Orbis and Dungeons ec
 ## Table of Contents
 
 1. [Stats System](#stats-system)
-2. [Localization System](#localization-system)
-3. [Event System](#event-system)
-4. [Configuration System](#configuration-system)
-5. [Utilities](#utilities)
-6. [UI Wrapper](#ui-wrapper)
+2. [Progression System](#progression-system)
+3. [Input System](#input-system)
+4. [Localization System](#localization-system)
+5. [Event System](#event-system)
+6. [Configuration System](#configuration-system)
+7. [Profile System](#profile-system)
+8. [Hytale Integration](#hytale-integration)
+9. [Utilities](#utilities)
+10. [UI Wrapper](#ui-wrapper)
 
 ---
 
@@ -140,6 +144,124 @@ List<StatModifier> mods = stats.getModifiers(StatType.HEALTH);
 // Reset to default values
 stats.reset();
 ```
+
+---
+
+## Progression System
+
+Leveling and XP management for any progression context (classes, skills, etc.).
+
+### LevelingCurve (Interface)
+
+Defines how much XP is required per level.
+
+```java
+public interface LevelingCurve {
+    long xpForLevel(int level);  // XP needed to go from level to level+1
+    int maxLevel();              // Maximum reachable level
+}
+```
+
+### LinearLevelingCurve
+
+Linear curve: each level requires `baseXp + (level * stepXp)`.
+
+```java
+import com.talania.core.progression.LinearLevelingCurve;
+
+// Level 0->1 needs 100 XP, level 1->2 needs 150 XP, level 2->3 needs 200 XP, etc.
+LevelingCurve curve = new LinearLevelingCurve(100, 100L, 50L);
+//                                            max  base  step
+```
+
+### LevelProgress
+
+Mutable tracker for current level and XP.
+
+```java
+import com.talania.core.progression.LevelProgress;
+
+LevelProgress progress = new LevelProgress();      // level=0, xp=0
+LevelProgress progress = new LevelProgress(5, 200); // level=5, xp=200
+
+progress.level();        // current level
+progress.xp();           // current XP within level
+progress.addXp(100);     // add XP manually
+progress.setLevel(10);   // set level directly
+```
+
+### LevelingService
+
+Applies XP to progress and handles automatic level-ups.
+
+```java
+import com.talania.core.progression.*;
+
+LevelingService service = new LevelingService();
+LevelingCurve curve = new LinearLevelingCurve(100, 100L, 50L);
+LevelProgress progress = new LevelProgress();
+
+// Add 250 XP - will auto-level from 0 to 1 (needs 100) and keep 150 excess
+LevelingResult result = service.addXp(progress, 250L, curve);
+```
+
+### LevelingResult
+
+Immutable result of an XP operation.
+
+```java
+result.oldLevel();      // level before XP was added
+result.newLevel();      // level after XP was added
+result.levelsGained();  // how many levels were gained
+result.xpAdded();       // how much XP was added
+result.leveledUp();     // true if at least one level was gained
+```
+
+---
+
+## Input System
+
+Input action events and pattern detection.
+
+### InputAction (Enum)
+
+Discrete action keys mapped to abilities.
+
+| Value | Description |
+|-------|-------------|
+| `E` | Primary action key |
+| `R` | Secondary action key |
+
+### InputActionEvent
+
+Event published when an action key is pressed. Subscribe via `EventBus`.
+
+```java
+import com.talania.core.input.*;
+import com.talania.core.events.EventBus;
+
+EventBus.subscribe(InputActionEvent.class, event -> {
+    UUID playerId = event.playerId();       // who pressed the key
+    InputAction action = event.action();    // E or R
+    long timestamp = event.timestamp();     // when it was pressed
+    Ref<EntityStore> ref = event.ref();     // entity reference (nullable)
+    Store<EntityStore> store = event.store(); // entity store (nullable)
+});
+```
+
+### InputPattern (Enum)
+
+High-level movement/input patterns detected by `InputPatternTracker`.
+
+| Pattern | Description |
+|---------|-------------|
+| `DOUBLE_TAP_CROUCH` | Crouched twice quickly |
+| `DOUBLE_TAP_SPRINT` | Sprinted twice quickly |
+| `DOUBLE_TAP_RIGHT_CLICK` | Right-clicked twice quickly |
+| `JUMP_LOOK_UP` | Jumped while looking up |
+| `CROUCH_JUMP` | Crouched then jumped |
+| `RIGHT_CLICK_CROUCH` | Right-clicked while crouching |
+| `PLACE_BLOCK_CROUCH` | Placed block while crouching |
 
 ---
 
@@ -483,7 +605,89 @@ UIComponent label = UIFactory.text()
 
 ---
 
+## Profile System
+
+Player profile persistence with class progress tracking.
+
+### TalaniaPlayerProfile
+
+```java
+import com.talania.core.profile.TalaniaPlayerProfile;
+import com.talania.core.progression.LevelProgress;
+
+TalaniaPlayerProfile profile = new TalaniaPlayerProfile(playerUUID);
+
+// Race
+profile.setRaceId("elf");
+String race = profile.raceId(); // "elf"
+
+// Class (for ClassRPG integration)
+profile.setClassId("warrior");
+String classId = profile.classId(); // "warrior"
+
+// Base stats
+profile.setBaseStat(StatType.HEALTH, 150f);
+float hp = profile.getBaseStat(StatType.HEALTH, 100f); // 150
+
+// Class progression
+LevelProgress warrior = profile.getOrCreateClassProgress("warrior");
+// Returns existing or creates new LevelProgress(0, 0)
+
+// Access all class progress
+Map<String, LevelProgress> all = profile.classProgress();
+```
+
+### TalaniaProfileRuntime
+
+```java
+import com.talania.core.profile.TalaniaProfileRuntime;
+
+TalaniaProfileRuntime runtime = new TalaniaProfileRuntime(dataDirectory);
+
+// Load a player profile (creates if not exists)
+TalaniaPlayerProfile profile = runtime.load(playerUUID);
+
+// Save and unload
+runtime.unload(playerUUID, true); // true = save before unload
+```
+
+### TalaniaCoreRuntime
+
+Singleton that wires all core systems together.
+
+```java
+import com.talania.core.runtime.TalaniaCoreRuntime;
+
+// Initialize once at plugin start
+TalaniaCoreRuntime runtime = TalaniaCoreRuntime.init(dataDirectory);
+
+// Access from anywhere
+TalaniaCoreRuntime rt = TalaniaCoreRuntime.get();
+rt.profileRuntime();        // profile management
+rt.statSyncService();       // Hytale stat sync
+rt.inputPatternTracker();   // input pattern detection
+```
+
+---
+
 ## Hytale Integration
+
+### EntityEffectService
+
+Apply Hytale entity effects by string ID.
+
+```java
+import com.talania.core.hytale.effects.EntityEffectService;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
+
+// Apply a speed potion effect for 5 seconds
+EntityEffectService.apply(targetRef, store, "Potion_Speed", 5000L, OverlapBehavior.OVERWRITE);
+
+// Apply a custom effect
+EntityEffectService.apply(targetRef, store, "EntityEffect/MyCustomEffect", 3000L, OverlapBehavior.OVERWRITE);
+```
+
+The service automatically resolves both direct IDs and `EntityEffect/` prefixed IDs.
 
 ### Stats Mapping
 

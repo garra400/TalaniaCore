@@ -15,6 +15,7 @@ public final class TalaniaPlayerProfile {
     private final UUID playerId;
     private int profileVersion;
     private String raceId;
+    private String classId;
     private final Map<StatType, Float> baseStats = new EnumMap<>(StatType.class);
     private final Map<String, LevelProgress> classProgress = new HashMap<>();
 
@@ -46,6 +47,17 @@ public final class TalaniaPlayerProfile {
 
     public void setRaceId(String raceId) {
         this.raceId = raceId;
+    }
+
+    /**
+     * Active class identifier for the ClassRPG system.
+     */
+    public String classId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
     }
 
     /**

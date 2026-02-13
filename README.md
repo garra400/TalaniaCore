@@ -32,12 +32,13 @@ TalaniaCore is a **public domain shared library** designed for the Hytale moddin
 | **stats** | Base stats + modifiers | ✅ Active |
 | **combat** | Damage modifiers, attack/damage typing, settings | 🧪 In Progress |
 | **events** | Event bus + entity events | ✅ Active |
-| **input** | Input pattern helpers | 🧪 In Progress |
+| **input** | Input patterns + action events | ✅ Active |
+| **progression** | Leveling system (XP curves, level progress) | ✅ Active |
 | **movement** | Movement utilities (jump, flight) | 🧪 In Progress |
 | **projectiles** | Projectile helpers + detection systems | 🧪 In Progress |
 | **entities** | Temporary entity effects + animation manager | 🧪 In Progress |
-| **profile** | Player profile storage + API | 🧪 In Progress |
-| **hytale** | Hytale API bridges (stats sync, teleport, etc.) | 🧪 In Progress |
+| **profile** | Player profile storage + class progress + API | ✅ Active |
+| **hytale** | Hytale API bridges (stats sync, teleport, effects) | ✅ Active |
 | **localization** | Translation system | ✅ Active |
 | **config** | JSON config + hot-reload | ✅ Active |
 | **ui** | UI wrapper abstractions | ✅ Active |
@@ -170,6 +171,48 @@ ModelModifier.Attachment ears = ModelModifier.attach(
 ears.detach();
 ```
 
+### Progression System
+
+```java
+import com.talania.core.progression.*;
+
+// Create a linear XP curve: baseXp + (level * stepXp)
+LevelingCurve curve = new LinearLevelingCurve(100, 100L, 50L);
+
+// Create progress tracker
+LevelProgress progress = new LevelProgress(); // starts at level 0, 0 xp
+
+// Add XP and level up automatically
+LevelingService service = new LevelingService();
+LevelingResult result = service.addXp(progress, 250L, curve);
+// result.leveledUp() -> true
+// result.oldLevel() -> 0
+// result.newLevel() -> 1
+```
+
+### Input Actions
+
+```java
+import com.talania.core.input.*;
+import com.talania.core.events.EventBus;
+
+// Subscribe to action key events (E/R)
+EventBus.subscribe(InputActionEvent.class, event -> {
+    InputAction action = event.action(); // E or R
+    UUID player = event.playerId();
+    // Handle skill activation...
+});
+```
+
+### Entity Effects (Hytale)
+
+```java
+import com.talania.core.hytale.effects.EntityEffectService;
+
+// Apply a Hytale entity effect by ID
+EntityEffectService.apply(targetRef, store, "Potion_Speed", 5000L, OverlapBehavior.OVERWRITE);
+```
+
 ### Color Parsing
 
 ```java
@@ -194,7 +237,8 @@ TalaniaCore/
 │   │   ├── stats/              # Core stats system
 │   │   ├── combat/             # Damage modifiers and combat helpers
 │   │   ├── events/             # Event bus + entity events
-│   │   ├── input/              # Input pattern helpers
+│   │   ├── input/              # Input patterns + action events
+│   │   ├── progression/        # Leveling system (XP, curves)
 │   │   ├── movement/           # Movement utilities
 │   │   ├── projectiles/        # Projectile helpers
 │   │   ├── entities/           # Temporary entity effects
