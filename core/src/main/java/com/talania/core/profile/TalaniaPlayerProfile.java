@@ -1,8 +1,10 @@
 package com.talania.core.profile;
 
+import com.talania.core.progression.LevelProgress;
 import com.talania.core.stats.StatType;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,6 +16,7 @@ public final class TalaniaPlayerProfile {
     private int profileVersion;
     private String raceId;
     private final Map<StatType, Float> baseStats = new EnumMap<>(StatType.class);
+    private final Map<String, LevelProgress> classProgress = new HashMap<>();
 
     public TalaniaPlayerProfile(UUID playerId) {
         this.playerId = playerId;
@@ -64,5 +67,19 @@ public final class TalaniaPlayerProfile {
      */
     public void setBaseStat(StatType stat, float value) {
         baseStats.put(stat, value);
+    }
+
+    /**
+     * Get or create level progress for a specific class.
+     */
+    public LevelProgress getOrCreateClassProgress(String classId) {
+        return classProgress.computeIfAbsent(classId, id -> new LevelProgress());
+    }
+
+    /**
+     * All class progress entries.
+     */
+    public Map<String, LevelProgress> classProgress() {
+        return classProgress;
     }
 }
