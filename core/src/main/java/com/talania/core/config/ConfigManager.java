@@ -243,7 +243,7 @@ public final class ConfigManager {
 
     /**
      * Register a callback for config file changes.
-     * Note: Automatic watching requires calling {@link #checkForChanges()} periodically.
+     * Note: Automatic watching requires calling {@link #reload(String, Class)} periodically.
      */
     public static <T> void watch(String filename, Class<T> configClass, Consumer<T> callback) {
         watchCallbacks.put(filename, callback);

@@ -201,7 +201,7 @@ public final class ColorParser {
     }
 
     /**
-     * Get the Color for a code like "&6" or "&#FF0000".
+     * Get the Color for a code like {@code "&6"} or {@code "&#FF0000"}.
      * 
      * @param code The color code
      * @return The Color, or WHITE if invalid
