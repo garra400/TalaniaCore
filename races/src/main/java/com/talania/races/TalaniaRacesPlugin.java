@@ -9,6 +9,7 @@ import com.talania.core.runtime.TalaniaCoreRuntime;
 import com.talania.core.module.ModuleHooks;
 import com.talania.core.module.TalaniaModuleRegistry;
 import com.talania.races.api.TalaniaApiImpl;
+import com.talania.races.system.RaceConditionalEffectSystem;
 
 import javax.annotation.Nonnull;
 
@@ -27,6 +28,7 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
     protected void setup() {
         this.api = new TalaniaApiImpl(raceService);
         TalaniaApiRegistry.register(api);
+        getEntityStoreRegistry().registerSystem(new RaceConditionalEffectSystem(raceService));
         TalaniaModuleRegistry.get().register("races", new ModuleHooks() {
             @Override
             public void onPlayerReady(PlayerRef playerRef, TalaniaPlayerProfile profile,

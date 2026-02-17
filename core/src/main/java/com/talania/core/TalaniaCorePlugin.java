@@ -16,6 +16,8 @@ import com.talania.core.projectiles.ProjectileOwnerDetectSystem;
 import com.talania.core.runtime.TalaniaCoreRuntime;
 import com.talania.core.debug.TalaniaDebug;
 import com.talania.core.module.TalaniaModuleRegistry;
+import com.talania.core.movement.MovementStatSystem;
+import com.talania.core.combat.healing.HealingStatScalingSystem;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
@@ -46,6 +48,8 @@ public final class TalaniaCorePlugin extends JavaPlugin {
         registry.registerSystem(new EntityAnimationSystem());
         registry.registerSystem(new InputPatternMovementSystem(runtime.inputPatternTracker()));
         registry.registerSystem(new InputPatternPlaceBlockSystem(runtime.inputPatternTracker()));
+        registry.registerSystem(new MovementStatSystem());
+        registry.registerSystem(new HealingStatScalingSystem());
 
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, runtime::handlePlayerReady);
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, runtime::handlePlayerDisconnect);

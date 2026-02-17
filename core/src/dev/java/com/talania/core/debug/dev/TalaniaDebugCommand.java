@@ -5,6 +5,7 @@ import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.talania.core.utils.PlayerRefUtil;
 import com.talania.core.debug.DebugCategory;
 import com.talania.core.debug.TalaniaDebug;
 import com.talania.core.debug.combat.CombatLogEntry;
@@ -42,7 +43,20 @@ public final class TalaniaDebugCommand extends CommandBase {
         }
 
         Player player = (Player) context.senderAs(Player.class);
-        PlayerRef playerRef = player.getPlayerRef();
+        PlayerRef playerRef = null;
+        if (player != null) {
+            com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> ref =
+                    player.getReference();
+            if (ref != null && ref.isValid()) {
+                com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store =
+                        ref.getStore();
+                playerRef = PlayerRefUtil.resolve(ref, store);
+            }
+        }
+        if (playerRef == null) {
+            context.sendMessage(Message.raw("Unable to resolve player ref."));
+            return;
+        }
 
         if (args.length < 3 || "menu".equalsIgnoreCase(args[2])) {
             openMenu(context, playerRef);

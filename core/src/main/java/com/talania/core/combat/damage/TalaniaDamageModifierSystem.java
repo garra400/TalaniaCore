@@ -21,9 +21,9 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageModule;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
-import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.talania.core.combat.CombatManager;
+import com.talania.core.combat.healing.HealingService;
 import com.talania.core.debug.combat.CombatLogEntry;
 import com.talania.core.debug.events.CombatLogEvent;
 import com.talania.core.events.EventBus;
@@ -288,11 +288,9 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             if (lifesteal > 0.0F) {
                 float heal = damage.getAmount() * lifesteal;
                 if (heal > 0.0F) {
-                    EntityStatMap attackerStats =
-                            (EntityStatMap) store.getComponent(attackerRef, EntityStatMap.getComponentType());
-                    if (attackerStats != null) {
-                        attackerStats.addStatValue(DefaultEntityStatTypes.getHealth(), heal);
-                        logBuilder.lifesteal(heal);
+                    float applied = HealingService.applyHeal(attackerRef, store, heal);
+                    if (applied > 0.0f) {
+                        logBuilder.lifesteal(applied);
                     }
                 }
             }

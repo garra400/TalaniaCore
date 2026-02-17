@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.talania.core.combat.healing.HealingService;
 import com.talania.core.combat.targeting.AreaOfEffect;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
@@ -87,7 +88,7 @@ public final class AreaHealing {
                 continue;
             }
             float heal = max * settings.healRatio * Math.max(0.0F, healMultiplier);
-            statMap.addStatValue(DefaultEntityStatTypes.getHealth(), heal);
+            HealingService.applyHeal(targetRef, store, heal);
         }
         state.nextTickAt = now + settings.tickMs;
     }

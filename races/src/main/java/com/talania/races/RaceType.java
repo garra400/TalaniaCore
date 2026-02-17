@@ -71,6 +71,7 @@ public enum RaceType {
     private final String theme;
     private final List<ModifierSpec> baseModifiers;
     private final List<String> conditionalNotes;
+    private static final java.util.Map<String, RaceType> BY_ID = buildIdMap();
 
     RaceType(String id, String displayName, String theme,
              List<ModifierSpec> baseModifiers, List<String> conditionalNotes) {
@@ -83,6 +84,16 @@ public enum RaceType {
 
     public String id() {
         return id;
+    }
+
+    /**
+     * Resolve a race by its string ID.
+     */
+    public static RaceType fromId(String id) {
+        if (id == null || id.isBlank()) {
+            return null;
+        }
+        return BY_ID.get(id.trim().toLowerCase(java.util.Locale.ROOT));
     }
 
     /**
@@ -178,6 +189,14 @@ public enum RaceType {
         mods.add(new ModifierSpec(source, StatType.FALL_RESISTANCE, 0.50f, StatModifier.Operation.ADD));
         mods.add(new ModifierSpec(source, StatType.JUMP_HEIGHT, 1.20f, StatModifier.Operation.MULTIPLY_TOTAL));
         return mods;
+    }
+
+    private static java.util.Map<String, RaceType> buildIdMap() {
+        java.util.Map<String, RaceType> map = new java.util.HashMap<>();
+        for (RaceType type : values()) {
+            map.put(type.id, type);
+        }
+        return map;
     }
 
     /**

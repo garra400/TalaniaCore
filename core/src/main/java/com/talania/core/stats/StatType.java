@@ -111,8 +111,11 @@ public enum StatType {
     
     // ==================== UTILITY ====================
     
-    /** Health regeneration per second */
-    HEALTH_REGEN("health_regen", 0.0f, 0.0f, 100.0f),
+    /** Health regeneration multiplier (1.0 = normal regen). */
+    HEALTH_REGEN("health_regen", 1.0f, 0.0f, 100.0f),
+
+    /** Healing received multiplier (1.0 = normal, 0.5 = 50% healing) */
+    HEALING_RECEIVED_MULT("healing_received_mult", 1.0f, 0.0f, 10.0f),
     
     /** Mana regeneration per second */
     MANA_REGEN("mana_regen", 0.0f, 0.0f, 100.0f),
