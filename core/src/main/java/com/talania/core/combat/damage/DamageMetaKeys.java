@@ -16,4 +16,5 @@ public final class DamageMetaKeys {
     public static final MetaKey CRIT_HIT = Damage.META_REGISTRY.registerMetaObject();
     public static final MetaKey ATTACK_TYPE = Damage.META_REGISTRY.registerMetaObject();
     public static final MetaKey DAMAGE_TYPE = Damage.META_REGISTRY.registerMetaObject();
+    public static final MetaKey THORNS_DAMAGE = Damage.META_REGISTRY.registerMetaObject();
 }
