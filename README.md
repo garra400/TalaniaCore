@@ -282,3 +282,17 @@ This project is released into the **Public Domain** under the [Unlicense](LICENS
 <p align="center">
   Part of the <strong>Orbis and Dungeons</strong> ecosystem
 </p>
+
+## Dev Build
+
+TalaniaCore supports a dev build with extra debug tools (commands + UI) for testing.
+
+Build dev jars:
+```bash
+./gradlew :core:devJar :races:devJar
+```
+
+Build release jars (no dev tools):
+```bash
+./gradlew :core:jar :races:jar
+```

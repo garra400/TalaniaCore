@@ -1,0 +1,89 @@
+$C = "../Common.ui";
+
+Group {
+  LayoutMode: Top;
+  Anchor: (Width: 720, Height: 520);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 688, Height: 488);
+    Padding: (Full: 12);
+    Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 20);
+      Anchor: (Width: 640);
+      Text: "Talania Debug";
+      Padding: (Bottom: 6);
+    }
+
+    Label #SubtitleLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 640);
+      Text: "Dev build only. Module tools and core debug.";
+      Padding: (Bottom: 10);
+    }
+
+    Group {
+      LayoutMode: Left;
+      Anchor: (Height: 32);
+      $C.@DefaultTextButtonStyle #OpenLogSettingsButton { Text: "Log Settings"; Anchor: (Width: 160, Height: 28); }
+      $C.@DefaultTextButtonStyle #OpenCombatLogButton { Text: "Combat Log"; Anchor: (Width: 160, Height: 28, Left: 10); }
+    }
+
+    Label {
+      Style: (...$C.@DefaultLabelStyle, RenderBold: true);
+      Text: "Modules";
+      Padding: (Top: 12, Bottom: 6);
+    }
+
+    Group #ModuleList {
+      LayoutMode: Top;
+      Anchor: (Width: 640, Height: 260);
+      Padding: (Full: 2);
+
+      Group #Module1Container {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #Module1Label { Style: (...$C.@DefaultLabelStyle); Text: "Module 1"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #Module1Button { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group #Module2Container {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40, Top: 6);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #Module2Label { Style: (...$C.@DefaultLabelStyle); Text: "Module 2"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #Module2Button { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group #Module3Container {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40, Top: 6);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #Module3Label { Style: (...$C.@DefaultLabelStyle); Text: "Module 3"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #Module3Button { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group #Module4Container {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40, Top: 6);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #Module4Label { Style: (...$C.@DefaultLabelStyle); Text: "Module 4"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #Module4Button { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+    }
+
+    Group {
+      LayoutMode: Left;
+      Anchor: (Height: 32, Top: 10);
+      $C.@DefaultTextButtonStyle #CloseButton { Text: "Close"; Anchor: (Width: 120, Height: 28); }
+    }
+  }
+}

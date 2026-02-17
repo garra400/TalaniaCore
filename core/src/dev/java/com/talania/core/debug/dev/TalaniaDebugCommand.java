@@ -5,7 +5,6 @@ import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.talania.core.debug.DebugCategory;
 import com.talania.core.debug.TalaniaDebug;
 import com.talania.core.debug.combat.CombatLogEntry;
@@ -43,13 +42,13 @@ public final class TalaniaDebugCommand extends CommandBase {
         }
 
         Player player = (Player) context.senderAs(Player.class);
-        PlayerRef playerRef = Universe.get().getPlayer(player.getUuid());
-        if (playerRef == null) {
-            context.sendMessage(Message.raw("Unable to resolve player ref."));
+        PlayerRef playerRef = player.getPlayerRef();
+
+        if (args.length < 3 || "menu".equalsIgnoreCase(args[2])) {
+            openMenu(context, playerRef);
             return;
         }
-
-        if (args.length < 3 || "help".equalsIgnoreCase(args[2])) {
+        if ("help".equalsIgnoreCase(args[2])) {
             showHelp(context);
             return;
         }
@@ -145,10 +144,28 @@ public final class TalaniaDebugCommand extends CommandBase {
 
     private void showHelp(CommandContext context) {
         context.sendMessage(Message.raw("Usage: /talania debug"));
+        context.sendMessage(Message.raw("  /talania debug menu"));
         context.sendMessage(Message.raw("  /talania debug log open"));
         context.sendMessage(Message.raw("  /talania debug log toggle <category>"));
         context.sendMessage(Message.raw("  /talania debug combatlog open"));
         context.sendMessage(Message.raw("  /talania debug combatlog last [n]"));
+    }
+
+    private void openMenu(CommandContext context, PlayerRef playerRef) {
+        if (playerRef == null || playerRef.getReference() == null) {
+            context.sendMessage(Message.raw("Unable to open debug menu right now."));
+            return;
+        }
+        playerRef.getReference().getStore().getExternalData().getWorld().execute(() -> {
+            Player player = (Player) playerRef.getReference().getStore()
+                    .getComponent(playerRef.getReference(), Player.getComponentType());
+            if (player != null) {
+                player.getPageManager().openCustomPage(
+                        playerRef.getReference(),
+                        playerRef.getReference().getStore(),
+                        new TalaniaDebugMenuPage(playerRef));
+            }
+        });
     }
 
     private String[] parseArgs(String input) {

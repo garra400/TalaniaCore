@@ -20,6 +20,11 @@ Build dev jar (includes debug commands + UI):
 ./gradlew :core:devJar
 ```
 
+Build races dev jar (includes races debug UI):
+```bash
+./gradlew :races:devJar
+```
+
 ### Notes
 - Dev tools are registered at runtime via reflection. Release builds skip this.
 - Debug commands are under `/talania debug ...` (dev jar only).

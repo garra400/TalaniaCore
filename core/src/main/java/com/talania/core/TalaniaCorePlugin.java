@@ -15,6 +15,7 @@ import com.talania.core.projectiles.ProjectileDetectSystem;
 import com.talania.core.projectiles.ProjectileOwnerDetectSystem;
 import com.talania.core.runtime.TalaniaCoreRuntime;
 import com.talania.core.debug.TalaniaDebug;
+import com.talania.core.module.TalaniaModuleRegistry;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
@@ -50,6 +51,7 @@ public final class TalaniaCorePlugin extends JavaPlugin {
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, runtime::handlePlayerDisconnect);
         getEventRegistry().registerGlobal(PlayerMouseButtonEvent.class, runtime::handleMouseButton);
 
+        TalaniaModuleRegistry.get().initModules(this);
         TalaniaDebug.tryRegisterDev(this);
     }
 }
