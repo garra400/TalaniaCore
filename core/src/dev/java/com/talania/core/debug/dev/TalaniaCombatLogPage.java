@@ -55,10 +55,8 @@ public final class TalaniaCombatLogPage extends InteractiveCustomUIPage {
         }
         if ("Refresh".equals(eventData.action)) {
             UICommandBuilder commandBuilder = new UICommandBuilder();
-            UIEventBuilder eventBuilder = new UIEventBuilder();
-            bindEvents(eventBuilder);
             applyState(commandBuilder);
-            sendUpdate(commandBuilder, eventBuilder, false);
+            sendUpdate(commandBuilder, new UIEventBuilder(), false);
         }
     }
 

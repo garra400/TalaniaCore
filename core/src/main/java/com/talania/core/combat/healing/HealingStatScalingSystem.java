@@ -37,6 +37,8 @@ public final class HealingStatScalingSystem extends EntityTickingSystem<EntitySt
     private static final float EPSILON = 0.0001f;
     private static final int HEALTH_INDEX = DefaultEntityStatTypes.getHealth();
     private static final Method STAT_VALUE_SETTER = resolveSetter();
+    private static volatile boolean setterBroken = false;
+    private static volatile boolean setterWarned = false;
 
     @Override
     public Query<EntityStore> getQuery() {
@@ -84,7 +86,7 @@ public final class HealingStatScalingSystem extends EntityTickingSystem<EntitySt
             return;
         }
         int updateCount = healthUpdates.size();
-        if (values.size() < updateCount * 2) {
+        if (values.size() != updateCount * 2) {
             return;
         }
 
@@ -147,13 +149,15 @@ public final class HealingStatScalingSystem extends EntityTickingSystem<EntitySt
     }
 
     private static void setStatValue(EntityStatValue value, float newValue) {
-        if (value == null || STAT_VALUE_SETTER == null) {
+        if (value == null || STAT_VALUE_SETTER == null || setterBroken) {
             return;
         }
         try {
             STAT_VALUE_SETTER.invoke(value, newValue);
         } catch (Exception ignored) {
-            // Best-effort; if we fail, the update stream still reflects the scaled value.
+            setterBroken = true;
+            warnOnce("HealingStatScalingSystem: EntityStatValue#set no longer accessible; "
+                    + "skipping reflective health updates.");
         }
     }
 
@@ -163,7 +167,17 @@ public final class HealingStatScalingSystem extends EntityTickingSystem<EntitySt
             method.setAccessible(true);
             return method;
         } catch (Exception ignored) {
+            warnOnce("HealingStatScalingSystem: EntityStatValue#set not available; "
+                    + "health scaling will rely on update values only.");
             return null;
         }
+    }
+
+    private static void warnOnce(String message) {
+        if (setterWarned) {
+            return;
+        }
+        setterWarned = true;
+        System.out.println(message);
     }
 }

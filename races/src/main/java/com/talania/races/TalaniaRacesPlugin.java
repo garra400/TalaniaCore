@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
  */
 public final class TalaniaRacesPlugin extends JavaPlugin {
     private final RaceService raceService = new RaceService();
+    private RaceConditionalEffectSystem conditionalEffectSystem;
     private TalaniaApiImpl api;
 
     public TalaniaRacesPlugin(@Nonnull JavaPluginInit init) {
@@ -28,7 +29,8 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
     protected void setup() {
         this.api = new TalaniaApiImpl(raceService);
         TalaniaApiRegistry.register(api);
-        getEntityStoreRegistry().registerSystem(new RaceConditionalEffectSystem(raceService));
+        this.conditionalEffectSystem = new RaceConditionalEffectSystem(raceService);
+        getEntityStoreRegistry().registerSystem(conditionalEffectSystem);
         TalaniaModuleRegistry.get().register("races", new ModuleHooks() {
             @Override
             public void onPlayerReady(PlayerRef playerRef, TalaniaPlayerProfile profile,
@@ -130,6 +132,9 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
     private void handlePlayerDisconnect(PlayerRef playerRef) {
         if (playerRef == null) {
             return;
+        }
+        if (conditionalEffectSystem != null) {
+            conditionalEffectSystem.clear(playerRef.getUuid());
         }
         raceService.clearRace(playerRef.getUuid());
     }

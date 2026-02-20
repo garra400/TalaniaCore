@@ -39,7 +39,6 @@ public final class TalaniaDebug {
         LOG_SERVICE.setSettings(SETTINGS);
         EventBus.subscribe(CombatLogEvent.class, COMBAT_LOG::handleEvent);
         registerCoreModule();
-        com.talania.core.module.TalaniaModuleRegistry.get().registerDebug(REGISTRY);
         initialized = true;
     }
 

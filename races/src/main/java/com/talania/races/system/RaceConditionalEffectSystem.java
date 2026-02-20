@@ -57,6 +57,13 @@ public final class RaceConditionalEffectSystem extends EntityTickingSystem<Entit
             return;
         }
         RaceType race = raceService.getRace(uuid);
+        if (race == null) {
+            RaceState existing = states.remove(uuid);
+            if (existing != null) {
+                clearConditionalModifiers(uuid, existing);
+            }
+            return;
+        }
         RaceState state = states.computeIfAbsent(uuid, ignored -> new RaceState());
         if (state.race != race) {
             clearConditionalModifiers(uuid, state);
@@ -117,6 +124,16 @@ public final class RaceConditionalEffectSystem extends EntityTickingSystem<Entit
         state.nightSpeedApplied = false;
         state.sunRegenApplied = false;
         state.starbornHealingApplied = false;
+    }
+
+    public void clear(UUID uuid) {
+        if (uuid == null) {
+            return;
+        }
+        RaceState state = states.remove(uuid);
+        if (state != null) {
+            clearConditionalModifiers(uuid, state);
+        }
     }
 
     private static final class RaceState {

@@ -61,6 +61,13 @@ public final class MovementStatSystem extends EntityTickingSystem<EntityStore> {
         applied.put(uuid, new AppliedMovement(moveSpeed, jumpHeight));
     }
 
+    public void clear(UUID playerId) {
+        if (playerId == null) {
+            return;
+        }
+        applied.remove(playerId);
+    }
+
     private static final class AppliedMovement {
         private final float moveSpeed;
         private final float jumpHeight;

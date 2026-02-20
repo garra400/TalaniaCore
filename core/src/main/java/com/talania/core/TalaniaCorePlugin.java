@@ -48,11 +48,17 @@ public final class TalaniaCorePlugin extends JavaPlugin {
         registry.registerSystem(new EntityAnimationSystem());
         registry.registerSystem(new InputPatternMovementSystem(runtime.inputPatternTracker()));
         registry.registerSystem(new InputPatternPlaceBlockSystem(runtime.inputPatternTracker()));
-        registry.registerSystem(new MovementStatSystem());
+        MovementStatSystem movementStatSystem = new MovementStatSystem();
+        registry.registerSystem(movementStatSystem);
         registry.registerSystem(new HealingStatScalingSystem());
 
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, runtime::handlePlayerReady);
-        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, runtime::handlePlayerDisconnect);
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, event -> {
+            runtime.handlePlayerDisconnect(event);
+            if (event != null && event.getPlayerRef() != null) {
+                movementStatSystem.clear(event.getPlayerRef().getUuid());
+            }
+        });
         getEventRegistry().registerGlobal(PlayerMouseButtonEvent.class, runtime::handleMouseButton);
 
         TalaniaModuleRegistry.get().initModules(this);
