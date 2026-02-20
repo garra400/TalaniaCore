@@ -1,8 +1,8 @@
 {
   "Group": "Talania",
-  "Name": "TalaniaBossFights",
+  "Name": "TalaniaCore-Dev",
   "Version": "0.1.0",
-  "Description": "Boss fight systems for Talania.",
+  "Description": "Shared core systems for Talania mods. (Dev)",
   "Authors": [
     {
       "Name": "Talania Team",
@@ -13,10 +13,10 @@
   "Website": "",
   "ServerVersion": "2026.02.19-1a311a592",
   "Dependencies": {
-    "Talania:TalaniaCore": "*"
+    "Hytale:EntityModule": "*"
   },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
-  "IncludesAssetPack": false,
-  "Main": "com.talania.bossfights.TalaniaBossfightsPlugin"
+  "IncludesAssetPack": true,
+  "Main": "com.talania.core.TalaniaCorePlugin"
 }

@@ -77,6 +77,32 @@ public final class DebugLogService {
         }
     }
 
+    public EnumSet<DebugCategory> getEnabled(UUID playerId) {
+        if (playerId == null) {
+            return EnumSet.noneOf(DebugCategory.class);
+        }
+        EnumSet<DebugCategory> set = enabled.get(playerId);
+        return set == null ? EnumSet.noneOf(DebugCategory.class) : EnumSet.copyOf(set);
+    }
+
+    public void setAll(UUID playerId, EnumSet<DebugCategory> categories) {
+        if (playerId == null) {
+            return;
+        }
+        if (categories == null || categories.isEmpty()) {
+            enabled.put(playerId, EnumSet.noneOf(DebugCategory.class));
+        } else {
+            enabled.put(playerId, EnumSet.copyOf(categories));
+        }
+    }
+
+    public void setAllEnabled(UUID playerId, boolean enabledAll) {
+        if (playerId == null) {
+            return;
+        }
+        setAll(playerId, enabledAll ? EnumSet.allOf(DebugCategory.class) : EnumSet.noneOf(DebugCategory.class));
+    }
+
     private EnumSet<DebugCategory> defaultSet() {
         if (settings.defaultEnabledCategories == null || settings.defaultEnabledCategories.isEmpty()) {
             return EnumSet.noneOf(DebugCategory.class);

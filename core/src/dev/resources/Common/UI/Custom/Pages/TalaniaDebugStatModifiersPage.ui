@@ -1,0 +1,1499 @@
+$C = "../Common.ui";
+
+$C.@Panel {
+  LayoutMode: Top;
+  Anchor: (Width: 1248, Height: 768);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 1210, Height: 730);
+    Padding: (Full: 12);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 20);
+      Anchor: (Width: 1152);
+      Text: "Stat Modifiers";
+      Padding: (Bottom: 6);
+    }
+
+    Label #SubtitleLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 1152);
+      Text: "Dev build only. Debug stat modifiers by category.";
+      Padding: (Bottom: 6);
+    }
+
+    Label #ToggleLabel {
+      Style: (...$C.@DefaultLabelStyle, RenderBold: true);
+      Anchor: (Width: 1152);
+      Text: "Debug modifiers: Enabled";
+      Padding: (Bottom: 4);
+    }
+
+    Group #StatScroll {
+      LayoutMode: TopScrolling;
+      ScrollbarStyle: $C.@DefaultScrollbarStyle;
+      Anchor: (Width: 1152, Height: 560, Top: 10);
+      Padding: (Full: 6);
+      Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+      Group #Row1 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24);
+
+        Label #Row1Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row1Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row1Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row1Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row1Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row1Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row1Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row1Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row1RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row1RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row1RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row1RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row1RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row2 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row2Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row2Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row2Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row2Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row2Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row2Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row2Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row2Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row2RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row2RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row2RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row2RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row2RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row3 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row3Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row3Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row3Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row3Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row3Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row3Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row3Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row3Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row3RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row3RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row3RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row3RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row3RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row4 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row4Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row4Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row4Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row4Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row4Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row4Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row4Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row4Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row4RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row4RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row4RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row4RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row4RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row5 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row5Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row5Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row5Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row5Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row5Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row5Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row5Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row5Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row5RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row5RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row5RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row5RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row5RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row6 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row6Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row6Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row6Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row6Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row6Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row6Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row6Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row6Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row6RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row6RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row6RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row6RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row6RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row7 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row7Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row7Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row7Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row7Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row7Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row7Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row7Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row7Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row7RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row7RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row7RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row7RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row7RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row8 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row8Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row8Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row8Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row8Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row8Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row8Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row8Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row8Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row8RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row8RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row8RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row8RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row8RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row9 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row9Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row9Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row9Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row9Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row9Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row9Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row9Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row9Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row9RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row9RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row9RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row9RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row9RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row10 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row10Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row10Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row10Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row10Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row10Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row10Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row10Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row10Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row10RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row10RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row10RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row10RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row10RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row11 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row11Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row11Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row11Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row11Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row11Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row11Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row11Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row11Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row11RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row11RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row11RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row11RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row11RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row12 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row12Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row12Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row12Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row12Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row12Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row12Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row12Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row12Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row12RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row12RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row12RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row12RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row12RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row13 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row13Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row13Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row13Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row13Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row13Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row13Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row13Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row13Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row13RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row13RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row13RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row13RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row13RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row14 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row14Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row14Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row14Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row14Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row14Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row14Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row14Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row14Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row14RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row14RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row14RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row14RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row14RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row15 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row15Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row15Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row15Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row15Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row15Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row15Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row15Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row15Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row15RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row15RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row15RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row15RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row15RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row16 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row16Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row16Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row16Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row16Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row16Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row16Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row16Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row16Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row16RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row16RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row16RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row16RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row16RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row17 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row17Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row17Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row17Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row17Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row17Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row17Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row17Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row17Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row17RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row17RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row17RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row17RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row17RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row18 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row18Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row18Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row18Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row18Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row18Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row18Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row18Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row18Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row18RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row18RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row18RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row18RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row18RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row19 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row19Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row19Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row19Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row19Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row19Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row19Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row19Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row19Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row19RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row19RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row19RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row19RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row19RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row20 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row20Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row20Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row20Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row20Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row20Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row20Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row20Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row20Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row20RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row20RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row20RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row20RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row20RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row21 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row21Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row21Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row21Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row21Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row21Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row21Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row21Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row21Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row21RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row21RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row21RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row21RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row21RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row22 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row22Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row22Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row22Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row22Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row22Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row22Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row22Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row22Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row22RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row22RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row22RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row22RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row22RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row23 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row23Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row23Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row23Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row23Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row23Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row23Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row23Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row23Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row23RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row23RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row23RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row23RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row23RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row24 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row24Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row24Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row24Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row24Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row24Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row24Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row24Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row24Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row24RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row24RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row24RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row24RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row24RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+      Group #Row25 {
+        LayoutMode: Left;
+        Anchor: (Width: 1120, Height: 24, Top: 4);
+
+        Label #Row25Header {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 1120);
+          Text: "";
+          Visible: false;
+        }
+
+        Group #Row25Left {
+          LayoutMode: Left;
+          Anchor: (Width: 544);
+
+          Label #Row25Name {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row25Base {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row25Mod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row25Minus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row25Plus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+
+        Group #Row25Right {
+          LayoutMode: Left;
+          Anchor: (Width: 544, Left: 16);
+
+          Label #Row25RName {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 220);
+            Text: "";
+          }
+          Label #Row25RBase {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          Label #Row25RMod {
+            Style: (...$C.@DefaultLabelStyle);
+            Anchor: (Width: 120, Left: 6);
+            Text: "";
+          }
+          $C.@SecondaryTextButton #Row25RMinus { Text: "-"; Anchor: (Width: 28, Height: 24, Left: 10); }
+          $C.@SecondaryTextButton #Row25RPlus { Text: "+"; Anchor: (Width: 28, Height: 24, Left: 6); }
+        }
+      }
+
+    }
+
+    Group {
+      LayoutMode: Left;
+      Anchor: (Height: 32, Top: 10);
+      $C.@SecondaryTextButton #ReturnButton { Text: "Return"; Anchor: (Width: 120, Height: 28); }
+    }
+  }
+}

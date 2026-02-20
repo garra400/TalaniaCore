@@ -7,7 +7,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
-import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -32,8 +31,7 @@ public final class TalaniaDebugLogSettingsPage extends InteractiveCustomUIPage {
             Map.entry(DebugCategory.SYSTEM, "System"),
             Map.entry(DebugCategory.UI, "Ui"),
             Map.entry(DebugCategory.PROJECTILES, "Projectiles"),
-            Map.entry(DebugCategory.EFFECTS, "Effects"),
-            Map.entry(DebugCategory.COMBAT_LOG, "CombatLog")
+            Map.entry(DebugCategory.EFFECTS, "Effects")
     );
 
     private final PlayerRef playerRef;
@@ -47,6 +45,7 @@ public final class TalaniaDebugLogSettingsPage extends InteractiveCustomUIPage {
     public void build(@Nonnull Ref ref, @Nonnull UICommandBuilder commandBuilder, @Nonnull UIEventBuilder eventBuilder,
                       @Nonnull Store store) {
         commandBuilder.append("Pages/TalaniaDebugLogSettingsPage.ui");
+        DebugLogSettingsStore.load().applyTo(TalaniaDebug.logs(), playerRef.getUuid());
         bindEvents(eventBuilder);
         applyState(commandBuilder);
     }
@@ -60,10 +59,10 @@ public final class TalaniaDebugLogSettingsPage extends InteractiveCustomUIPage {
             return;
         }
 
-        if ("Close".equals(eventData.action)) {
+        if ("Return".equals(eventData.action)) {
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
-                player.getPageManager().setPage(ref, store, Page.None);
+                player.getPageManager().openCustomPage(ref, store, new TalaniaDebugMenuPage(playerRef));
             }
             return;
         }
@@ -74,6 +73,15 @@ public final class TalaniaDebugLogSettingsPage extends InteractiveCustomUIPage {
                 TalaniaDebug.logs().toggle(playerRef.getUuid(), category);
             }
         }
+        if ("AllOn".equals(eventData.action)) {
+            TalaniaDebug.logs().setAllEnabled(playerRef.getUuid(), true);
+        }
+        if ("AllOff".equals(eventData.action)) {
+            TalaniaDebug.logs().setAllEnabled(playerRef.getUuid(), false);
+        }
+
+        DebugLogSettingsStore.load().setEnabled(playerRef.getUuid(),
+                TalaniaDebug.logs().getEnabled(playerRef.getUuid()));
 
         UICommandBuilder commandBuilder = new UICommandBuilder();
         applyState(commandBuilder);
@@ -86,8 +94,12 @@ public final class TalaniaDebugLogSettingsPage extends InteractiveCustomUIPage {
             eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#" + prefix + "Toggle",
                     new EventData().append("Action", "Toggle").append("Value", entry.getKey().id()), false);
         }
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CloseButton",
-                new EventData().append("Action", "Close"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#AllOnButton",
+                new EventData().append("Action", "AllOn"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#AllOffButton",
+                new EventData().append("Action", "AllOff"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ReturnButton",
+                new EventData().append("Action", "Return"), false);
     }
 
     private void applyState(UICommandBuilder commandBuilder) {

@@ -7,8 +7,8 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
-import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -46,11 +46,8 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
         if (eventData.action == null) {
             return;
         }
-        if ("Close".equals(eventData.action)) {
-            Player player = (Player) store.getComponent(ref, Player.getComponentType());
-            if (player != null) {
-                player.getPageManager().setPage(ref, store, Page.None);
-            }
+        if ("Return".equals(eventData.action)) {
+            openDebugMenu(ref, store);
             return;
         }
         if ("SetRace".equals(eventData.action) && eventData.value != null) {
@@ -68,10 +65,10 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
     }
 
     private void bindEvents(UIEventBuilder eventBuilder) {
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CloseButton",
-                new EventData().append("Action", "Close"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ReturnButton",
+                new EventData().append("Action", "Return"), false);
         for (RaceType race : RaceType.values()) {
-            eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#" + race.id() + "Button",
+            eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#" + uiId(race.id()) + "Button",
                     new EventData().append("Action", "SetRace").append("Value", race.id()), false);
         }
     }
@@ -79,12 +76,50 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
     private void applyState(UICommandBuilder commandBuilder) {
         commandBuilder.set("#TitleLabel.Text", "Races Debug");
         RaceType current = plugin.raceService().getRace(playerRef.getUuid());
-        String currentLabel = current != null ? current.displayName() : "None";
+        String currentLabel = current != null ? singularLabel(current) : "None";
         commandBuilder.set("#CurrentRaceLabel.Text", "Current: " + currentLabel);
         for (RaceType race : RaceType.values()) {
-            commandBuilder.set("#" + race.id() + "Label.Text", race.displayName());
-            commandBuilder.set("#" + race.id() + "Button.Text", "Set");
+            String id = uiId(race.id());
+            commandBuilder.set("#" + id + "Label.Text", singularLabel(race));
+            commandBuilder.set("#" + id + "Button.Text", "Set");
         }
+    }
+
+    private static String uiId(String id) {
+        if (id == null || id.isEmpty()) {
+            return id;
+        }
+        StringBuilder sb = new StringBuilder(id.length());
+        boolean upperNext = true;
+        for (int i = 0; i < id.length(); i++) {
+            char ch = id.charAt(i);
+            if (!Character.isLetterOrDigit(ch)) {
+                upperNext = true;
+                continue;
+            }
+            if (upperNext) {
+                sb.append(Character.toUpperCase(ch));
+                upperNext = false;
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String singularLabel(RaceType race) {
+        if (race == null) {
+            return "";
+        }
+        return switch (race) {
+            case HUMAN -> "Human";
+            case HIGH_ELF -> "High Elf";
+            case ORC -> "Orc";
+            case DWARF -> "Dwarf";
+            case NIGHTWALKER -> "Nightwalker";
+            case BEASTKIN -> "Beastkin";
+            case STARBORN -> "Starborn";
+        };
     }
 
     public static void open(PlayerRef playerRef, Ref<EntityStore> ref, Store<EntityStore> store,
@@ -99,6 +134,27 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
                         new TalaniaRacesDebugPage(playerRef, plugin));
             }
         });
+    }
+
+    private void openDebugMenu(Ref<EntityStore> ref, Store<EntityStore> store) {
+        if (ref == null || store == null) {
+            return;
+        }
+        Player player = (Player) store.getComponent(ref, Player.getComponentType());
+        if (player == null) {
+            return;
+        }
+        try {
+            Class<?> clazz = Class.forName("com.talania.core.debug.dev.TalaniaDebugMenuPage");
+            Object page = clazz.getDeclaredConstructor(PlayerRef.class).newInstance(playerRef);
+            if (page instanceof CustomUIPage customPage) {
+                player.getPageManager().openCustomPage(ref, store, customPage);
+            }
+        } catch (ClassNotFoundException ignored) {
+            // Dev-only classes not present in release build.
+        } catch (Exception ignored) {
+            // Swallow to avoid breaking debug UI flow.
+        }
     }
 
     public static final class TalaniaRacesDebugEventData {

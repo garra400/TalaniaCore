@@ -104,7 +104,7 @@ public final class TalaniaCoreRuntime {
             stats.setBase(stat, profile.getBaseStat(stat, stat.getDefaultValue()));
         }
         stats.recalculate();
-
+        TalaniaDebug.statModifiers().applyToStats(playerId, stats);
         statSyncService.applyAll(ref, store, playerId, stats);
 
         com.hypixel.hytale.server.core.universe.PlayerRef playerRef =

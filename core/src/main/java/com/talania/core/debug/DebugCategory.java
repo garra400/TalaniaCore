@@ -16,8 +16,7 @@ public enum DebugCategory {
     SYSTEM("system", "Runtime warnings and system state"),
     UI("ui", "UI actions and flows"),
     PROJECTILES("projectiles", "Projectile ownership and impacts"),
-    EFFECTS("effects", "Entity effect application/removal"),
-    COMBAT_LOG("combat_log", "Combat log storage and display");
+    EFFECTS("effects", "Entity effect application/removal");
 
     private final String id;
     private final String description;
