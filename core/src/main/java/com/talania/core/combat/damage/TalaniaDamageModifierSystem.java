@@ -10,9 +10,11 @@ import com.hypixel.hytale.component.SystemGroup;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
 import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
@@ -108,8 +110,8 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         CombatLogEntry.Builder logBuilder =
                 CombatLogEntry.builder(UUID.randomUUID(), attackerUuid, targetUuid, baseAmount)
                         .cause(damage.getCause());
-        logBuilder.attackerName(resolvePlayerName(store, attackerRef));
-        logBuilder.targetName(resolvePlayerName(store, targetRef));
+        logBuilder.attackerName(resolveEntityName(store, attackerRef));
+        logBuilder.targetName(resolveEntityName(store, targetRef));
 
         AttackType attackType = (AttackType) damage.getIfPresentMetaObject(DamageMetaKeys.ATTACK_TYPE);
         DamageType damageType = (DamageType) damage.getIfPresentMetaObject(DamageMetaKeys.DAMAGE_TYPE);
@@ -371,6 +373,52 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         }
         String name = playerRef.getUsername();
         return name == null || name.isBlank() ? null : name;
+    }
+
+    private static String resolveEntityName(Store<EntityStore> store, Ref<EntityStore> ref) {
+        if (store == null || ref == null || !ref.isValid()) {
+            return null;
+        }
+        String playerName = resolvePlayerName(store, ref);
+        if (playerName != null) {
+            return playerName;
+        }
+        DisplayNameComponent displayName =
+                (DisplayNameComponent) store.getComponent(ref, DisplayNameComponent.getComponentType());
+        if (displayName == null) {
+            return null;
+        }
+        Message message = displayName.getDisplayName();
+        if (message == null) {
+            return null;
+        }
+        String raw = message.getRawText();
+        if (raw != null && !raw.isBlank()) {
+            return raw;
+        }
+        String messageId = message.getMessageId();
+        if (messageId != null && !messageId.isBlank()) {
+            String humanized = humanizeMessageId(messageId);
+            return humanized == null || humanized.isBlank() ? messageId : humanized;
+        }
+        return null;
+    }
+
+    private static String humanizeMessageId(String messageId) {
+        if (messageId == null || messageId.isBlank()) {
+            return null;
+        }
+        String trimmed = messageId.trim();
+        int lastSlash = trimmed.lastIndexOf('/');
+        int lastDot = trimmed.lastIndexOf('.');
+        int lastColon = trimmed.lastIndexOf(':');
+        int cut = Math.max(lastSlash, Math.max(lastDot, lastColon));
+        String core = cut >= 0 && cut + 1 < trimmed.length() ? trimmed.substring(cut + 1) : trimmed;
+        core = core.replace('_', ' ').replace('-', ' ').trim();
+        if (core.isBlank()) {
+            return core;
+        }
+        return Character.toUpperCase(core.charAt(0)) + core.substring(1);
     }
 
     private static ItemStack itemInHand(Store<EntityStore> store, Ref<EntityStore> attackerRef) {

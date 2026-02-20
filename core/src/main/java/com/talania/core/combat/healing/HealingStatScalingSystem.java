@@ -101,14 +101,14 @@ public final class HealingStatScalingSystem extends EntityTickingSystem<EntitySt
             float adjustedOld = oldValue + offset;
 
             if (update.op == EntityStatOp.Add) {
-                float delta = update.value;
-                if (delta > 0.0f) {
-                    float scaledDelta = delta * Math.max(0.0f, healingMult);
+                float addDelta = update.value;
+                if (addDelta > 0.0f) {
+                    float scaledDelta = addDelta * Math.max(0.0f, healingMult);
                     if (!update.predictable) {
                         scaledDelta *= Math.max(0.0f, regenMult);
                     }
                     float adjustedNew = adjustedOld + scaledDelta;
-                    if (Math.abs(scaledDelta - delta) > EPSILON) {
+                    if (Math.abs(scaledDelta - addDelta) > EPSILON) {
                         update.value = scaledDelta;
                         changed = true;
                     }
@@ -116,7 +116,7 @@ public final class HealingStatScalingSystem extends EntityTickingSystem<EntitySt
                     values.set(baseIndex + 1, adjustedNew);
                     offset += (adjustedNew - newValue);
                 } else {
-                    float adjustedNew = adjustedOld + delta;
+                    float adjustedNew = adjustedOld + addDelta;
                     values.set(baseIndex, adjustedOld);
                     values.set(baseIndex + 1, adjustedNew);
                     offset += (adjustedNew - newValue);

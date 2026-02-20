@@ -18,6 +18,7 @@ public final class TalaniaDebug {
     private static final DebugRegistry REGISTRY = new DebugRegistry();
     private static final DebugLogService LOG_SERVICE = new DebugLogService();
     private static final CombatLogManager COMBAT_LOG = new CombatLogManager(LOG_SERVICE);
+    private static final DebugStatModifierService STAT_MODIFIERS = new DebugStatModifierService();
     private static DebugSettings SETTINGS = new DebugSettings();
     private static boolean initialized = false;
 
@@ -56,6 +57,10 @@ public final class TalaniaDebug {
         return LOG_SERVICE;
     }
 
+    public static DebugStatModifierService statModifiers() {
+        return STAT_MODIFIERS;
+    }
+
     public static CombatLogManager combatLog() {
         return COMBAT_LOG;
     }
@@ -66,6 +71,7 @@ public final class TalaniaDebug {
 
     public static void handlePlayerReady(UUID playerId) {
         LOG_SERVICE.ensurePlayer(playerId);
+        STAT_MODIFIERS.ensurePlayer(playerId);
     }
 
     public static void handlePlayerDisconnect(UUID playerId) {

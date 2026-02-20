@@ -1,103 +1,144 @@
 $C = "../Common.ui";
 
-Group {
+$C.@Panel {
   LayoutMode: Top;
-  Anchor: (Width: 720, Height: 520);
+  Anchor: (Width: 864, Height: 624);
   Padding: (Full: 16);
 
   Group {
     LayoutMode: Top;
-    Anchor: (Width: 688, Height: 488);
+    Anchor: (Width: 826, Height: 586);
     Padding: (Full: 12);
-    Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
     Label #TitleLabel {
       Style: (...$C.@TitleStyle, FontSize: 20);
-      Anchor: (Width: 640);
+      Anchor: (Width: 768);
       Text: "Races Debug";
       Padding: (Bottom: 6);
     }
 
     Label #CurrentRaceLabel {
       Style: (...$C.@DefaultLabelStyle);
-      Anchor: (Width: 640);
+      Anchor: (Width: 768);
       Text: "Current: None";
       Padding: (Bottom: 12);
     }
 
     Group #RaceList {
       LayoutMode: Top;
-      Anchor: (Width: 640, Height: 300);
+      Anchor: (Width: 768, Height: 360);
       Padding: (Full: 2);
 
       Group {
         LayoutMode: Left;
-        Anchor: (Width: 640, Height: 40);
+        Anchor: (Width: 768, Height: 40);
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
-        Label #humanLabel { Style: (...$C.@DefaultLabelStyle); Text: "Humans"; Anchor: (Width: 420); }
-        $C.@DefaultTextButtonStyle #humanButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+
+        Label #HumanLabel {
+          Style: (...$C.@DefaultLabelStyle);
+          Text: "Human";
+          TooltipText: "XP bonus plus 10 percent. Magic damage taken plus 5 percent.";
+          Anchor: (Width: 504);
+        }
+        $C.@SecondaryTextButton #HumanButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
         LayoutMode: Left;
-        Anchor: (Width: 640, Height: 40, Top: 6);
+        Anchor: (Width: 768, Height: 40, Top: 6);
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
-        Label #high_elfLabel { Style: (...$C.@DefaultLabelStyle); Text: "High Elves"; Anchor: (Width: 420); }
-        $C.@DefaultTextButtonStyle #high_elfButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+
+        Label #HighElfLabel {
+          Style: (...$C.@DefaultLabelStyle);
+          Text: "High Elf";
+          TooltipText: "Mana plus 20 percent. Health minus 10 percent.";
+          Anchor: (Width: 504);
+        }
+        $C.@SecondaryTextButton #HighElfButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
         LayoutMode: Left;
-        Anchor: (Width: 640, Height: 40, Top: 6);
+        Anchor: (Width: 768, Height: 40, Top: 6);
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
-        Label #orcLabel { Style: (...$C.@DefaultLabelStyle); Text: "Orcs"; Anchor: (Width: 420); }
-        $C.@DefaultTextButtonStyle #orcButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+
+        Label #OrcLabel {
+          Style: (...$C.@DefaultLabelStyle);
+          Text: "Orc";
+          TooltipText: "Melee damage plus 15 percent. Mana regen minus 20 percent.";
+          Anchor: (Width: 504);
+        }
+        $C.@SecondaryTextButton #OrcButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
         LayoutMode: Left;
-        Anchor: (Width: 640, Height: 40, Top: 6);
+        Anchor: (Width: 768, Height: 40, Top: 6);
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
-        Label #dwarfLabel { Style: (...$C.@DefaultLabelStyle); Text: "Dwarves"; Anchor: (Width: 420); }
-        $C.@DefaultTextButtonStyle #dwarfButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+
+        Label #DwarfLabel {
+          Style: (...$C.@DefaultLabelStyle);
+          Text: "Dwarf";
+          TooltipText: "Armor plus 10 percent. Poison resistance plus 10 percent. Move speed minus 10 percent.";
+          Anchor: (Width: 504);
+        }
+        $C.@SecondaryTextButton #DwarfButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
         LayoutMode: Left;
-        Anchor: (Width: 640, Height: 40, Top: 6);
+        Anchor: (Width: 768, Height: 40, Top: 6);
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
-        Label #nightwalkerLabel { Style: (...$C.@DefaultLabelStyle); Text: "Nightwalkers"; Anchor: (Width: 420); }
-        $C.@DefaultTextButtonStyle #nightwalkerButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+
+        Label #NightwalkerLabel {
+          Style: (...$C.@DefaultLabelStyle);
+          Text: "Nightwalker";
+          TooltipText: "Move speed plus 15 percent at night. HP regen minus 10 percent in sunlight.";
+          Anchor: (Width: 504);
+        }
+        $C.@SecondaryTextButton #NightwalkerButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
         LayoutMode: Left;
-        Anchor: (Width: 640, Height: 40, Top: 6);
+        Anchor: (Width: 768, Height: 40, Top: 6);
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
-        Label #beastkinLabel { Style: (...$C.@DefaultLabelStyle); Text: "Beastkin"; Anchor: (Width: 420); }
-        $C.@DefaultTextButtonStyle #beastkinButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+
+        Label #BeastkinLabel {
+          Style: (...$C.@DefaultLabelStyle);
+          Text: "Beastkin";
+          TooltipText: "Fall resistance plus 50 percent. Jump height plus 20 percent.";
+          Anchor: (Width: 504);
+        }
+        $C.@SecondaryTextButton #BeastkinButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
         LayoutMode: Left;
-        Anchor: (Width: 640, Height: 40, Top: 6);
+        Anchor: (Width: 768, Height: 40, Top: 6);
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
-        Label #starbornLabel { Style: (...$C.@DefaultLabelStyle); Text: "Starborn"; Anchor: (Width: 420); }
-        $C.@DefaultTextButtonStyle #starbornButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+
+        Label #StarbornLabel {
+          Style: (...$C.@DefaultLabelStyle);
+          Text: "Starborn";
+          TooltipText: "Regenerating energy shield. Healing from food/potions reduced.";
+          Anchor: (Width: 504);
+        }
+        $C.@SecondaryTextButton #StarbornButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
     }
 
     Group {
       LayoutMode: Left;
       Anchor: (Height: 32, Top: 10);
-      $C.@DefaultTextButtonStyle #CloseButton { Text: "Close"; Anchor: (Width: 120, Height: 28); }
+      $C.@SecondaryTextButton #ReturnButton { Text: "Return"; Anchor: (Width: 120, Height: 28); }
     }
   }
 }

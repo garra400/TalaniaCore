@@ -7,7 +7,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
-import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -23,6 +22,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public final class TalaniaCombatLogPage extends InteractiveCustomUIPage {
+    private static final int MAX_ROWS = 30;
     private final PlayerRef playerRef;
 
     public TalaniaCombatLogPage(PlayerRef playerRef) {
@@ -46,10 +46,10 @@ public final class TalaniaCombatLogPage extends InteractiveCustomUIPage {
         if (eventData.action == null) {
             return;
         }
-        if ("Close".equals(eventData.action)) {
+        if ("Return".equals(eventData.action)) {
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
-                player.getPageManager().setPage(ref, store, Page.None);
+                player.getPageManager().openCustomPage(ref, store, new TalaniaDebugMenuPage(playerRef));
             }
             return;
         }
@@ -65,30 +65,35 @@ public final class TalaniaCombatLogPage extends InteractiveCustomUIPage {
     private void bindEvents(UIEventBuilder eventBuilder) {
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#RefreshButton",
                 new EventData().append("Action", "Refresh"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CloseButton",
-                new EventData().append("Action", "Close"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ReturnButton",
+                new EventData().append("Action", "Return"), false);
     }
 
     private void applyState(UICommandBuilder commandBuilder) {
         commandBuilder.set("#TitleLabel.Text", "Combat Log");
         commandBuilder.set("#SubtitleLabel.Text", "Dev build only. Recent combat events.");
-        commandBuilder.set("#LogText.Text", buildLogText());
+        applyRows(commandBuilder);
     }
 
-    private String buildLogText() {
-        List<CombatLogEntry> entries = TalaniaDebug.combatLog().recent(playerRef.getUuid(), 50);
-        if (entries.isEmpty()) {
-            return "No combat log entries yet.";
-        }
-        StringBuilder sb = new StringBuilder();
-        for (CombatLogEntry entry : entries) {
-            sb.append(CombatLogFormatter.summaryFor(playerRef.getUuid(), entry, null, null)).append("\n");
-            for (String line : CombatLogFormatter.modifierLines(entry)) {
-                sb.append("  - ").append(line).append("\n");
+    private void applyRows(UICommandBuilder commandBuilder) {
+        List<CombatLogEntry> entries = TalaniaDebug.combatLog().recent(playerRef.getUuid(), MAX_ROWS);
+        commandBuilder.set("#EmptyLabel.Visible", entries.isEmpty());
+        int count = entries.size();
+        for (int i = 0; i < MAX_ROWS; i++) {
+            String index = String.valueOf(i + 1);
+            String rowId = "#Row" + index;
+            int entryIndex = count - 1 - i;
+            if (entryIndex < 0) {
+                commandBuilder.set(rowId + ".Visible", false);
+                continue;
             }
-            sb.append("\n");
+            CombatLogEntry entry = entries.get(entryIndex);
+            commandBuilder.set(rowId + ".Visible", true);
+            commandBuilder.set(rowId + "Summary.Text",
+                    CombatLogFormatter.actorSummaryFor(playerRef.getUuid(), entry, null, null));
+            commandBuilder.set(rowId + "Damage.Text", CombatLogFormatter.damageText(entry));
+            commandBuilder.set(rowId + "Damage.TooltipText", CombatLogFormatter.damageTooltip(entry));
         }
-        return sb.toString().trim();
     }
 
     public static final class TalaniaCombatLogPageEventData {

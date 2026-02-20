@@ -32,11 +32,13 @@ dependencies {
 }
 
 tasks.register('devJar', Jar) {
+    archiveBaseName.set('TalaniaCore')
     archiveClassifier.set('dev')
+    archiveVersion.set(project.version.toString())
     dependsOn tasks.named('devClasses')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from sourceSets.main.output
     from sourceSets.dev.output
+    from sourceSets.main.output
 }
 
 publishing {

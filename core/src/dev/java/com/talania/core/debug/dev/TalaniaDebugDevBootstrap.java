@@ -13,6 +13,6 @@ public final class TalaniaDebugDevBootstrap {
             return;
         }
         plugin.getCommandRegistry().registerCommand(
-                new TalaniaDebugCommand("talania", "Talania debug commands"));
+                new TalaniaDebugCommand("talania", "Talania debug"));
     }
 }
