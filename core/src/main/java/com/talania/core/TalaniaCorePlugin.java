@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.talania.core.combat.damage.TalaniaDamageModifierSystem;
+import com.talania.core.combat.shield.EnergyShieldSystem;
 import com.talania.core.entities.EntityAnimationSystem;
 import com.talania.core.events.entity.npc.NpcDeathEventSystem;
 import com.talania.core.events.entity.npc.NpcDeathHandledComponent;
@@ -51,6 +52,7 @@ public final class TalaniaCorePlugin extends JavaPlugin {
         MovementStatSystem movementStatSystem = new MovementStatSystem();
         registry.registerSystem(movementStatSystem);
         registry.registerSystem(new HealingStatScalingSystem());
+        registry.registerSystem(new EnergyShieldSystem());
 
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, runtime::handlePlayerReady);
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, event -> {

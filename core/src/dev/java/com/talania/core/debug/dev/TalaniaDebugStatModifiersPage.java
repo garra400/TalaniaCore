@@ -96,7 +96,8 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
                 new EventData().append("Action", "Return"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ResetButton",
                 new EventData().append("Action", "Reset"), false);
-        for (int i = 0; i < rowPairs.size(); i++) {
+        int maxBindings = Math.min(rowPairs.size(), UI_ROW_COUNT);
+        for (int i = 0; i < maxBindings; i++) {
             RowPair pair = rowPairs.get(i);
             if (pair.type == RowType.HEADER) {
                 continue;
@@ -223,7 +224,12 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
             return;
         }
         DebugStatModifierService modifiers = TalaniaDebug.statModifiers();
-        modifiers.addDelta(playerRef.getUuid(), stat, delta);
+        float baseValue = modifiers.baseValue(playerRef.getUuid(), stat);
+        float currentDelta = modifiers.getDelta(playerRef.getUuid(), stat);
+        float currentMult = modifiers.getMultiplier(playerRef.getUuid(), stat);
+        float nextDelta = currentDelta + delta;
+        nextDelta = clampDelta(stat, baseValue, nextDelta, currentMult);
+        modifiers.setDelta(playerRef.getUuid(), stat, nextDelta);
         applyModifiersToStats(ref, store);
     }
 
@@ -237,7 +243,12 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
             return;
         }
         DebugStatModifierService modifiers = TalaniaDebug.statModifiers();
-        modifiers.addMultiplier(playerRef.getUuid(), stat, delta);
+        float baseValue = modifiers.baseValue(playerRef.getUuid(), stat);
+        float currentDelta = modifiers.getDelta(playerRef.getUuid(), stat);
+        float currentMult = modifiers.getMultiplier(playerRef.getUuid(), stat);
+        float nextMult = currentMult + delta;
+        nextMult = clampMultiplier(stat, baseValue, currentDelta, nextMult);
+        modifiers.setMultiplier(playerRef.getUuid(), stat, nextMult);
         applyModifiersToStats(ref, store);
     }
 
@@ -247,6 +258,35 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+
+    private float clampDelta(StatType stat, float baseValue, float deltaValue, float multiplier) {
+        float minValue = stat.getMinValue();
+        float maxValue = stat.getMaxValue();
+        float safeMult = Math.max(0.01f, multiplier);
+        float finalValue = (baseValue + deltaValue) * safeMult;
+        if (finalValue < minValue) {
+            deltaValue = (minValue / safeMult) - baseValue;
+        } else if (finalValue > maxValue) {
+            deltaValue = (maxValue / safeMult) - baseValue;
+        }
+        return deltaValue;
+    }
+
+    private float clampMultiplier(StatType stat, float baseValue, float deltaValue, float multiplier) {
+        float minValue = stat.getMinValue();
+        float maxValue = stat.getMaxValue();
+        float baseWithDelta = baseValue + deltaValue;
+        float next = Math.max(0.01f, multiplier);
+        if (baseWithDelta > 0.0001f) {
+            float finalValue = baseWithDelta * next;
+            if (finalValue < minValue) {
+                next = minValue / baseWithDelta;
+            } else if (finalValue > maxValue) {
+                next = maxValue / baseWithDelta;
+            }
+        }
+        return Math.max(0.01f, next);
     }
 
     private void applyModifiersToStats(Ref<EntityStore> ref, Store<EntityStore> store) {
@@ -336,7 +376,8 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
 
     private StatCategory categoryFor(StatType stat) {
         return switch (stat) {
-            case HEALTH, MANA, STAMINA -> StatCategory.VITALS;
+            case HEALTH, MANA, STAMINA, ENERGY_SHIELD_MAX, ENERGY_SHIELD_RECHARGE,
+                 ENERGY_SHIELD_RECHARGE_DELAY -> StatCategory.VITALS;
             case ATTACK, MAGIC_ATTACK, MELEE_DAMAGE_MULT, RANGED_DAMAGE_MULT, MAGIC_DAMAGE_MULT,
                  SPRINT_DAMAGE_MULT, CRIT_CHANCE, CRIT_DAMAGE, ATTACK_SPEED, LIFESTEAL -> StatCategory.OFFENSE;
             case ARMOR, MAGIC_RESIST, DODGE_CHANCE, BLOCKING_EFFICIENCY, FLAT_DAMAGE_REDUCTION,
@@ -365,7 +406,8 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
             case HEALTH, MANA, STAMINA, FLAT_DAMAGE_REDUCTION, CRIT_CHANCE, LIFESTEAL,
                  ARMOR, MAGIC_RESIST, DODGE_CHANCE, FALL_RESISTANCE, FIRE_RESISTANCE,
                  POISON_RESISTANCE, LIGHTNING_RESISTANCE, HOLY_RESISTANCE, VOID_RESISTANCE,
-                 MANA_REGEN, STAMINA_REGEN -> List.of(ModKind.ADD);
+                 MANA_REGEN, STAMINA_REGEN, ENERGY_SHIELD_MAX, ENERGY_SHIELD_RECHARGE,
+                 ENERGY_SHIELD_RECHARGE_DELAY -> List.of(ModKind.ADD);
             default -> List.of(ModKind.MULT);
         };
     }

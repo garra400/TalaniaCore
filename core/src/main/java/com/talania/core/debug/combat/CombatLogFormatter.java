@@ -56,6 +56,9 @@ public final class CombatLogFormatter {
         if (entry.thorns() != null && entry.thorns() > 0.0f) {
             sb.append(" thorns=").append(formatAmount(entry.thorns()));
         }
+        if (entry.shieldAbsorbed() > 0.0f) {
+            sb.append(" shield=").append(formatAmount(entry.shieldAbsorbed()));
+        }
         if (entry.cancelled()) {
             sb.append(" cancelled");
             if (entry.cancelReason() != null) {
@@ -120,6 +123,7 @@ public final class CombatLogFormatter {
         sb.append("\nBase damage: ").append(formatAmount(entry.baseAmount()));
         if (entry.steps().isEmpty()) {
             sb.append(" (no modifiers)");
+            appendMitigationSummary(sb, entry, "\n");
         } else {
             for (String line : modifierLines(entry, false)) {
                 sb.append("\n").append(line);
@@ -146,6 +150,7 @@ public final class CombatLogFormatter {
             } else {
                 lines.add(prefix + "base: " + formatAmount(base) + " -> " + formatAmount(fin));
             }
+            appendMitigationSummary(lines, entry, prefix);
             return lines;
         }
         for (CombatLogEntry.CombatLogStep step : entry.steps()) {
@@ -157,6 +162,7 @@ public final class CombatLogFormatter {
             }
             lines.add(sb.toString());
         }
+        appendMitigationSummary(lines, entry, prefix);
         return lines;
     }
 
@@ -201,6 +207,44 @@ public final class CombatLogFormatter {
             upper = false;
         }
         return sb.toString();
+    }
+
+    private static void appendMitigationSummary(StringBuilder sb, CombatLogEntry entry, String prefix) {
+        if (entry == null) {
+            return;
+        }
+        float shield = entry.shieldAbsorbed();
+        float life = entry.lifeDamage();
+        boolean showShield = shield > 0.0f;
+        boolean showLife = life > 0.0f;
+        if (!showShield && !showLife) {
+            return;
+        }
+        if (showShield) {
+            sb.append(prefix).append("Energy shield removed: ").append(formatAmount(shield));
+        }
+        if (showLife && !(showShield && life <= 0.0f)) {
+            sb.append(prefix).append("Life removed: ").append(formatAmount(life));
+        }
+    }
+
+    private static void appendMitigationSummary(List<String> lines, CombatLogEntry entry, String prefix) {
+        if (entry == null) {
+            return;
+        }
+        float shield = entry.shieldAbsorbed();
+        float life = entry.lifeDamage();
+        boolean showShield = shield > 0.0f;
+        boolean showLife = life > 0.0f;
+        if (!showShield && !showLife) {
+            return;
+        }
+        if (showShield) {
+            lines.add(prefix + "Energy shield removed: " + formatAmount(shield));
+        }
+        if (showLife && !(showShield && life <= 0.0f)) {
+            lines.add(prefix + "Life removed: " + formatAmount(life));
+        }
     }
 
     private static String formatCause(DamageCause cause) {
