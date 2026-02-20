@@ -71,6 +71,7 @@ public final class TalaniaDebug {
     public static void handlePlayerReady(UUID playerId) {
         LOG_SERVICE.ensurePlayer(playerId);
         STAT_MODIFIERS.ensurePlayer(playerId);
+        applyDevStatModifierStore(playerId);
     }
 
     public static void handlePlayerDisconnect(UUID playerId) {
@@ -99,5 +100,21 @@ public final class TalaniaDebug {
             builder.section("core-log", "Logging");
             builder.section("core-combat", "Combat");
         });
+    }
+
+    private static void applyDevStatModifierStore(UUID playerId) {
+        if (playerId == null) {
+            return;
+        }
+        try {
+            Class<?> clazz = Class.forName("com.talania.core.debug.dev.DebugStatModifierStore");
+            Object store = clazz.getMethod("load").invoke(null);
+            clazz.getMethod("applyTo", DebugStatModifierService.class, UUID.class)
+                    .invoke(store, STAT_MODIFIERS, playerId);
+        } catch (ClassNotFoundException ignored) {
+            // Dev-only classes not present in release build.
+        } catch (Exception e) {
+            // Keep debug init resilient.
+        }
     }
 }

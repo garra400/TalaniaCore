@@ -154,6 +154,27 @@ public final class DebugStatModifierService {
         stats.recalculate();
     }
 
+    public boolean hasActiveModifiers(UUID playerId) {
+        if (playerId == null) {
+            return false;
+        }
+        PlayerState state = states.get(playerId);
+        if (state == null) {
+            return false;
+        }
+        return state.enabled && (!state.addDeltas.isEmpty() || !state.multipliers.isEmpty());
+    }
+
+    public void reset(UUID playerId) {
+        if (playerId == null) {
+            return;
+        }
+        PlayerState state = states.computeIfAbsent(playerId, id -> new PlayerState());
+        state.addDeltas.clear();
+        state.multipliers.clear();
+        state.enabled = true;
+    }
+
     private void removeDebugModifiers(EntityStats stats) {
         for (StatType stat : StatType.values()) {
             stats.removeModifier(SOURCE_PREFIX + stat.getId());

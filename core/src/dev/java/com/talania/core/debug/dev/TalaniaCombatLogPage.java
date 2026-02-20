@@ -77,11 +77,12 @@ public final class TalaniaCombatLogPage extends InteractiveCustomUIPage {
         List<CombatLogEntry> entries = TalaniaDebug.combatLog().recent(playerRef.getUuid(), MAX_ROWS);
         commandBuilder.set("#EmptyLabel.Visible", entries.isEmpty());
         int count = entries.size();
+        int startIndex = Math.max(0, count - MAX_ROWS);
         for (int i = 0; i < MAX_ROWS; i++) {
             String index = String.valueOf(i + 1);
             String rowId = "#Row" + index;
-            int entryIndex = count - 1 - i;
-            if (entryIndex < 0) {
+            int entryIndex = startIndex + i;
+            if (entryIndex >= count) {
                 commandBuilder.set(rowId + ".Visible", false);
                 continue;
             }

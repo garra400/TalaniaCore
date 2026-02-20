@@ -42,6 +42,8 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
     public void build(@Nonnull Ref ref, @Nonnull UICommandBuilder commandBuilder, @Nonnull UIEventBuilder eventBuilder,
                       @Nonnull Store store) {
         commandBuilder.append("Pages/TalaniaDebugStatModifiersPage.ui");
+        DebugStatModifierStore.load().applyTo(TalaniaDebug.statModifiers(), playerRef.getUuid());
+        applyModifiersToStats(ref, store);
         bindEvents(eventBuilder);
         applyState(commandBuilder, true);
     }
@@ -63,11 +65,20 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
         }
         if ("AdjustAdd".equals(eventData.action) && eventData.value != null && eventData.delta != null) {
             adjustAdd(ref, store, eventData.value, eventData.delta);
+            DebugStatModifierStore.load().saveFrom(TalaniaDebug.statModifiers(), playerRef.getUuid());
             refresh();
             return;
         }
         if ("AdjustMult".equals(eventData.action) && eventData.value != null && eventData.delta != null) {
             adjustMult(ref, store, eventData.value, eventData.delta);
+            DebugStatModifierStore.load().saveFrom(TalaniaDebug.statModifiers(), playerRef.getUuid());
+            refresh();
+            return;
+        }
+        if ("Reset".equals(eventData.action)) {
+            TalaniaDebug.statModifiers().reset(playerRef.getUuid());
+            applyModifiersToStats(ref, store);
+            DebugStatModifierStore.load().clear(playerRef.getUuid());
             refresh();
         }
     }
@@ -83,6 +94,8 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
     private void bindEvents(UIEventBuilder eventBuilder) {
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ReturnButton",
                 new EventData().append("Action", "Return"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ResetButton",
+                new EventData().append("Action", "Reset"), false);
         for (int i = 0; i < rowPairs.size(); i++) {
             RowPair pair = rowPairs.get(i);
             if (pair.type == RowType.HEADER) {
