@@ -26,6 +26,7 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.talania.core.combat.CombatManager;
 import com.talania.core.combat.healing.HealingService;
+import com.talania.core.combat.shield.EnergyShieldService;
 import com.talania.core.debug.combat.CombatLogEntry;
 import com.talania.core.debug.events.CombatLogEvent;
 import com.talania.core.events.EventBus;
@@ -306,6 +307,22 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             }
         }
 
+        float preShieldAmount = damage.getAmount();
+        float shieldAbsorbed = 0.0f;
+        float lifeDamage = preShieldAmount;
+        // Energy shield absorption (applies before health damage).
+        if (targetUuid != null) {
+            float shieldMax = statWithDebug(targetUuid, StatType.ENERGY_SHIELD_MAX);
+            if (shieldMax > 0.0F) {
+                float remaining = EnergyShieldService.applyDamage(targetUuid, preShieldAmount, shieldMax);
+                if (remaining != preShieldAmount) {
+                    shieldAbsorbed = preShieldAmount - remaining;
+                    lifeDamage = remaining;
+                    damage.setAmount(remaining);
+                }
+            }
+        }
+
         // Blocking efficiency & stamina drain scaling (per-player stat)
         Float existing = (Float) damage.getIfPresentMetaObject(Damage.STAMINA_DRAIN_MULTIPLIER);
         if (existing == null) {
@@ -344,7 +361,9 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         if (thornsDamage != null) {
             logBuilder.thorns(thornsDamage);
         }
-        logBuilder.finalAmount(damage.getAmount());
+        logBuilder.finalAmount(preShieldAmount);
+        logBuilder.lifeDamage(lifeDamage);
+        logBuilder.shieldAbsorbed(shieldAbsorbed);
         publishCombatLog(logBuilder);
     }
 

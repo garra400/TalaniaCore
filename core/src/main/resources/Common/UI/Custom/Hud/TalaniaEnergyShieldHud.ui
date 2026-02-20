@@ -1,0 +1,19 @@
+$C = "../Common.ui";
+
+Group #EnergyShieldRoot {
+  Anchor: (Left: 0, Right: 0, Bottom: 110, Height: 12);
+  LayoutMode: Center;
+
+  Group #EnergyShieldFrame {
+    Anchor: (Width: 280, Height: 10);
+    Background: #1B2C5A(0.8);
+    Padding: (Full: 1);
+
+    ProgressBar #EnergyShieldBar {
+      Anchor: (Left: 0, Right: 0, Top: 0, Bottom: 0);
+      Background: #000000(0.4);
+      Bar: #4D7CFF;
+      Value: 1.0;
+    }
+  }
+}

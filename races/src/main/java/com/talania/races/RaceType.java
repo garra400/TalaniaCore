@@ -60,7 +60,7 @@ public enum RaceType {
             "starborn",
             "Starborn",
             "Cosmos and Mystery",
-            Collections.emptyList(),
+            modifiersForStarborn(),
             List.of(
                     "Energy Shield: regenerating shield when out of combat.",
                     "Healing Difficulty: potions/food 50% less effective."
@@ -188,6 +188,18 @@ public enum RaceType {
         List<ModifierSpec> mods = new ArrayList<>();
         mods.add(new ModifierSpec(source, StatType.FALL_RESISTANCE, 0.50f, StatModifier.Operation.ADD));
         mods.add(new ModifierSpec(source, StatType.JUMP_HEIGHT, 1.20f, StatModifier.Operation.MULTIPLY_TOTAL));
+        return mods;
+    }
+
+    /**
+     * Base modifiers for the Starborn race.
+     */
+    private static List<ModifierSpec> modifiersForStarborn() {
+        String source = "race:starborn";
+        List<ModifierSpec> mods = new ArrayList<>();
+        mods.add(new ModifierSpec(source, StatType.ENERGY_SHIELD_MAX, 10.0f, StatModifier.Operation.ADD));
+        mods.add(new ModifierSpec(source, StatType.ENERGY_SHIELD_RECHARGE, 2.0f, StatModifier.Operation.ADD));
+        mods.add(new ModifierSpec(source, StatType.ENERGY_SHIELD_RECHARGE_DELAY, 5.0f, StatModifier.Operation.ADD));
         return mods;
     }
 
