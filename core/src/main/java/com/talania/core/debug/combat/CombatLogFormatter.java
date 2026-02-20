@@ -116,8 +116,8 @@ public final class CombatLogFormatter {
                 sb.append(": ").append(entry.cancelReason());
             }
         }
-        sb.append("\n---");
-        sb.append("\nBase: ").append(formatAmount(entry.baseAmount()));
+        sb.append("\n");
+        sb.append("\nBase damage: ").append(formatAmount(entry.baseAmount()));
         if (entry.steps().isEmpty()) {
             sb.append(" (no modifiers)");
         } else {
