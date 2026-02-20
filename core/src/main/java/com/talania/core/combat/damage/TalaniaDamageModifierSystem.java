@@ -106,6 +106,16 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             return;
         }
 
+        // Ensure debug stat modifiers are applied before reading stats.
+        if (attackerIsPlayer && attackerUuid != null) {
+            com.talania.core.debug.TalaniaDebug.statModifiers()
+                    .applyToStats(attackerUuid, StatsManager.getOrCreate(attackerUuid));
+        }
+        if (targetIsPlayer && targetUuid != null) {
+            com.talania.core.debug.TalaniaDebug.statModifiers()
+                    .applyToStats(targetUuid, StatsManager.getOrCreate(targetUuid));
+        }
+
         float baseAmount = damage.getAmount();
         CombatLogEntry.Builder logBuilder =
                 CombatLogEntry.builder(UUID.randomUUID(), attackerUuid, targetUuid, baseAmount)
@@ -114,11 +124,17 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         logBuilder.targetName(resolveEntityName(store, targetRef));
 
         AttackType attackType = (AttackType) damage.getIfPresentMetaObject(DamageMetaKeys.ATTACK_TYPE);
+        if (attackType == null) {
+            attackType = inferAttackType(store, attackerRef);
+            if (attackType != null) {
+                damage.putMetaObject(DamageMetaKeys.ATTACK_TYPE, attackType);
+            }
+        }
         DamageType damageType = (DamageType) damage.getIfPresentMetaObject(DamageMetaKeys.DAMAGE_TYPE);
         logBuilder.attackType(attackType).damageType(damageType);
 
         // Target dodge chance
-        float dodgeChance = StatsManager.getStat(targetUuid, StatType.DODGE_CHANCE);
+        float dodgeChance = statWithDebug(targetUuid, StatType.DODGE_CHANCE);
         if (attackerRef != null && dodgeChance > 0.0F) {
             if (ThreadLocalRandom.current().nextFloat() < dodgeChance) {
                 damage.setCancelled(true);
@@ -131,9 +147,9 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Crit from attacker stats
         if (attackerUuid != null) {
-            float critChance = StatsManager.getStat(attackerUuid, StatType.CRIT_CHANCE);
+            float critChance = statWithDebug(attackerUuid, StatType.CRIT_CHANCE);
             if (critChance > 0.0F && ThreadLocalRandom.current().nextFloat() < critChance) {
-                float critMultiplier = StatsManager.getStat(attackerUuid, StatType.CRIT_DAMAGE);
+                float critMultiplier = statWithDebug(attackerUuid, StatType.CRIT_DAMAGE);
                 if (critMultiplier <= 0.0F) {
                     critMultiplier = 1.5F;
                 }
@@ -146,10 +162,22 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             }
         }
 
+        // Base attack power (physical or magic)
+        if (attackerUuid != null && attackType != null) {
+            StatType powerStat = attackType == AttackType.MAGIC ? StatType.MAGIC_ATTACK : StatType.ATTACK;
+            float power = statWithDebug(attackerUuid, powerStat);
+            if (power != 1.0F) {
+                float before = damage.getAmount();
+                damage.setAmount(damage.getAmount() * power);
+                logBuilder.step("attack_power", before, damage.getAmount(),
+                        "before * " + power + " (" + powerStat.getId() + ")");
+            }
+        }
+
         // Attack-type multipliers (optional meta)
         if (attackType != null) {
             if (attackerUuid != null) {
-                float outgoing = StatsManager.getStat(attackerUuid, attackType.damageStat());
+                float outgoing = statWithDebug(attackerUuid, attackType.damageStat());
                 if (outgoing != 1.0F) {
                     float before = damage.getAmount();
                     damage.setAmount(damage.getAmount() * outgoing);
@@ -158,7 +186,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
                 }
             }
             if (targetUuid != null) {
-                float incoming = StatsManager.getStat(targetUuid, attackType.damageTakenStat());
+                float incoming = statWithDebug(targetUuid, attackType.damageTakenStat());
                 if (incoming != 1.0F) {
                     float before = damage.getAmount();
                     damage.setAmount(damage.getAmount() * incoming);
@@ -172,7 +200,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         if (attackerRef != null) {
             com.hypixel.hytale.protocol.MovementStates movementStates = movementStates(store, attackerRef);
             if (movementStates != null && movementStates.sprinting) {
-                float sprintMultiplier = StatsManager.getStat(attackerUuid, StatType.SPRINT_DAMAGE_MULT);
+                float sprintMultiplier = statWithDebug(attackerUuid, StatType.SPRINT_DAMAGE_MULT);
                 if (sprintMultiplier > 1.0F) {
                     float before = damage.getAmount();
                     damage.setAmount(damage.getAmount() * sprintMultiplier);
@@ -220,7 +248,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Flat damage reduction (per-player stat) + armor stat (percent)
         if (targetUuid != null) {
-            float armorReduction = StatsManager.getStat(targetUuid, StatType.ARMOR);
+            float armorReduction = statWithDebug(targetUuid, StatType.ARMOR);
             if (armorReduction > 0.0F) {
                 float clamped = Math.max(0.0F, Math.min(1.0F, armorReduction));
                 float before = damage.getAmount();
@@ -228,7 +256,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
                 logBuilder.step("armor_reduction", before, damage.getAmount(),
                         "before * (1 - " + clamped + ") (armor)");
             }
-            float flatReduction = StatsManager.getStat(targetUuid, StatType.FLAT_DAMAGE_REDUCTION);
+            float flatReduction = statWithDebug(targetUuid, StatType.FLAT_DAMAGE_REDUCTION);
             if (flatReduction > 0.0F) {
                 float before = damage.getAmount();
                 float reduced = Math.max(0.0F, damage.getAmount() - flatReduction);
@@ -246,7 +274,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Damage-type resistances (optional meta)
         if (damageType != null && damageType != DamageType.PHYSICAL) {
-            float resist = StatsManager.getStat(targetUuid, damageType.resistanceStat());
+            float resist = statWithDebug(targetUuid, damageType.resistanceStat());
             if (resist > 0.0F) {
                 float clamped = Math.max(0.0F, Math.min(1.0F, resist));
                 float before = damage.getAmount();
@@ -258,7 +286,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Fall damage reduction
         if (damage.getCause() == DamageCause.FALL) {
-            float fallResist = StatsManager.getStat(targetUuid, StatType.FALL_RESISTANCE);
+            float fallResist = statWithDebug(targetUuid, StatType.FALL_RESISTANCE);
             if (fallResist > 0.0F) {
                 float clamped = Math.max(0.0F, Math.min(1.0F, fallResist));
                 float before = damage.getAmount();
@@ -271,10 +299,10 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         // Blocking efficiency & stamina drain scaling (per-player stat)
         Float existing = (Float) damage.getIfPresentMetaObject(Damage.STAMINA_DRAIN_MULTIPLIER);
         if (existing == null) {
-            float staminaMult = StatsManager.getStat(targetUuid, StatType.STAMINA_DRAIN_MULT);
+            float staminaMult = statWithDebug(targetUuid, StatType.STAMINA_DRAIN_MULT);
             Boolean blocked = damage.getIfPresentMetaObject(Damage.BLOCKED);
             if (blocked != null && blocked.booleanValue()) {
-                float blockingEfficiency = StatsManager.getStat(targetUuid, StatType.BLOCKING_EFFICIENCY);
+                float blockingEfficiency = statWithDebug(targetUuid, StatType.BLOCKING_EFFICIENCY);
                 if (blockingEfficiency > 0.0F) {
                     staminaMult *= (1.0F / blockingEfficiency);
                 }
@@ -286,7 +314,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Lifesteal
         if (attackerUuid != null) {
-            float lifesteal = StatsManager.getStat(attackerUuid, StatType.LIFESTEAL);
+            float lifesteal = statWithDebug(attackerUuid, StatType.LIFESTEAL);
             if (lifesteal > 0.0F) {
                 float heal = damage.getAmount() * lifesteal;
                 if (heal > 0.0F) {
@@ -308,6 +336,22 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         }
         logBuilder.finalAmount(damage.getAmount());
         publishCombatLog(logBuilder);
+    }
+
+    private static final float DEBUG_EPS = 0.0001f;
+
+    private static float statWithDebug(UUID entityId, StatType stat) {
+        if (entityId == null || stat == null) {
+            return stat != null ? stat.getDefaultValue() : 0.0f;
+        }
+        com.talania.core.debug.DebugStatModifierService debug = com.talania.core.debug.TalaniaDebug.statModifiers();
+        float delta = debug.getDelta(entityId, stat);
+        float mult = debug.getMultiplier(entityId, stat);
+        if (Math.abs(delta) > DEBUG_EPS || Math.abs(mult - 1.0f) > DEBUG_EPS) {
+            float base = debug.baseValue(entityId, stat);
+            return (base + delta) * mult;
+        }
+        return StatsManager.getStat(entityId, stat);
     }
 
     private static void publishCombatLog(CombatLogEntry.Builder builder) {
@@ -362,6 +406,35 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         return weaponFamilyFromItemId(item.getId());
     }
 
+    private static AttackType inferAttackType(Store<EntityStore> store, Ref<EntityStore> attackerRef) {
+        if (store == null || attackerRef == null) {
+            return null;
+        }
+        ItemStack itemStack = itemInHand(store, attackerRef);
+        if (itemStack == null || itemStack.isEmpty()) {
+            return AttackType.MELEE;
+        }
+        Item item = itemStack.getItem();
+        if (item == null) {
+            return AttackType.MELEE;
+        }
+        String family = familyTag(item.getData());
+        String probe = family != null ? family : item.getId();
+        if (probe == null) {
+            return AttackType.MELEE;
+        }
+        String lower = probe.toLowerCase();
+        if (lower.contains("bow") || lower.contains("crossbow") || lower.contains("gun")
+                || lower.contains("rifle") || lower.contains("pistol") || lower.contains("musket")) {
+            return AttackType.RANGED;
+        }
+        if (lower.contains("staff") || lower.contains("wand") || lower.contains("tome")
+                || lower.contains("spell") || lower.contains("magic")) {
+            return AttackType.MAGIC;
+        }
+        return AttackType.MELEE;
+    }
+
     private static String resolvePlayerName(Store<EntityStore> store, Ref<EntityStore> ref) {
         if (store == null || ref == null) {
             return null;
@@ -409,11 +482,26 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             return null;
         }
         String trimmed = messageId.trim();
-        int lastSlash = trimmed.lastIndexOf('/');
-        int lastDot = trimmed.lastIndexOf('.');
-        int lastColon = trimmed.lastIndexOf(':');
-        int cut = Math.max(lastSlash, Math.max(lastDot, lastColon));
-        String core = cut >= 0 && cut + 1 < trimmed.length() ? trimmed.substring(cut + 1) : trimmed;
+        String[] parts = trimmed.split("[/.:]");
+        String core = null;
+        for (int i = parts.length - 1; i >= 0; i--) {
+            String part = parts[i].trim();
+            if (part.isEmpty()) {
+                continue;
+            }
+            String lower = part.toLowerCase();
+            if (lower.equals("name") || lower.equals("title") || lower.equals("display") || lower.equals("label")) {
+                continue;
+            }
+            if (lower.equals("entity") && i > 0) {
+                continue;
+            }
+            core = part;
+            break;
+        }
+        if (core == null) {
+            core = trimmed;
+        }
         core = core.replace('_', ' ').replace('-', ' ').trim();
         if (core.isBlank()) {
             return core;

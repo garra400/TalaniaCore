@@ -29,6 +29,7 @@ $C.@Panel {
       ScrollbarStyle: $C.@DefaultScrollbarStyle;
       Anchor: (Width: 816, Height: 480);
       Padding: (Full: 6);
+      AutoScrollDown: true;
       Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
       Label #EmptyLabel {
@@ -51,7 +52,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -68,7 +69,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -85,7 +86,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -102,7 +103,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -119,7 +120,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -136,7 +137,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -153,7 +154,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -170,7 +171,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -187,7 +188,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -204,7 +205,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -221,7 +222,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -238,7 +239,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -255,7 +256,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -272,7 +273,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -289,7 +290,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -306,7 +307,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -323,7 +324,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -340,7 +341,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -357,7 +358,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -374,7 +375,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -391,7 +392,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -408,7 +409,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -425,7 +426,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -442,7 +443,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -459,7 +460,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -476,7 +477,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -493,7 +494,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -510,7 +511,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -527,7 +528,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
 
@@ -544,7 +545,7 @@ $C.@Panel {
           Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
           Anchor: (Width: 220, Left: 8);
           Text: "";
-          TextTooltipStyle: (MaxWidth: 300);
+          TextTooltipStyle: (MaxWidth: 600);
         }
       }
     }
