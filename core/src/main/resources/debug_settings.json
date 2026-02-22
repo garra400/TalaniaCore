@@ -1,0 +1,8 @@
+{
+  "enableChatOutput": true,
+  "enableUiOutput": true,
+  "logToConsole": false,
+  "rateLimitMs": 0,
+  "combatLogMaxEntries": 200,
+  "defaultEnabledCategories": []
+}

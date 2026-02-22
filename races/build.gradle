@@ -2,6 +2,29 @@ plugins {
     id 'java-library'
 }
 
+sourceSets {
+    dev {
+        java.srcDir 'src/dev/java'
+        resources.setSrcDirs(['src/dev/resources'])
+        compileClasspath += sourceSets.main.output + configurations.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+configurations {
+    devImplementation.extendsFrom implementation
+    devCompileOnly.extendsFrom compileOnly
+    devRuntimeOnly.extendsFrom runtimeOnly
+}
+
 dependencies {
     implementation project(':core')
+}
+
+tasks.register('devJar', Jar) {
+    archiveClassifier.set('dev')
+    dependsOn tasks.named('devClasses')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from sourceSets.main.output
+    from sourceSets.dev.output
 }

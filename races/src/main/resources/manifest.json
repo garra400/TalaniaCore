@@ -17,6 +17,6 @@
   },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
-  "IncludesAssetPack": false,
+  "IncludesAssetPack": true,
   "Main": "com.talania.races.TalaniaRacesPlugin"
 }

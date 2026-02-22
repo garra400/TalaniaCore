@@ -1,0 +1,103 @@
+$C = "../Common.ui";
+
+Group {
+  LayoutMode: Top;
+  Anchor: (Width: 720, Height: 520);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 688, Height: 488);
+    Padding: (Full: 12);
+    Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 20);
+      Anchor: (Width: 640);
+      Text: "Races Debug";
+      Padding: (Bottom: 6);
+    }
+
+    Label #CurrentRaceLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 640);
+      Text: "Current: None";
+      Padding: (Bottom: 12);
+    }
+
+    Group #RaceList {
+      LayoutMode: Top;
+      Anchor: (Width: 640, Height: 300);
+      Padding: (Full: 2);
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #humanLabel { Style: (...$C.@DefaultLabelStyle); Text: "Humans"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #humanButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40, Top: 6);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #high_elfLabel { Style: (...$C.@DefaultLabelStyle); Text: "High Elves"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #high_elfButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40, Top: 6);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #orcLabel { Style: (...$C.@DefaultLabelStyle); Text: "Orcs"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #orcButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40, Top: 6);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #dwarfLabel { Style: (...$C.@DefaultLabelStyle); Text: "Dwarves"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #dwarfButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40, Top: 6);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #nightwalkerLabel { Style: (...$C.@DefaultLabelStyle); Text: "Nightwalkers"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #nightwalkerButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40, Top: 6);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #beastkinLabel { Style: (...$C.@DefaultLabelStyle); Text: "Beastkin"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #beastkinButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 640, Height: 40, Top: 6);
+        Padding: (Full: 6);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+        Label #starbornLabel { Style: (...$C.@DefaultLabelStyle); Text: "Starborn"; Anchor: (Width: 420); }
+        $C.@DefaultTextButtonStyle #starbornButton { Text: "Set"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+    }
+
+    Group {
+      LayoutMode: Left;
+      Anchor: (Height: 32, Top: 10);
+      $C.@DefaultTextButtonStyle #CloseButton { Text: "Close"; Anchor: (Width: 120, Height: 28); }
+    }
+  }
+}

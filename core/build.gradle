@@ -10,10 +10,33 @@ java {
     withJavadocJar()
 }
 
+sourceSets {
+    dev {
+        java.srcDir 'src/dev/java'
+        resources.setSrcDirs(['src/dev/resources'])
+        compileClasspath += sourceSets.main.output + configurations.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+configurations {
+    devImplementation.extendsFrom implementation
+    devCompileOnly.extendsFrom compileOnly
+    devRuntimeOnly.extendsFrom runtimeOnly
+}
+
 dependencies {
     // JSON processing
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.mongodb:bson:4.11.1'
+}
+
+tasks.register('devJar', Jar) {
+    archiveClassifier.set('dev')
+    dependsOn tasks.named('devClasses')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from sourceSets.main.output
+    from sourceSets.dev.output
 }
 
 publishing {

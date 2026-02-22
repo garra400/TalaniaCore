@@ -96,6 +96,13 @@ public final class ConfigManager {
         errorLogger = err != null ? err : System.err::println;
     }
 
+    /**
+     * Check whether the config manager has been initialized.
+     */
+    public static boolean isInitialized() {
+        return configDir != null;
+    }
+
     // ==================== LOADING ====================
 
     /**

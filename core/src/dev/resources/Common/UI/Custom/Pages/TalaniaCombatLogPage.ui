@@ -1,0 +1,49 @@
+$C = "../Common.ui";
+
+Group {
+  LayoutMode: Top;
+  Anchor: (Width: 760, Height: 560);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 728, Height: 528);
+    Padding: (Full: 12);
+    Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 20);
+      Anchor: (Width: 680);
+      Text: "Combat Log";
+      Padding: (Bottom: 6);
+    }
+
+    Label #SubtitleLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 680);
+      Text: "Dev build only. Recent combat events.";
+      Padding: (Bottom: 10);
+    }
+
+    Group #LogScroll {
+      LayoutMode: TopScrolling;
+      ScrollbarStyle: $C.@DefaultScrollbarStyle;
+      Anchor: (Width: 680, Height: 400);
+      Padding: (Full: 6);
+      Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+      Label #LogText {
+        Style: (...$C.@DefaultLabelStyle);
+        Anchor: (Width: 640);
+        Text: "";
+      }
+    }
+
+    Group {
+      LayoutMode: Left;
+      Anchor: (Height: 32, Top: 10);
+      $C.@DefaultTextButtonStyle #RefreshButton { Text: "Refresh"; Anchor: (Width: 120, Height: 28); }
+      $C.@DefaultTextButtonStyle #CloseButton { Text: "Close"; Anchor: (Width: 120, Height: 28, Left: 10); }
+    }
+  }
+}

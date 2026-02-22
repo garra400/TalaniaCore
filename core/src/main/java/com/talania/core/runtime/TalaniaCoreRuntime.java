@@ -11,6 +11,8 @@ import com.talania.core.hytale.stats.EntityStatModifierRegistry;
 import com.talania.core.hytale.stats.EntityStatModifierService;
 import com.talania.core.hytale.stats.EntityStatSyncService;
 import com.talania.core.input.InputPatternTracker;
+import com.talania.core.debug.TalaniaDebug;
+import com.talania.core.module.TalaniaModuleRegistry;
 import com.talania.core.profile.TalaniaPlayerProfile;
 import com.talania.core.profile.TalaniaProfileRuntime;
 import com.talania.core.stats.EntityStats;
@@ -33,6 +35,7 @@ public final class TalaniaCoreRuntime {
     private final InputPatternTracker inputPatternTracker;
 
     private TalaniaCoreRuntime(Path dataDirectory) {
+        TalaniaDebug.init(dataDirectory);
         this.profileRuntime = new TalaniaProfileRuntime(dataDirectory);
         this.statModifierRegistry = new EntityStatModifierRegistry();
         this.statModifierRegistry.registerDefaults();
@@ -91,6 +94,7 @@ public final class TalaniaCoreRuntime {
             return;
         }
         UUID playerId = uuidComponent.getUuid();
+        TalaniaDebug.handlePlayerReady(playerId);
         TalaniaPlayerProfile profile = profileRuntime.load(playerId);
         if (profile == null) {
             return;
@@ -102,6 +106,12 @@ public final class TalaniaCoreRuntime {
         stats.recalculate();
 
         statSyncService.applyAll(ref, store, playerId, stats);
+
+        com.hypixel.hytale.server.core.universe.PlayerRef playerRef =
+                com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
+        if (playerRef != null) {
+            TalaniaModuleRegistry.get().handlePlayerReady(playerRef, profile, ref, store);
+        }
     }
 
     /**
@@ -116,9 +126,11 @@ public final class TalaniaCoreRuntime {
             return;
         }
         UUID playerId = playerRef.getUuid();
+        TalaniaDebug.handlePlayerDisconnect(playerId);
         profileRuntime.unload(playerId, true);
         StatsManager.unregister(playerId);
         inputPatternTracker.clear(playerId);
+        TalaniaModuleRegistry.get().handlePlayerDisconnect(playerRef);
     }
 
     /**
