@@ -129,7 +129,7 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
     private void applyState(UICommandBuilder commandBuilder, boolean setTooltips) {
         commandBuilder.set("#TitleLabel.Text", "Stat Modifiers");
         commandBuilder.set("#SubtitleLabel.Text", "Dev build only. Debug stat modifiers by category.");
-        commandBuilder.set("#ToggleLabel.Text", "Debug modifiers: Enabled");
+        commandBuilder.set("#ToggleLabel.Text", "Debug modifiers: Always On");
 
         for (int i = 0; i < UI_ROW_COUNT; i++) {
             String index = String.valueOf(i + 1);

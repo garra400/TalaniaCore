@@ -19,7 +19,6 @@ public final class DebugStatModifierService {
     private final Map<UUID, PlayerState> states = new ConcurrentHashMap<>();
 
     private static final class PlayerState {
-        private boolean enabled = true;
         private final EnumMap<StatType, Float> addDeltas = new EnumMap<>(StatType.class);
         private final EnumMap<StatType, Float> multipliers = new EnumMap<>(StatType.class);
     }
@@ -28,31 +27,7 @@ public final class DebugStatModifierService {
         if (playerId == null) {
             return;
         }
-        states.computeIfAbsent(playerId, id -> new PlayerState()).enabled = true;
-    }
-
-    public boolean isEnabled(UUID playerId) {
-        if (playerId == null) {
-            return false;
-        }
-        return states.computeIfAbsent(playerId, id -> new PlayerState()).enabled;
-    }
-
-    public boolean toggle(UUID playerId) {
-        if (playerId == null) {
-            return false;
-        }
-        PlayerState state = states.computeIfAbsent(playerId, id -> new PlayerState());
-        state.enabled = !state.enabled;
-        return state.enabled;
-    }
-
-    public void setEnabled(UUID playerId, boolean enabled) {
-        if (playerId == null) {
-            return;
-        }
-        PlayerState state = states.computeIfAbsent(playerId, id -> new PlayerState());
-        state.enabled = enabled;
+        states.computeIfAbsent(playerId, id -> new PlayerState());
     }
 
     public float getDelta(UUID playerId, StatType stat) {
@@ -131,10 +106,6 @@ public final class DebugStatModifierService {
         }
         removeDebugModifiers(stats);
         PlayerState state = states.computeIfAbsent(playerId, id -> new PlayerState());
-        if (!state.enabled) {
-            stats.recalculate();
-            return;
-        }
         for (Map.Entry<StatType, Float> entry : state.addDeltas.entrySet()) {
             float value = entry.getValue();
             if (Math.abs(value) <= 0.0001f) {
@@ -162,7 +133,7 @@ public final class DebugStatModifierService {
         if (state == null) {
             return false;
         }
-        return state.enabled && (!state.addDeltas.isEmpty() || !state.multipliers.isEmpty());
+        return !state.addDeltas.isEmpty() || !state.multipliers.isEmpty();
     }
 
     public void reset(UUID playerId) {
@@ -172,7 +143,6 @@ public final class DebugStatModifierService {
         PlayerState state = states.computeIfAbsent(playerId, id -> new PlayerState());
         state.addDeltas.clear();
         state.multipliers.clear();
-        state.enabled = true;
     }
 
     private void removeDebugModifiers(EntityStats stats) {
