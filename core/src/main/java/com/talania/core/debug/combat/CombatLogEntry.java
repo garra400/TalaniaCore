@@ -101,6 +101,13 @@ public final class CombatLogEntry {
         return finalAmount;
     }
 
+    /**
+     * Total damage after modifiers/reductions, before splitting into life vs shield.
+     */
+    public float totalDamage() {
+        return finalAmount;
+    }
+
     public boolean cancelled() {
         return cancelled;
     }

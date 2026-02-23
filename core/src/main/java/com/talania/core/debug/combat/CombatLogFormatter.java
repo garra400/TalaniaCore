@@ -37,7 +37,7 @@ public final class CombatLogFormatter {
         sb.append(formatTimestamp(entry.timestamp())).append(" ");
         sb.append(attackerLabel).append(" -> ").append(targetLabel).append(" | ");
         sb.append("Damage ");
-        sb.append(formatAmount(entry.finalAmount()));
+        sb.append(formatAmount(entry.totalDamage()));
         if (entry.damageType() != null) {
             sb.append(" [").append(entry.damageType().name()).append("]");
         }
@@ -83,7 +83,7 @@ public final class CombatLogFormatter {
         if (entry == null) {
             return "";
         }
-        return "Damage " + formatAmount(entry.finalAmount());
+        return "Damage " + formatAmount(entry.totalDamage());
     }
 
     public static String damageTooltip(CombatLogEntry entry) {
@@ -91,7 +91,7 @@ public final class CombatLogFormatter {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("Damage: ").append(formatAmount(entry.finalAmount()));
+        sb.append("Damage: ").append(formatAmount(entry.totalDamage()));
         if (entry.damageType() != null) {
             sb.append(" [").append(formatEnumName(entry.damageType().name())).append("]");
         }
