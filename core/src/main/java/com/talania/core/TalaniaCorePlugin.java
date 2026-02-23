@@ -52,13 +52,16 @@ public final class TalaniaCorePlugin extends JavaPlugin {
         MovementStatSystem movementStatSystem = new MovementStatSystem();
         registry.registerSystem(movementStatSystem);
         registry.registerSystem(new HealingStatScalingSystem());
-        registry.registerSystem(new EnergyShieldSystem());
+        EnergyShieldSystem energyShieldSystem = new EnergyShieldSystem();
+        registry.registerSystem(energyShieldSystem);
 
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, runtime::handlePlayerReady);
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, event -> {
             runtime.handlePlayerDisconnect(event);
             if (event != null && event.getPlayerRef() != null) {
-                movementStatSystem.clear(event.getPlayerRef().getUuid());
+                java.util.UUID playerId = event.getPlayerRef().getUuid();
+                movementStatSystem.clear(playerId);
+                energyShieldSystem.clear(playerId);
             }
         });
         getEventRegistry().registerGlobal(PlayerMouseButtonEvent.class, runtime::handleMouseButton);

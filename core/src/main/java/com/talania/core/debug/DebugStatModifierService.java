@@ -43,8 +43,8 @@ public final class DebugStatModifierService {
             return false;
         }
         PlayerState state = states.computeIfAbsent(playerId, id -> new PlayerState());
-        state.enabled = true;
-        return true;
+        state.enabled = !state.enabled;
+        return state.enabled;
     }
 
     public void setEnabled(UUID playerId, boolean enabled) {
@@ -52,7 +52,7 @@ public final class DebugStatModifierService {
             return;
         }
         PlayerState state = states.computeIfAbsent(playerId, id -> new PlayerState());
-        state.enabled = true;
+        state.enabled = enabled;
     }
 
     public float getDelta(UUID playerId, StatType stat) {

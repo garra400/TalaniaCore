@@ -62,13 +62,17 @@ public final class EnergyShieldSystem extends EntityTickingSystem<EntityStore> {
         if (player == null || uuid == null) {
             return;
         }
-        com.hypixel.hytale.server.core.universe.PlayerRef playerRef = PlayerRefUtil.resolve(ref, store);
-        if (playerRef == null) {
-            return;
-        }
         float safeMax = Math.max(0.0f, maxShield);
         float current = EnergyShieldService.getCurrent(uuid);
         HudState state = hudStates.computeIfAbsent(uuid, id -> new HudState());
+        com.hypixel.hytale.server.core.universe.PlayerRef playerRef = state.playerRef;
+        if (playerRef == null) {
+            playerRef = PlayerRefUtil.resolve(ref, store);
+            if (playerRef == null) {
+                return;
+            }
+            state.playerRef = playerRef;
+        }
         if (safeMax <= 0.0f) {
             if (state.hud != null) {
                 state.lastMax = 0.0f;
@@ -90,8 +94,16 @@ public final class EnergyShieldSystem extends EntityTickingSystem<EntityStore> {
         }
     }
 
+    public void clear(UUID playerId) {
+        if (playerId == null) {
+            return;
+        }
+        hudStates.remove(playerId);
+    }
+
     private static final class HudState {
         private EnergyShieldHud hud;
+        private com.hypixel.hytale.server.core.universe.PlayerRef playerRef;
         private float lastCurrent = -1.0f;
         private float lastMax = -1.0f;
     }
