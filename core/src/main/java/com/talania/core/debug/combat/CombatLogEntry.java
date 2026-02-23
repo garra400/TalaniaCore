@@ -30,6 +30,8 @@ public final class CombatLogEntry {
     private final float lifesteal;
     private final Float thorns;
     private final Boolean blocked;
+    private final float lifeDamage;
+    private final float shieldAbsorbed;
     private final List<CombatLogStep> steps;
 
     private CombatLogEntry(Builder builder) {
@@ -50,6 +52,8 @@ public final class CombatLogEntry {
         this.lifesteal = builder.lifesteal;
         this.thorns = builder.thorns;
         this.blocked = builder.blocked;
+        this.lifeDamage = Float.isNaN(builder.lifeDamage) ? builder.finalAmount : builder.lifeDamage;
+        this.shieldAbsorbed = builder.shieldAbsorbed;
         this.steps = Collections.unmodifiableList(new ArrayList<>(builder.steps));
     }
 
@@ -97,6 +101,13 @@ public final class CombatLogEntry {
         return finalAmount;
     }
 
+    /**
+     * Total damage after modifiers/reductions, before splitting into life vs shield.
+     */
+    public float totalDamage() {
+        return finalAmount;
+    }
+
     public boolean cancelled() {
         return cancelled;
     }
@@ -119,6 +130,14 @@ public final class CombatLogEntry {
 
     public Boolean blocked() {
         return blocked;
+    }
+
+    public float lifeDamage() {
+        return lifeDamage;
+    }
+
+    public float shieldAbsorbed() {
+        return shieldAbsorbed;
     }
 
     public List<CombatLogStep> steps() {
@@ -177,6 +196,8 @@ public final class CombatLogEntry {
         private float lifesteal;
         private Float thorns;
         private Boolean blocked;
+        private float lifeDamage = Float.NaN;
+        private float shieldAbsorbed;
         private final List<CombatLogStep> steps = new ArrayList<>();
 
         private Builder(UUID eventId, UUID attackerId, UUID targetId, float baseAmount) {
@@ -241,6 +262,16 @@ public final class CombatLogEntry {
 
         public Builder blocked(Boolean blocked) {
             this.blocked = blocked;
+            return this;
+        }
+
+        public Builder lifeDamage(float lifeDamage) {
+            this.lifeDamage = lifeDamage;
+            return this;
+        }
+
+        public Builder shieldAbsorbed(float shieldAbsorbed) {
+            this.shieldAbsorbed = shieldAbsorbed;
             return this;
         }
 

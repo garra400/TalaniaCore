@@ -1,26 +1,25 @@
 $C = "../Common.ui";
 
-Group {
+$C.@Panel {
   LayoutMode: Top;
-  Anchor: (Width: 720, Height: 560);
+  Anchor: (Width: 864, Height: 672);
   Padding: (Full: 16);
 
   Group {
     LayoutMode: Top;
-    Anchor: (Width: 688, Height: 528);
+    Anchor: (Width: 826, Height: 634);
     Padding: (Full: 12);
-    Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
     Label #TitleLabel {
       Style: (...$C.@TitleStyle, FontSize: 20);
-      Anchor: (Width: 640);
+      Anchor: (Width: 768);
       Text: "Talania Debug";
       Padding: (Bottom: 6);
     }
 
     Label #SubtitleLabel {
       Style: (...$C.@DefaultLabelStyle);
-      Anchor: (Width: 640);
+      Anchor: (Width: 768);
       Text: "Dev build only. Toggle per-player debug categories.";
       Padding: (Bottom: 10);
     }
@@ -28,136 +27,137 @@ Group {
     Group #ContentScroll {
       LayoutMode: TopScrolling;
       ScrollbarStyle: $C.@DefaultScrollbarStyle;
-      Anchor: (Width: 640, Height: 380);
+      Anchor: (Width: 768, Height: 456);
       Padding: (Full: 2);
 
       Group #DamagePanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92);
+        Anchor: (Width: 768, Height: 120);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Damage Logs"; Padding: (Bottom: 4); }
         Label #DamageDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #DamageValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #DamageToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #DamageToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
       Group #ModifiersPanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
+        Anchor: (Width: 768, Height: 120, Top: 10);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Modifiers Logs"; Padding: (Bottom: 4); }
         Label #ModifiersDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #ModifiersValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #ModifiersToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #ModifiersToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
       Group #CooldownPanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
+        Anchor: (Width: 768, Height: 120, Top: 10);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Cooldown Logs"; Padding: (Bottom: 4); }
         Label #CooldownDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #CooldownValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #CooldownToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #CooldownToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
       Group #InputPanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
+        Anchor: (Width: 768, Height: 120, Top: 10);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Input Logs"; Padding: (Bottom: 4); }
         Label #InputDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #InputValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #InputToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #InputToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
       Group #ActivationPanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
+        Anchor: (Width: 768, Height: 120, Top: 10);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Activation Logs"; Padding: (Bottom: 4); }
         Label #ActivationDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #ActivationValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #ActivationToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #ActivationToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
       Group #ProfilePanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
+        Anchor: (Width: 768, Height: 120, Top: 10);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Profile Logs"; Padding: (Bottom: 4); }
         Label #ProfileDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #ProfileValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #ProfileToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #ProfileToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
       Group #SystemPanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
+        Anchor: (Width: 768, Height: 120, Top: 10);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "System Logs"; Padding: (Bottom: 4); }
         Label #SystemDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #SystemValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #SystemToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #SystemToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
       Group #UiPanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
+        Anchor: (Width: 768, Height: 120, Top: 10);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "UI Logs"; Padding: (Bottom: 4); }
         Label #UiDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #UiValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #UiToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #UiToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
       Group #ProjectilesPanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
+        Anchor: (Width: 768, Height: 120, Top: 10);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Projectile Logs"; Padding: (Bottom: 4); }
         Label #ProjectilesDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #ProjectilesValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #ProjectilesToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #ProjectilesToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
       Group #EffectsPanel {
         LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
+        Anchor: (Width: 768, Height: 120, Top: 10);
         Padding: (Full: 10);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
         Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Effects Logs"; Padding: (Bottom: 4); }
         Label #EffectsDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
         Label #EffectsValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #EffectsToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
+        $C.@SecondaryTextButton #EffectsToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
       }
 
-      Group #CombatLogPanel {
-        LayoutMode: Top;
-        Anchor: (Width: 640, Height: 92, Top: 8);
-        Padding: (Full: 10);
-        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
-        Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Combat Log"; Padding: (Bottom: 4); }
-        Label #CombatLogDescription { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 4); }
-        Label #CombatLogValue { Style: (...$C.@DefaultLabelStyle); Text: ""; Padding: (Bottom: 6); }
-        $C.@DefaultTextButtonStyle #CombatLogToggle { Text: "Toggle"; Anchor: (Width: 120, Height: 26); }
-      }
     }
 
     Group {
       LayoutMode: Left;
       Anchor: (Height: 32, Top: 10);
-      $C.@DefaultTextButtonStyle #CloseButton { Text: "Close"; Anchor: (Width: 120, Height: 28); }
+      $C.@SecondaryTextButton #AllOnButton { Text: "All On"; Anchor: (Width: 120, Height: 28); }
+      $C.@SecondaryTextButton #AllOffButton { Text: "All Off"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      $C.@SecondaryTextButton #ReturnButton { Text: "Return"; Anchor: (Width: 120, Height: 28, Left: 10); }
     }
   }
 }

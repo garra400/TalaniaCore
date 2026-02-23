@@ -11,6 +11,7 @@ import com.talania.core.hytale.stats.EntityStatModifierRegistry;
 import com.talania.core.hytale.stats.EntityStatModifierService;
 import com.talania.core.hytale.stats.EntityStatSyncService;
 import com.talania.core.input.InputPatternTracker;
+import com.talania.core.combat.shield.EnergyShieldService;
 import com.talania.core.debug.TalaniaDebug;
 import com.talania.core.module.TalaniaModuleRegistry;
 import com.talania.core.profile.TalaniaPlayerProfile;
@@ -104,7 +105,7 @@ public final class TalaniaCoreRuntime {
             stats.setBase(stat, profile.getBaseStat(stat, stat.getDefaultValue()));
         }
         stats.recalculate();
-
+        TalaniaDebug.statModifiers().applyToStats(playerId, stats);
         statSyncService.applyAll(ref, store, playerId, stats);
 
         com.hypixel.hytale.server.core.universe.PlayerRef playerRef =
@@ -127,6 +128,7 @@ public final class TalaniaCoreRuntime {
         }
         UUID playerId = playerRef.getUuid();
         TalaniaDebug.handlePlayerDisconnect(playerId);
+        EnergyShieldService.clear(playerId);
         profileRuntime.unload(playerId, true);
         StatsManager.unregister(playerId);
         inputPatternTracker.clear(playerId);

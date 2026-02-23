@@ -18,6 +18,7 @@ public final class TalaniaDebug {
     private static final DebugRegistry REGISTRY = new DebugRegistry();
     private static final DebugLogService LOG_SERVICE = new DebugLogService();
     private static final CombatLogManager COMBAT_LOG = new CombatLogManager(LOG_SERVICE);
+    private static final DebugStatModifierService STAT_MODIFIERS = new DebugStatModifierService();
     private static DebugSettings SETTINGS = new DebugSettings();
     private static boolean initialized = false;
 
@@ -55,6 +56,10 @@ public final class TalaniaDebug {
         return LOG_SERVICE;
     }
 
+    public static DebugStatModifierService statModifiers() {
+        return STAT_MODIFIERS;
+    }
+
     public static CombatLogManager combatLog() {
         return COMBAT_LOG;
     }
@@ -65,6 +70,8 @@ public final class TalaniaDebug {
 
     public static void handlePlayerReady(UUID playerId) {
         LOG_SERVICE.ensurePlayer(playerId);
+        STAT_MODIFIERS.ensurePlayer(playerId);
+        applyDevStatModifierStore(playerId);
     }
 
     public static void handlePlayerDisconnect(UUID playerId) {
@@ -93,5 +100,21 @@ public final class TalaniaDebug {
             builder.section("core-log", "Logging");
             builder.section("core-combat", "Combat");
         });
+    }
+
+    private static void applyDevStatModifierStore(UUID playerId) {
+        if (playerId == null) {
+            return;
+        }
+        try {
+            Class<?> clazz = Class.forName("com.talania.core.debug.dev.DebugStatModifierStore");
+            Object store = clazz.getMethod("load").invoke(null);
+            clazz.getMethod("applyTo", DebugStatModifierService.class, UUID.class)
+                    .invoke(store, STAT_MODIFIERS, playerId);
+        } catch (ClassNotFoundException ignored) {
+            // Dev-only classes not present in release build.
+        } catch (Exception e) {
+            // Keep debug init resilient.
+        }
     }
 }

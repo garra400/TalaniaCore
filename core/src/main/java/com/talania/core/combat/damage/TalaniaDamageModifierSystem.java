@@ -10,9 +10,11 @@ import com.hypixel.hytale.component.SystemGroup;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
 import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
@@ -24,6 +26,7 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.talania.core.combat.CombatManager;
 import com.talania.core.combat.healing.HealingService;
+import com.talania.core.combat.shield.EnergyShieldService;
 import com.talania.core.debug.combat.CombatLogEntry;
 import com.talania.core.debug.events.CombatLogEvent;
 import com.talania.core.events.EventBus;
@@ -31,6 +34,7 @@ import com.talania.core.stats.StatsManager;
 import com.talania.core.stats.DamageType;
 import com.talania.core.stats.StatType;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -104,19 +108,35 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             return;
         }
 
+        // Ensure debug stat modifiers are applied before reading stats.
+        if (attackerIsPlayer && attackerUuid != null) {
+            com.talania.core.debug.TalaniaDebug.statModifiers()
+                    .applyToStats(attackerUuid, StatsManager.getOrCreate(attackerUuid));
+        }
+        if (targetIsPlayer && targetUuid != null) {
+            com.talania.core.debug.TalaniaDebug.statModifiers()
+                    .applyToStats(targetUuid, StatsManager.getOrCreate(targetUuid));
+        }
+
         float baseAmount = damage.getAmount();
         CombatLogEntry.Builder logBuilder =
                 CombatLogEntry.builder(UUID.randomUUID(), attackerUuid, targetUuid, baseAmount)
                         .cause(damage.getCause());
-        logBuilder.attackerName(resolvePlayerName(store, attackerRef));
-        logBuilder.targetName(resolvePlayerName(store, targetRef));
+        logBuilder.attackerName(resolveEntityName(store, attackerRef));
+        logBuilder.targetName(resolveEntityName(store, targetRef));
 
         AttackType attackType = (AttackType) damage.getIfPresentMetaObject(DamageMetaKeys.ATTACK_TYPE);
+        if (attackType == null) {
+            attackType = inferAttackType(store, attackerRef);
+            if (attackType != null) {
+                damage.putMetaObject(DamageMetaKeys.ATTACK_TYPE, attackType);
+            }
+        }
         DamageType damageType = (DamageType) damage.getIfPresentMetaObject(DamageMetaKeys.DAMAGE_TYPE);
         logBuilder.attackType(attackType).damageType(damageType);
 
         // Target dodge chance
-        float dodgeChance = StatsManager.getStat(targetUuid, StatType.DODGE_CHANCE);
+        float dodgeChance = statWithDebug(targetUuid, StatType.DODGE_CHANCE);
         if (attackerRef != null && dodgeChance > 0.0F) {
             if (ThreadLocalRandom.current().nextFloat() < dodgeChance) {
                 damage.setCancelled(true);
@@ -129,9 +149,9 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Crit from attacker stats
         if (attackerUuid != null) {
-            float critChance = StatsManager.getStat(attackerUuid, StatType.CRIT_CHANCE);
+            float critChance = statWithDebug(attackerUuid, StatType.CRIT_CHANCE);
             if (critChance > 0.0F && ThreadLocalRandom.current().nextFloat() < critChance) {
-                float critMultiplier = StatsManager.getStat(attackerUuid, StatType.CRIT_DAMAGE);
+                float critMultiplier = statWithDebug(attackerUuid, StatType.CRIT_DAMAGE);
                 if (critMultiplier <= 0.0F) {
                     critMultiplier = 1.5F;
                 }
@@ -139,29 +159,45 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
                 damage.setAmount(damage.getAmount() * critMultiplier);
                 damage.putMetaObject(DamageMetaKeys.CRIT_HIT, Boolean.TRUE);
                 logBuilder.crit(true)
-                        .step("crit", before, damage.getAmount(),
-                                "before * " + critMultiplier + " (crit_damage)");
+                        .step("Critical Hit", before, damage.getAmount(),
+                                "before * " + formatMultiplier(critMultiplier)
+                                        + " (" + displayNameForStat(StatType.CRIT_DAMAGE) + ")");
+            }
+        }
+
+        // Base attack power (physical or magic)
+        if (attackerUuid != null && attackType != null) {
+            StatType powerStat = attackType == AttackType.MAGIC ? StatType.MAGIC_ATTACK : StatType.ATTACK;
+            float power = statWithDebug(attackerUuid, powerStat);
+            if (power != 1.0F) {
+                float before = damage.getAmount();
+                damage.setAmount(damage.getAmount() * power);
+                String label = displayNameForStat(powerStat);
+                logBuilder.step(label, before, damage.getAmount(),
+                        "before * " + formatMultiplier(power) + " (" + label + ")");
             }
         }
 
         // Attack-type multipliers (optional meta)
         if (attackType != null) {
             if (attackerUuid != null) {
-                float outgoing = StatsManager.getStat(attackerUuid, attackType.damageStat());
+                float outgoing = statWithDebug(attackerUuid, attackType.damageStat());
                 if (outgoing != 1.0F) {
                     float before = damage.getAmount();
                     damage.setAmount(damage.getAmount() * outgoing);
-                    logBuilder.step("attack_type_outgoing", before, damage.getAmount(),
-                            "before * " + outgoing + " (" + attackType.damageStat().getId() + ")");
+                    String label = displayNameForStat(attackType.damageStat());
+                    logBuilder.step(label, before, damage.getAmount(),
+                            "before * " + formatMultiplier(outgoing) + " (" + label + ")");
                 }
             }
             if (targetUuid != null) {
-                float incoming = StatsManager.getStat(targetUuid, attackType.damageTakenStat());
+                float incoming = statWithDebug(targetUuid, attackType.damageTakenStat());
                 if (incoming != 1.0F) {
                     float before = damage.getAmount();
                     damage.setAmount(damage.getAmount() * incoming);
-                    logBuilder.step("attack_type_incoming", before, damage.getAmount(),
-                            "before * " + incoming + " (" + attackType.damageTakenStat().getId() + ")");
+                    String label = displayNameForStat(attackType.damageTakenStat());
+                    logBuilder.step(label, before, damage.getAmount(),
+                            "before * " + formatMultiplier(incoming) + " (" + label + ")");
                 }
             }
         }
@@ -170,12 +206,13 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         if (attackerRef != null) {
             com.hypixel.hytale.protocol.MovementStates movementStates = movementStates(store, attackerRef);
             if (movementStates != null && movementStates.sprinting) {
-                float sprintMultiplier = StatsManager.getStat(attackerUuid, StatType.SPRINT_DAMAGE_MULT);
+                float sprintMultiplier = statWithDebug(attackerUuid, StatType.SPRINT_DAMAGE_MULT);
                 if (sprintMultiplier > 1.0F) {
                     float before = damage.getAmount();
                     damage.setAmount(damage.getAmount() * sprintMultiplier);
-                    logBuilder.step("sprint_multiplier", before, damage.getAmount(),
-                            "before * " + sprintMultiplier + " (sprint_damage_mult)");
+                    String label = displayNameForStat(StatType.SPRINT_DAMAGE_MULT);
+                    logBuilder.step(label, before, damage.getAmount(),
+                            "before * " + formatMultiplier(sprintMultiplier) + " (" + label + ")");
                 }
             }
         }
@@ -188,8 +225,8 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
             if (multiplier != 1.0F) {
                 float before = damage.getAmount();
                 damage.setAmount(damage.getAmount() * multiplier);
-                logBuilder.step("player_damage_multiplier", before, damage.getAmount(),
-                        "before * " + multiplier + " (combat_settings)");
+                logBuilder.step("Player Damage", before, damage.getAmount(),
+                        "before * " + formatMultiplier(multiplier) + " (Combat Settings)");
             }
         }
 
@@ -203,14 +240,14 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
                     if (weaponDamage.bonus != 0.0f) {
                         float before = damage.getAmount();
                         damage.setAmount(damage.getAmount() * Math.max(0.0f, 1.0f + weaponDamage.bonus));
-                        logBuilder.step("weapon_bonus", before, damage.getAmount(),
-                                "before * (1 + " + weaponDamage.bonus + ") (" + category + ")");
+                        logBuilder.step("Weapon Bonus", before, damage.getAmount(),
+                                "before * (1 + " + formatMultiplier(weaponDamage.bonus) + ") (" + category + ")");
                     }
                     if (weaponDamage.multiplier != 1.0f) {
                         float before = damage.getAmount();
                         damage.setAmount(damage.getAmount() * weaponDamage.multiplier);
-                        logBuilder.step("weapon_multiplier", before, damage.getAmount(),
-                                "before * " + weaponDamage.multiplier + " (" + category + ")");
+                        logBuilder.step("Weapon Multiplier", before, damage.getAmount(),
+                                "before * " + formatMultiplier(weaponDamage.multiplier) + " (" + category + ")");
                     }
                 }
             }
@@ -218,21 +255,23 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Flat damage reduction (per-player stat) + armor stat (percent)
         if (targetUuid != null) {
-            float armorReduction = StatsManager.getStat(targetUuid, StatType.ARMOR);
+            float armorReduction = statWithDebug(targetUuid, StatType.ARMOR);
             if (armorReduction > 0.0F) {
                 float clamped = Math.max(0.0F, Math.min(1.0F, armorReduction));
                 float before = damage.getAmount();
                 damage.setAmount(damage.getAmount() * (1.0F - clamped));
-                logBuilder.step("armor_reduction", before, damage.getAmount(),
-                        "before * (1 - " + clamped + ") (armor)");
+                String label = displayNameForStat(StatType.ARMOR);
+                logBuilder.step(label, before, damage.getAmount(),
+                        "before * (1 - " + formatMultiplier(clamped) + ") (" + label + ")");
             }
-            float flatReduction = StatsManager.getStat(targetUuid, StatType.FLAT_DAMAGE_REDUCTION);
+            float flatReduction = statWithDebug(targetUuid, StatType.FLAT_DAMAGE_REDUCTION);
             if (flatReduction > 0.0F) {
                 float before = damage.getAmount();
                 float reduced = Math.max(0.0F, damage.getAmount() - flatReduction);
                 damage.setAmount(reduced);
-                logBuilder.step("flat_reduction", before, reduced,
-                        "before - " + flatReduction + " (flat_damage_reduction)");
+                String label = displayNameForStat(StatType.FLAT_DAMAGE_REDUCTION);
+                logBuilder.step(label, before, reduced,
+                        "before - " + formatAmount(flatReduction) + " (" + label + ")");
                 if (reduced <= 0.0F) {
                     damage.setCancelled(true);
                     logBuilder.cancelled("flat_reduction").finalAmount(0.0F);
@@ -244,35 +283,53 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Damage-type resistances (optional meta)
         if (damageType != null && damageType != DamageType.PHYSICAL) {
-            float resist = StatsManager.getStat(targetUuid, damageType.resistanceStat());
+            float resist = statWithDebug(targetUuid, damageType.resistanceStat());
             if (resist > 0.0F) {
                 float clamped = Math.max(0.0F, Math.min(1.0F, resist));
                 float before = damage.getAmount();
                 damage.setAmount(damage.getAmount() * (1.0F - clamped));
-                logBuilder.step("damage_type_resist", before, damage.getAmount(),
-                        "before * (1 - " + clamped + ") (" + damageType.resistanceStat().getId() + ")");
+                String label = displayNameForStat(damageType.resistanceStat());
+                logBuilder.step(label, before, damage.getAmount(),
+                        "before * (1 - " + formatMultiplier(clamped) + ") (" + label + ")");
             }
         }
 
         // Fall damage reduction
         if (damage.getCause() == DamageCause.FALL) {
-            float fallResist = StatsManager.getStat(targetUuid, StatType.FALL_RESISTANCE);
+            float fallResist = statWithDebug(targetUuid, StatType.FALL_RESISTANCE);
             if (fallResist > 0.0F) {
                 float clamped = Math.max(0.0F, Math.min(1.0F, fallResist));
                 float before = damage.getAmount();
                 damage.setAmount(damage.getAmount() * (1.0F - clamped));
-                logBuilder.step("fall_resist", before, damage.getAmount(),
-                        "before * (1 - " + clamped + ") (fall_resistance)");
+                String label = displayNameForStat(StatType.FALL_RESISTANCE);
+                logBuilder.step(label, before, damage.getAmount(),
+                        "before * (1 - " + formatMultiplier(clamped) + ") (" + label + ")");
+            }
+        }
+
+        float preShieldAmount = damage.getAmount();
+        float shieldAbsorbed = 0.0f;
+        float lifeDamage = preShieldAmount;
+        // Energy shield absorption (applies before health damage).
+        if (targetUuid != null) {
+            float shieldMax = statWithDebug(targetUuid, StatType.ENERGY_SHIELD_MAX);
+            if (shieldMax > 0.0F) {
+                float remaining = EnergyShieldService.applyDamage(targetUuid, preShieldAmount, shieldMax);
+                if (remaining != preShieldAmount) {
+                    shieldAbsorbed = preShieldAmount - remaining;
+                    lifeDamage = remaining;
+                    damage.setAmount(remaining);
+                }
             }
         }
 
         // Blocking efficiency & stamina drain scaling (per-player stat)
         Float existing = (Float) damage.getIfPresentMetaObject(Damage.STAMINA_DRAIN_MULTIPLIER);
         if (existing == null) {
-            float staminaMult = StatsManager.getStat(targetUuid, StatType.STAMINA_DRAIN_MULT);
+            float staminaMult = statWithDebug(targetUuid, StatType.STAMINA_DRAIN_MULT);
             Boolean blocked = damage.getIfPresentMetaObject(Damage.BLOCKED);
             if (blocked != null && blocked.booleanValue()) {
-                float blockingEfficiency = StatsManager.getStat(targetUuid, StatType.BLOCKING_EFFICIENCY);
+                float blockingEfficiency = statWithDebug(targetUuid, StatType.BLOCKING_EFFICIENCY);
                 if (blockingEfficiency > 0.0F) {
                     staminaMult *= (1.0F / blockingEfficiency);
                 }
@@ -284,7 +341,7 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
 
         // Lifesteal
         if (attackerUuid != null) {
-            float lifesteal = StatsManager.getStat(attackerUuid, StatType.LIFESTEAL);
+            float lifesteal = statWithDebug(attackerUuid, StatType.LIFESTEAL);
             if (lifesteal > 0.0F) {
                 float heal = damage.getAmount() * lifesteal;
                 if (heal > 0.0F) {
@@ -304,8 +361,78 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         if (thornsDamage != null) {
             logBuilder.thorns(thornsDamage);
         }
-        logBuilder.finalAmount(damage.getAmount());
+        logBuilder.finalAmount(preShieldAmount);
+        logBuilder.lifeDamage(lifeDamage);
+        logBuilder.shieldAbsorbed(shieldAbsorbed);
         publishCombatLog(logBuilder);
+    }
+
+    private static final float DEBUG_EPS = 0.0001f;
+    private static final DecimalFormat MULT_FORMAT = new DecimalFormat("0.0");
+    private static final DecimalFormat AMOUNT_FORMAT = new DecimalFormat("0.##");
+
+    private static float statWithDebug(UUID entityId, StatType stat) {
+        if (entityId == null || stat == null) {
+            return stat != null ? stat.getDefaultValue() : 0.0f;
+        }
+        com.talania.core.debug.DebugStatModifierService debug = com.talania.core.debug.TalaniaDebug.statModifiers();
+        float delta = debug.getDelta(entityId, stat);
+        float mult = debug.getMultiplier(entityId, stat);
+        if (Math.abs(delta) > DEBUG_EPS || Math.abs(mult - 1.0f) > DEBUG_EPS) {
+            float base = debug.baseValue(entityId, stat);
+            return (base + delta) * mult;
+        }
+        return StatsManager.getStat(entityId, stat);
+    }
+
+    private static String formatMultiplier(float value) {
+        return MULT_FORMAT.format(value);
+    }
+
+    private static String formatAmount(float value) {
+        return AMOUNT_FORMAT.format(value);
+    }
+
+    private static String displayNameForStat(StatType stat) {
+        if (stat == null) {
+            return "Unknown";
+        }
+        return switch (stat) {
+            case ATTACK -> "Attack Power";
+            case MAGIC_ATTACK -> "Magic Power";
+            case MELEE_DAMAGE_MULT -> "Melee Damage";
+            case RANGED_DAMAGE_MULT -> "Ranged Damage";
+            case MAGIC_DAMAGE_MULT -> "Magic Damage";
+            case SPRINT_DAMAGE_MULT -> "Sprint Damage";
+            case MELEE_DAMAGE_TAKEN_MULT -> "Melee Damage Taken";
+            case RANGED_DAMAGE_TAKEN_MULT -> "Ranged Damage Taken";
+            case MAGIC_DAMAGE_TAKEN_MULT -> "Magic Damage Taken";
+            case CRIT_DAMAGE -> "Critical Damage";
+            case CRIT_CHANCE -> "Critical Chance";
+            case FLAT_DAMAGE_REDUCTION -> "Flat Reduction";
+            case STAMINA_DRAIN_MULT -> "Stamina Drain";
+            default -> humanizeStatId(stat.getId());
+        };
+    }
+
+    private static String humanizeStatId(String id) {
+        if (id == null || id.isBlank()) {
+            return "Unknown";
+        }
+        String raw = id.replace('_', ' ').trim();
+        StringBuilder sb = new StringBuilder(raw.length());
+        boolean upperNext = true;
+        for (int i = 0; i < raw.length(); i++) {
+            char ch = raw.charAt(i);
+            if (ch == ' ') {
+                sb.append(' ');
+                upperNext = true;
+                continue;
+            }
+            sb.append(upperNext ? Character.toUpperCase(ch) : ch);
+            upperNext = false;
+        }
+        return sb.toString();
     }
 
     private static void publishCombatLog(CombatLogEntry.Builder builder) {
@@ -360,6 +487,35 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         return weaponFamilyFromItemId(item.getId());
     }
 
+    private static AttackType inferAttackType(Store<EntityStore> store, Ref<EntityStore> attackerRef) {
+        if (store == null || attackerRef == null) {
+            return null;
+        }
+        ItemStack itemStack = itemInHand(store, attackerRef);
+        if (itemStack == null || itemStack.isEmpty()) {
+            return AttackType.MELEE;
+        }
+        Item item = itemStack.getItem();
+        if (item == null) {
+            return AttackType.MELEE;
+        }
+        String family = familyTag(item.getData());
+        String probe = family != null ? family : item.getId();
+        if (probe == null) {
+            return AttackType.MELEE;
+        }
+        String lower = probe.toLowerCase();
+        if (lower.contains("bow") || lower.contains("crossbow") || lower.contains("gun")
+                || lower.contains("rifle") || lower.contains("pistol") || lower.contains("musket")) {
+            return AttackType.RANGED;
+        }
+        if (lower.contains("staff") || lower.contains("wand") || lower.contains("tome")
+                || lower.contains("spell") || lower.contains("magic")) {
+            return AttackType.MAGIC;
+        }
+        return AttackType.MELEE;
+    }
+
     private static String resolvePlayerName(Store<EntityStore> store, Ref<EntityStore> ref) {
         if (store == null || ref == null) {
             return null;
@@ -371,6 +527,67 @@ public final class TalaniaDamageModifierSystem extends DamageEventSystem {
         }
         String name = playerRef.getUsername();
         return name == null || name.isBlank() ? null : name;
+    }
+
+    private static String resolveEntityName(Store<EntityStore> store, Ref<EntityStore> ref) {
+        if (store == null || ref == null || !ref.isValid()) {
+            return null;
+        }
+        String playerName = resolvePlayerName(store, ref);
+        if (playerName != null) {
+            return playerName;
+        }
+        DisplayNameComponent displayName =
+                (DisplayNameComponent) store.getComponent(ref, DisplayNameComponent.getComponentType());
+        if (displayName == null) {
+            return null;
+        }
+        Message message = displayName.getDisplayName();
+        if (message == null) {
+            return null;
+        }
+        String raw = message.getRawText();
+        if (raw != null && !raw.isBlank()) {
+            return raw;
+        }
+        String messageId = message.getMessageId();
+        if (messageId != null && !messageId.isBlank()) {
+            String humanized = humanizeMessageId(messageId);
+            return humanized == null || humanized.isBlank() ? messageId : humanized;
+        }
+        return null;
+    }
+
+    private static String humanizeMessageId(String messageId) {
+        if (messageId == null || messageId.isBlank()) {
+            return null;
+        }
+        String trimmed = messageId.trim();
+        String[] parts = trimmed.split("[/.:]");
+        String core = null;
+        for (int i = parts.length - 1; i >= 0; i--) {
+            String part = parts[i].trim();
+            if (part.isEmpty()) {
+                continue;
+            }
+            String lower = part.toLowerCase();
+            if (lower.equals("name") || lower.equals("title") || lower.equals("display") || lower.equals("label")) {
+                continue;
+            }
+            if (lower.equals("entity") && i > 0) {
+                continue;
+            }
+            core = part;
+            break;
+        }
+        if (core == null) {
+            core = trimmed;
+        }
+        core = core.replace('_', ' ').replace('-', ' ').trim();
+        if (core.isBlank()) {
+            return core;
+        }
+        return Character.toUpperCase(core.charAt(0)) + core.substring(1);
     }
 
     private static ItemStack itemInHand(Store<EntityStore> store, Ref<EntityStore> attackerRef) {

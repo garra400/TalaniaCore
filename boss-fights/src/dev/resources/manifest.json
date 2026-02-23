@@ -1,8 +1,8 @@
 {
   "Group": "Talania",
-  "Name": "TalaniaBossFights",
+  "Name": "TalaniaBossFights-Dev",
   "Version": "0.1.0",
-  "Description": "Boss fight systems for Talania.",
+  "Description": "Boss fight systems for Talania. (Dev)",
   "Authors": [
     {
       "Name": "Talania Team",
@@ -13,7 +13,7 @@
   "Website": "",
   "ServerVersion": "2026.02.19-1a311a592",
   "Dependencies": {
-    "Talania:TalaniaCore": "*"
+    "Talania:TalaniaCore-Dev": "*"
   },
   "OptionalDependencies": {},
   "DisabledByDefault": false,

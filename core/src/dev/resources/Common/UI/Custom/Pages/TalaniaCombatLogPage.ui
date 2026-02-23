@@ -1,26 +1,25 @@
 $C = "../Common.ui";
 
-Group {
+$C.@Panel {
   LayoutMode: Top;
-  Anchor: (Width: 760, Height: 560);
+  Anchor: (Width: 912, Height: 672);
   Padding: (Full: 16);
 
   Group {
     LayoutMode: Top;
-    Anchor: (Width: 728, Height: 528);
+    Anchor: (Width: 874, Height: 634);
     Padding: (Full: 12);
-    Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
     Label #TitleLabel {
       Style: (...$C.@TitleStyle, FontSize: 20);
-      Anchor: (Width: 680);
+      Anchor: (Width: 816);
       Text: "Combat Log";
       Padding: (Bottom: 6);
     }
 
     Label #SubtitleLabel {
       Style: (...$C.@DefaultLabelStyle);
-      Anchor: (Width: 680);
+      Anchor: (Width: 816);
       Text: "Dev build only. Recent combat events.";
       Padding: (Bottom: 10);
     }
@@ -28,22 +27,534 @@ Group {
     Group #LogScroll {
       LayoutMode: TopScrolling;
       ScrollbarStyle: $C.@DefaultScrollbarStyle;
-      Anchor: (Width: 680, Height: 400);
+      Anchor: (Width: 816, Height: 480);
       Padding: (Full: 6);
+      AutoScrollDown: true;
       Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-      Label #LogText {
+      Label #EmptyLabel {
         Style: (...$C.@DefaultLabelStyle);
-        Anchor: (Width: 640);
-        Text: "";
+        Anchor: (Width: 768);
+        Text: "No combat log entries yet.";
+        Visible: false;
+      }
+
+      Group #Row1 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24);
+
+        Label #Row1Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row1Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row2 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row2Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row2Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row3 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row3Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row3Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row4 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row4Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row4Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row5 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row5Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row5Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row6 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row6Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row6Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row7 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row7Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row7Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row8 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row8Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row8Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row9 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row9Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row9Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row10 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row10Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row10Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row11 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row11Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row11Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row12 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row12Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row12Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row13 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row13Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row13Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row14 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row14Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row14Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row15 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row15Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row15Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row16 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row16Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row16Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row17 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row17Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row17Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row18 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row18Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row18Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row19 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row19Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row19Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row20 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row20Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row20Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row21 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row21Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row21Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row22 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row22Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row22Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row23 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row23Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row23Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row24 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row24Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row24Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row25 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row25Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row25Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row26 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row26Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row26Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row27 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row27Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row27Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row28 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row28Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row28Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row29 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row29Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row29Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
+      }
+
+      Group #Row30 {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 24, Top: 4);
+
+        Label #Row30Summary {
+          Style: (...$C.@DefaultLabelStyle);
+          Anchor: (Width: 520);
+          Text: "";
+        }
+        Label #Row30Damage {
+          Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff);
+          Anchor: (Width: 220, Left: 8);
+          Text: "";
+          TextTooltipStyle: (MaxWidth: 600);
+        }
       }
     }
 
     Group {
       LayoutMode: Left;
       Anchor: (Height: 32, Top: 10);
-      $C.@DefaultTextButtonStyle #RefreshButton { Text: "Refresh"; Anchor: (Width: 120, Height: 28); }
-      $C.@DefaultTextButtonStyle #CloseButton { Text: "Close"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      $C.@SecondaryTextButton #RefreshButton { Text: "Refresh"; Anchor: (Width: 120, Height: 28); }
+      $C.@SecondaryTextButton #ReturnButton { Text: "Return"; Anchor: (Width: 120, Height: 28, Left: 10); }
     }
   }
 }

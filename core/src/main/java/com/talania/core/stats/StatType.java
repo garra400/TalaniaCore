@@ -21,6 +21,15 @@ public enum StatType {
     
     /** Maximum stamina/energy */
     STAMINA("stamina", 10.0f, 0.0f, 1000.0f),
+
+    /** Maximum energy shield (absorbs damage before health). */
+    ENERGY_SHIELD_MAX("energy_shield_max", 0.0f, 0.0f, 10000.0f),
+
+    /** Energy shield recharge rate (points per second). */
+    ENERGY_SHIELD_RECHARGE("energy_shield_recharge", 0.0f, 0.0f, 1000.0f),
+
+    /** Delay (seconds) before energy shield begins recharging after damage. */
+    ENERGY_SHIELD_RECHARGE_DELAY("energy_shield_recharge_delay", 0.0f, 0.0f, 60.0f),
     
     // ==================== OFFENSE ====================
     

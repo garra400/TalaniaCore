@@ -63,9 +63,6 @@ public final class CombatLogManager {
     }
 
     private void addIfEnabled(UUID playerId, CombatLogEntry entry) {
-        if (!logService.isEnabled(playerId, DebugCategory.COMBAT_LOG)) {
-            return;
-        }
         CombatLogBuffer buffer = buffers.computeIfAbsent(playerId,
                 id -> new CombatLogBuffer(logService.settings().combatLogMaxEntries));
         buffer.add(entry);
