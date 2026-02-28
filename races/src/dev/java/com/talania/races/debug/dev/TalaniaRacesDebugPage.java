@@ -8,7 +8,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -47,7 +46,7 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
             return;
         }
         if ("Return".equals(eventData.action)) {
-            openDebugMenu(ref, store);
+            openRacesMenu(ref, store);
             return;
         }
         if ("SetRace".equals(eventData.action) && eventData.value != null) {
@@ -74,7 +73,7 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
     }
 
     private void applyState(UICommandBuilder commandBuilder) {
-        commandBuilder.set("#TitleLabel.Text", "Races Debug");
+        commandBuilder.set("#TitleLabel.Text", "Races: Select Race");
         RaceType current = plugin.raceService().getRace(playerRef.getUuid());
         String currentLabel = current != null ? singularLabel(current) : "None";
         commandBuilder.set("#CurrentRaceLabel.Text", "Current: " + currentLabel);
@@ -136,25 +135,11 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
         });
     }
 
-    private void openDebugMenu(Ref<EntityStore> ref, Store<EntityStore> store) {
+    private void openRacesMenu(Ref<EntityStore> ref, Store<EntityStore> store) {
         if (ref == null || store == null) {
             return;
         }
-        Player player = (Player) store.getComponent(ref, Player.getComponentType());
-        if (player == null) {
-            return;
-        }
-        try {
-            Class<?> clazz = Class.forName("com.talania.core.debug.dev.TalaniaDebugMenuPage");
-            Object page = clazz.getDeclaredConstructor(PlayerRef.class).newInstance(playerRef);
-            if (page instanceof CustomUIPage customPage) {
-                player.getPageManager().openCustomPage(ref, store, customPage);
-            }
-        } catch (ClassNotFoundException ignored) {
-            // Dev-only classes not present in release build.
-        } catch (Exception ignored) {
-            // Swallow to avoid breaking debug UI flow.
-        }
+        TalaniaRacesDebugMenuPage.open(playerRef, ref, store, plugin);
     }
 
     public static final class TalaniaRacesDebugEventData {

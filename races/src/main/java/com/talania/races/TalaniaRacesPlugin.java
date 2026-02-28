@@ -68,7 +68,7 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
             return;
         }
         try {
-            Class<?> clazz = Class.forName("com.talania.races.debug.dev.TalaniaRacesDebugPage");
+            Class<?> clazz = Class.forName("com.talania.races.debug.dev.TalaniaRacesDebugMenuPage");
             java.lang.reflect.Method method = clazz.getDeclaredMethod("open",
                     com.hypixel.hytale.server.core.universe.PlayerRef.class,
                     com.hypixel.hytale.component.Ref.class,

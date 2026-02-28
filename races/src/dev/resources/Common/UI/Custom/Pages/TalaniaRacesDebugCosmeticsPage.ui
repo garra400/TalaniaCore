@@ -1,0 +1,260 @@
+$C = "../Common.ui";
+
+$C.@Panel {
+  LayoutMode: Top;
+  Anchor: (Width: 864, Height: 672);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 826, Height: 634);
+    Padding: (Full: 12);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 20);
+      Anchor: (Width: 768);
+      Text: "Races: Cosmetics Debug";
+      Padding: (Bottom: 6);
+    }
+
+    Label #SubtitleLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 768);
+      Text: "Shows current cosmetics and randomizes per slot.";
+      Padding: (Bottom: 10);
+    }
+
+    Group #CosmeticsScroll {
+      LayoutMode: TopScrolling;
+      ScrollbarStyle: $C.@DefaultScrollbarStyle;
+      Anchor: (Width: 768, Height: 456);
+      Padding: (Full: 2);
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotBodyCharacteristicName { Style: (...$C.@DefaultLabelStyle); Text: "Body"; Anchor: (Width: 160); }
+        Label #SlotBodyCharacteristicValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotBodyCharacteristicButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotUnderwearName { Style: (...$C.@DefaultLabelStyle); Text: "Underwear"; Anchor: (Width: 160); }
+        Label #SlotUnderwearValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotUnderwearButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotFaceName { Style: (...$C.@DefaultLabelStyle); Text: "Face"; Anchor: (Width: 160); }
+        Label #SlotFaceValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotFaceButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotEyesName { Style: (...$C.@DefaultLabelStyle); Text: "Eyes"; Anchor: (Width: 160); }
+        Label #SlotEyesValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotEyesButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotEarsName { Style: (...$C.@DefaultLabelStyle); Text: "Ears"; Anchor: (Width: 160); }
+        Label #SlotEarsValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotEarsButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotMouthName { Style: (...$C.@DefaultLabelStyle); Text: "Mouth"; Anchor: (Width: 160); }
+        Label #SlotMouthValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotMouthButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotEyebrowsName { Style: (...$C.@DefaultLabelStyle); Text: "Eyebrows"; Anchor: (Width: 160); }
+        Label #SlotEyebrowsValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotEyebrowsButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotHaircutName { Style: (...$C.@DefaultLabelStyle); Text: "Haircut"; Anchor: (Width: 160); }
+        Label #SlotHaircutValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotHaircutButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotFacialHairName { Style: (...$C.@DefaultLabelStyle); Text: "Facial Hair"; Anchor: (Width: 160); }
+        Label #SlotFacialHairValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotFacialHairButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotPantsName { Style: (...$C.@DefaultLabelStyle); Text: "Pants"; Anchor: (Width: 160); }
+        Label #SlotPantsValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotPantsButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotOverpantsName { Style: (...$C.@DefaultLabelStyle); Text: "Overpants"; Anchor: (Width: 160); }
+        Label #SlotOverpantsValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotOverpantsButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotUndertopName { Style: (...$C.@DefaultLabelStyle); Text: "Undertop"; Anchor: (Width: 160); }
+        Label #SlotUndertopValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotUndertopButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotOvertopName { Style: (...$C.@DefaultLabelStyle); Text: "Overtop"; Anchor: (Width: 160); }
+        Label #SlotOvertopValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotOvertopButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotShoesName { Style: (...$C.@DefaultLabelStyle); Text: "Shoes"; Anchor: (Width: 160); }
+        Label #SlotShoesValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotShoesButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotHeadAccessoryName { Style: (...$C.@DefaultLabelStyle); Text: "Head Accessory"; Anchor: (Width: 160); }
+        Label #SlotHeadAccessoryValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotHeadAccessoryButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotFaceAccessoryName { Style: (...$C.@DefaultLabelStyle); Text: "Face Accessory"; Anchor: (Width: 160); }
+        Label #SlotFaceAccessoryValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotFaceAccessoryButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotEarAccessoryName { Style: (...$C.@DefaultLabelStyle); Text: "Ear Accessory"; Anchor: (Width: 160); }
+        Label #SlotEarAccessoryValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotEarAccessoryButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotSkinFeatureName { Style: (...$C.@DefaultLabelStyle); Text: "Skin Feature"; Anchor: (Width: 160); }
+        Label #SlotSkinFeatureValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotSkinFeatureButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotGlovesName { Style: (...$C.@DefaultLabelStyle); Text: "Gloves"; Anchor: (Width: 160); }
+        Label #SlotGlovesValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotGlovesButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 768, Height: 64, Top: 8);
+        Padding: (Full: 8);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+        Label #SlotCapeName { Style: (...$C.@DefaultLabelStyle); Text: "Cape"; Anchor: (Width: 160); }
+        Label #SlotCapeValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
+        $C.@SecondaryTextButton #SlotCapeButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+    }
+
+    Group {
+      LayoutMode: Left;
+      Anchor: (Height: 32, Top: 12);
+      $C.@SecondaryTextButton #ReturnButton { Text: "Return"; Anchor: (Width: 120, Height: 28); }
+    }
+  }
+}

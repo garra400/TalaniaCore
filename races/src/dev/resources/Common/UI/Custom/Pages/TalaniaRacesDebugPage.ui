@@ -13,7 +13,7 @@ $C.@Panel {
     Label #TitleLabel {
       Style: (...$C.@TitleStyle, FontSize: 20);
       Anchor: (Width: 768);
-      Text: "Races Debug";
+      Text: "Races: Select Race";
       Padding: (Bottom: 6);
     }
 

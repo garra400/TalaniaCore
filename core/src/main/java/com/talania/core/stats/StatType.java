@@ -117,6 +117,9 @@ public enum StatType {
     
     /** Jump height multiplier */
     JUMP_HEIGHT("jump_height", 1.0f, 0.0f, 10.0f),
+
+    /** Player model scale multiplier */
+    PLAYER_SCALE("player_scale", 1.0f, 0.1f, 5.0f),
     
     // ==================== UTILITY ====================
     
