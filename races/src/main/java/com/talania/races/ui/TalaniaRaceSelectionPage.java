@@ -165,16 +165,20 @@ public final class TalaniaRaceSelectionPage extends InteractiveCustomUIPage<Tala
         return sb.toString();
     }
 
-    public static void open(PlayerRef playerRef, Ref<EntityStore> ref, Store<EntityStore> store,
+    public static void open(Ref<EntityStore> ref, Store<EntityStore> store,
                             TalaniaRacesPlugin plugin, boolean respec) {
-        if (playerRef == null || ref == null || store == null || plugin == null) {
+        if (ref == null || store == null || plugin == null) {
+            return;
+        }
+        PlayerRef resolved = com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
+        if (resolved == null) {
             return;
         }
         store.getExternalData().getWorld().execute(() -> {
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
                 player.getPageManager().openCustomPage(ref, store,
-                        new TalaniaRaceSelectionPage(playerRef, plugin, respec));
+                        new TalaniaRaceSelectionPage(resolved, plugin, respec));
             }
         });
     }

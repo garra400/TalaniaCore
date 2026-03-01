@@ -50,7 +50,7 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
             return;
         }
         if ("Return".equals(eventData.action)) {
-            openRacesMenu(ref, store);
+            TalaniaRacesDebugMenuPage.open(ref, store, plugin);
             return;
         }
         if ("SetRace".equals(eventData.action) && eventData.value != null) {
@@ -130,16 +130,19 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
         };
     }
 
-    public static void open(PlayerRef playerRef, Ref<EntityStore> ref, Store<EntityStore> store,
-                            TalaniaRacesPlugin plugin) {
-        if (playerRef == null || ref == null || store == null || plugin == null) {
+    public static void open(Ref<EntityStore> ref, Store<EntityStore> store, TalaniaRacesPlugin plugin) {
+        if (ref == null || store == null || plugin == null) {
+            return;
+        }
+        PlayerRef resolved = com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
+        if (resolved == null) {
             return;
         }
         store.getExternalData().getWorld().execute(() -> {
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
                 player.getPageManager().openCustomPage(ref, store,
-                        new TalaniaRacesDebugPage(playerRef, plugin));
+                        new TalaniaRacesDebugPage(resolved, plugin));
             }
         });
     }
@@ -148,7 +151,7 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
         if (ref == null || store == null) {
             return;
         }
-        TalaniaRacesDebugMenuPage.open(playerRef, ref, store, plugin);
+        TalaniaRacesDebugMenuPage.open(ref, store, plugin);
     }
 
     private UUID resolvePlayerId(Ref ref, Store store) {

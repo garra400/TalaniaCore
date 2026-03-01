@@ -8,6 +8,7 @@ import com.talania.core.profile.api.TalaniaApiRegistry;
 import com.talania.core.runtime.TalaniaCoreRuntime;
 import com.talania.core.events.EventBus;
 import com.talania.core.events.player.PromptRaceSelectionEvent;
+import com.talania.core.utils.PlayerRefUtil;
 import com.talania.core.module.ModuleHooks;
 import com.talania.core.module.TalaniaModuleRegistry;
 import com.talania.races.api.TalaniaApiImpl;
@@ -74,11 +75,10 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
         try {
             Class<?> clazz = Class.forName("com.talania.races.debug.dev.TalaniaRacesDebugMenuPage");
             java.lang.reflect.Method method = clazz.getDeclaredMethod("open",
-                    com.hypixel.hytale.server.core.universe.PlayerRef.class,
                     com.hypixel.hytale.component.Ref.class,
                     com.hypixel.hytale.component.Store.class,
                     TalaniaRacesPlugin.class);
-            method.invoke(null, playerRef, ref, store, this);
+            method.invoke(null, ref, store, this);
         } catch (ClassNotFoundException ignored) {
             // Dev-only classes not present in release build.
         } catch (Exception e) {
@@ -143,14 +143,25 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
     }
 
     private void handleRaceSelectionPrompt(PromptRaceSelectionEvent event) {
-        if (event == null || event.playerRef() == null || event.playerEntityRef() == null) {
+        if (event == null || event.playerEntityRef() == null) {
             return;
         }
         TalaniaCoreRuntime core = TalaniaCoreRuntime.get();
         if (core == null) {
             return;
         }
-        java.util.UUID playerId = event.playerRef().getUuid();
+        com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> ref =
+                event.playerEntityRef();
+        com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store =
+                ref.getStore();
+        if (store == null) {
+            return;
+        }
+        PlayerRef playerRef = PlayerRefUtil.resolve(ref, store);
+        if (playerRef == null) {
+            return;
+        }
+        java.util.UUID playerId = playerRef.getUuid();
         TalaniaPlayerProfile profile = core.profileRuntime().load(playerId);
         if (profile == null) {
             return;
@@ -163,12 +174,7 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
         } else {
             clearRace(profile, playerId, core);
         }
-        com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store =
-                event.playerEntityRef().getStore();
-        if (store == null) {
-            return;
-        }
-        TalaniaRaceSelectionPage.open(event.playerRef(), event.playerEntityRef(), store, this, event.respec());
+        TalaniaRaceSelectionPage.open(ref, store, this, event.respec());
     }
 
     private void clearRace(TalaniaPlayerProfile profile, java.util.UUID playerId, TalaniaCoreRuntime core) {

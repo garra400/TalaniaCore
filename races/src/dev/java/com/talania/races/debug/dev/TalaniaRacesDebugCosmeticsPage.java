@@ -58,7 +58,7 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
             return;
         }
         if ("Return".equals(eventData.action)) {
-            TalaniaRacesDebugMenuPage.open(playerRef, ref, store, plugin);
+            TalaniaRacesDebugMenuPage.open(ref, store, plugin);
             return;
         }
         if ("SetSample".equals(eventData.action) && eventData.value != null) {
@@ -306,16 +306,19 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
         return value.substring(0, MAX_LABEL_LENGTH - 3) + "...";
     }
 
-    public static void open(PlayerRef playerRef, Ref<EntityStore> ref, Store<EntityStore> store,
-                            TalaniaRacesPlugin plugin) {
-        if (playerRef == null || ref == null || store == null || plugin == null) {
+    public static void open(Ref<EntityStore> ref, Store<EntityStore> store, TalaniaRacesPlugin plugin) {
+        if (ref == null || store == null || plugin == null) {
+            return;
+        }
+        PlayerRef resolved = com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
+        if (resolved == null) {
             return;
         }
         store.getExternalData().getWorld().execute(() -> {
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
                 player.getPageManager().openCustomPage(ref, store,
-                        new TalaniaRacesDebugCosmeticsPage(playerRef, plugin));
+                        new TalaniaRacesDebugCosmeticsPage(resolved, plugin));
             }
         });
     }
