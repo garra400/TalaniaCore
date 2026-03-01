@@ -73,11 +73,13 @@ public final class EnergyShieldSystem extends EntityTickingSystem<EntityStore> {
             }
             state.playerRef = playerRef;
         }
+        boolean hideForUi = player.getPageManager().getCustomPage() != null;
         if (safeMax <= 0.0f) {
             if (state.hud != null) {
                 state.lastMax = 0.0f;
                 state.lastCurrent = 0.0f;
-                state.hud.updateValues(0.0f, 0.0f);
+                state.lastHidden = hideForUi;
+                state.hud.updateValues(0.0f, 0.0f, hideForUi);
             }
             return;
         }
@@ -86,11 +88,13 @@ public final class EnergyShieldSystem extends EntityTickingSystem<EntityStore> {
             player.getHudManager().setCustomHud(playerRef, state.hud);
         }
         boolean shouldUpdate = Math.abs(state.lastMax - safeMax) > 0.001f
-                || Math.abs(state.lastCurrent - current) > 0.001f;
+                || Math.abs(state.lastCurrent - current) > 0.001f
+                || state.lastHidden != hideForUi;
         if (shouldUpdate) {
             state.lastMax = safeMax;
             state.lastCurrent = current;
-            state.hud.updateValues(current, safeMax);
+            state.lastHidden = hideForUi;
+            state.hud.updateValues(current, safeMax, hideForUi);
         }
     }
 
@@ -106,5 +110,6 @@ public final class EnergyShieldSystem extends EntityTickingSystem<EntityStore> {
         private com.hypixel.hytale.server.core.universe.PlayerRef playerRef;
         private float lastCurrent = -1.0f;
         private float lastMax = -1.0f;
+        private boolean lastHidden = false;
     }
 }

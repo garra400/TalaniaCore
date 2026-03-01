@@ -7,6 +7,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -18,10 +19,12 @@ import com.talania.races.RaceType;
 import com.talania.races.TalaniaRacesPlugin;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
     private final PlayerRef playerRef;
     private final TalaniaRacesPlugin plugin;
+    private UUID playerId;
 
     public TalaniaRacesDebugPage(PlayerRef playerRef, TalaniaRacesPlugin plugin) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaRacesDebugEventData.CODEC);
@@ -34,6 +37,7 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
                       @Nonnull Store store) {
         commandBuilder.append("Pages/TalaniaRacesDebugPage.ui");
         bindEvents(eventBuilder);
+        playerId = resolvePlayerId(ref, store);
         applyState(commandBuilder);
     }
 
@@ -52,7 +56,11 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
         if ("SetRace".equals(eventData.action) && eventData.value != null) {
             RaceType race = RaceType.fromId(eventData.value);
             if (race != null) {
-                plugin.setRace(playerRef.getUuid(), race);
+                UUID resolvedId = resolvePlayerId(ref, store);
+                if (resolvedId != null) {
+                    playerId = resolvedId;
+                    plugin.setRace(resolvedId, race);
+                }
             }
         }
 
@@ -74,7 +82,8 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
 
     private void applyState(UICommandBuilder commandBuilder) {
         commandBuilder.set("#TitleLabel.Text", "Races: Select Race");
-        RaceType current = plugin.raceService().getRace(playerRef.getUuid());
+        UUID resolvedId = playerId != null ? playerId : playerRef.getUuid();
+        RaceType current = plugin.raceService().getRace(resolvedId);
         String currentLabel = current != null ? singularLabel(current) : "None";
         commandBuilder.set("#CurrentRaceLabel.Text", "Current: " + currentLabel);
         for (RaceType race : RaceType.values()) {
@@ -140,6 +149,17 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
             return;
         }
         TalaniaRacesDebugMenuPage.open(playerRef, ref, store, plugin);
+    }
+
+    private UUID resolvePlayerId(Ref ref, Store store) {
+        if (ref == null || store == null) {
+            return playerRef != null ? playerRef.getUuid() : null;
+        }
+        UUIDComponent uuidComponent = (UUIDComponent) store.getComponent(ref, UUIDComponent.getComponentType());
+        if (uuidComponent != null && uuidComponent.getUuid() != null) {
+            return uuidComponent.getUuid();
+        }
+        return playerRef != null ? playerRef.getUuid() : null;
     }
 
     public static final class TalaniaRacesDebugEventData {

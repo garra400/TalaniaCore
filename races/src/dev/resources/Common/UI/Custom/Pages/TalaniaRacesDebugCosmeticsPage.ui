@@ -20,7 +20,7 @@ $C.@Panel {
     Label #SubtitleLabel {
       Style: (...$C.@DefaultLabelStyle);
       Anchor: (Width: 768);
-      Text: "Shows current cosmetics and randomizes per slot.";
+      Text: "Shows current cosmetics and applies a sample per slot.";
       Padding: (Bottom: 10);
     }
 
@@ -38,7 +38,7 @@ $C.@Panel {
 
         Label #SlotBodyCharacteristicName { Style: (...$C.@DefaultLabelStyle); Text: "Body"; Anchor: (Width: 160); }
         Label #SlotBodyCharacteristicValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotBodyCharacteristicButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotBodyCharacteristicButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -49,7 +49,7 @@ $C.@Panel {
 
         Label #SlotUnderwearName { Style: (...$C.@DefaultLabelStyle); Text: "Underwear"; Anchor: (Width: 160); }
         Label #SlotUnderwearValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotUnderwearButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotUnderwearButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -60,7 +60,7 @@ $C.@Panel {
 
         Label #SlotFaceName { Style: (...$C.@DefaultLabelStyle); Text: "Face"; Anchor: (Width: 160); }
         Label #SlotFaceValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotFaceButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotFaceButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -71,7 +71,7 @@ $C.@Panel {
 
         Label #SlotEyesName { Style: (...$C.@DefaultLabelStyle); Text: "Eyes"; Anchor: (Width: 160); }
         Label #SlotEyesValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotEyesButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotEyesButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -82,7 +82,7 @@ $C.@Panel {
 
         Label #SlotEarsName { Style: (...$C.@DefaultLabelStyle); Text: "Ears"; Anchor: (Width: 160); }
         Label #SlotEarsValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotEarsButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotEarsButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -93,7 +93,7 @@ $C.@Panel {
 
         Label #SlotMouthName { Style: (...$C.@DefaultLabelStyle); Text: "Mouth"; Anchor: (Width: 160); }
         Label #SlotMouthValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotMouthButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotMouthButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -104,7 +104,7 @@ $C.@Panel {
 
         Label #SlotEyebrowsName { Style: (...$C.@DefaultLabelStyle); Text: "Eyebrows"; Anchor: (Width: 160); }
         Label #SlotEyebrowsValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotEyebrowsButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotEyebrowsButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -115,7 +115,7 @@ $C.@Panel {
 
         Label #SlotHaircutName { Style: (...$C.@DefaultLabelStyle); Text: "Haircut"; Anchor: (Width: 160); }
         Label #SlotHaircutValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotHaircutButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotHaircutButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -126,7 +126,7 @@ $C.@Panel {
 
         Label #SlotFacialHairName { Style: (...$C.@DefaultLabelStyle); Text: "Facial Hair"; Anchor: (Width: 160); }
         Label #SlotFacialHairValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotFacialHairButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotFacialHairButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -137,7 +137,7 @@ $C.@Panel {
 
         Label #SlotPantsName { Style: (...$C.@DefaultLabelStyle); Text: "Pants"; Anchor: (Width: 160); }
         Label #SlotPantsValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotPantsButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotPantsButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -148,7 +148,7 @@ $C.@Panel {
 
         Label #SlotOverpantsName { Style: (...$C.@DefaultLabelStyle); Text: "Overpants"; Anchor: (Width: 160); }
         Label #SlotOverpantsValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotOverpantsButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotOverpantsButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -159,7 +159,7 @@ $C.@Panel {
 
         Label #SlotUndertopName { Style: (...$C.@DefaultLabelStyle); Text: "Undertop"; Anchor: (Width: 160); }
         Label #SlotUndertopValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotUndertopButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotUndertopButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -170,7 +170,7 @@ $C.@Panel {
 
         Label #SlotOvertopName { Style: (...$C.@DefaultLabelStyle); Text: "Overtop"; Anchor: (Width: 160); }
         Label #SlotOvertopValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotOvertopButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotOvertopButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -181,7 +181,7 @@ $C.@Panel {
 
         Label #SlotShoesName { Style: (...$C.@DefaultLabelStyle); Text: "Shoes"; Anchor: (Width: 160); }
         Label #SlotShoesValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotShoesButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotShoesButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -192,7 +192,7 @@ $C.@Panel {
 
         Label #SlotHeadAccessoryName { Style: (...$C.@DefaultLabelStyle); Text: "Head Accessory"; Anchor: (Width: 160); }
         Label #SlotHeadAccessoryValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotHeadAccessoryButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotHeadAccessoryButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -203,7 +203,7 @@ $C.@Panel {
 
         Label #SlotFaceAccessoryName { Style: (...$C.@DefaultLabelStyle); Text: "Face Accessory"; Anchor: (Width: 160); }
         Label #SlotFaceAccessoryValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotFaceAccessoryButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotFaceAccessoryButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -214,7 +214,7 @@ $C.@Panel {
 
         Label #SlotEarAccessoryName { Style: (...$C.@DefaultLabelStyle); Text: "Ear Accessory"; Anchor: (Width: 160); }
         Label #SlotEarAccessoryValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotEarAccessoryButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotEarAccessoryButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -225,7 +225,7 @@ $C.@Panel {
 
         Label #SlotSkinFeatureName { Style: (...$C.@DefaultLabelStyle); Text: "Skin Feature"; Anchor: (Width: 160); }
         Label #SlotSkinFeatureValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotSkinFeatureButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotSkinFeatureButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -236,7 +236,7 @@ $C.@Panel {
 
         Label #SlotGlovesName { Style: (...$C.@DefaultLabelStyle); Text: "Gloves"; Anchor: (Width: 160); }
         Label #SlotGlovesValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotGlovesButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotGlovesButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
 
       Group {
@@ -247,7 +247,7 @@ $C.@Panel {
 
         Label #SlotCapeName { Style: (...$C.@DefaultLabelStyle); Text: "Cape"; Anchor: (Width: 160); }
         Label #SlotCapeValue { Style: (...$C.@DefaultLabelStyle); Text: "Current: None"; Anchor: (Width: 440, Left: 10); }
-        $C.@SecondaryTextButton #SlotCapeButton { Text: "Randomize"; Anchor: (Width: 120, Height: 28, Left: 10); }
+        $C.@SecondaryTextButton #SlotCapeButton { Text: "Set Sample"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
     }
 

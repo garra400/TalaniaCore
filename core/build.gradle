@@ -10,19 +10,13 @@ java {
     withJavadocJar()
 }
 
-sourceSets {
-    dev {
-        java.srcDir 'src/dev/java'
-        resources.setSrcDirs(['src/dev/resources'])
-        compileClasspath += sourceSets.main.output + configurations.compileClasspath
-        runtimeClasspath += output + compileClasspath
-    }
+if (project.hasProperty("devBuild")) {
+    sourceSets.main.java.srcDir 'src/dev/java'
+    sourceSets.main.resources.srcDir 'src/dev/resources'
 }
 
-configurations {
-    devImplementation.extendsFrom implementation
-    devCompileOnly.extendsFrom compileOnly
-    devRuntimeOnly.extendsFrom runtimeOnly
+tasks.named('processResources') {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 dependencies {
@@ -35,9 +29,8 @@ tasks.register('devJar', Jar) {
     archiveBaseName.set('TalaniaCore')
     archiveClassifier.set('dev')
     archiveVersion.set(project.version.toString())
-    dependsOn tasks.named('devClasses')
+    dependsOn tasks.named('classes')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from sourceSets.dev.output
     from sourceSets.main.output
 }
 

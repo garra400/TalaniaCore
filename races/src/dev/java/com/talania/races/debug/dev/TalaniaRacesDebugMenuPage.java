@@ -7,6 +7,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
@@ -21,10 +22,12 @@ import com.talania.races.RaceType;
 import com.talania.races.TalaniaRacesPlugin;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
     private final PlayerRef playerRef;
     private final TalaniaRacesPlugin plugin;
+    private UUID playerId;
 
     public TalaniaRacesDebugMenuPage(PlayerRef playerRef, TalaniaRacesPlugin plugin) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaRacesDebugMenuEventData.CODEC);
@@ -37,6 +40,7 @@ public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
                       @Nonnull Store store) {
         commandBuilder.append("Pages/TalaniaRacesDebugMenuPage.ui");
         bindEvents(eventBuilder);
+        playerId = resolvePlayerId(ref, store);
         applyState(commandBuilder);
     }
 
@@ -56,10 +60,6 @@ public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
             TalaniaRacesDebugPage.open(playerRef, ref, store, plugin);
             return;
         }
-        if ("OpenSize".equals(eventData.action)) {
-            TalaniaRacesDebugSizePage.open(playerRef, ref, store, plugin);
-            return;
-        }
         if ("OpenCosmetics".equals(eventData.action)) {
             TalaniaRacesDebugCosmeticsPage.open(playerRef, ref, store, plugin);
         }
@@ -70,8 +70,6 @@ public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
                 new EventData().append("Action", "Return"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenRaceListButton",
                 new EventData().append("Action", "OpenRaceList"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenSizeButton",
-                new EventData().append("Action", "OpenSize"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenCosmeticsButton",
                 new EventData().append("Action", "OpenCosmetics"), false);
     }
@@ -80,11 +78,12 @@ public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
         commandBuilder.set("#TitleLabel.Text", "Races Debug");
         commandBuilder.set("#SubtitleLabel.Text", "Dev build only. Race tools and cosmetics testing.");
 
-        RaceType current = plugin.raceService().getRace(playerRef.getUuid());
+        UUID resolvedId = playerId != null ? playerId : playerRef.getUuid();
+        RaceType current = plugin.raceService().getRace(resolvedId);
         String currentLabel = current != null ? current.displayName() : "None";
         commandBuilder.set("#CurrentRaceLabel.Text", "Current race: " + currentLabel);
 
-        float scale = StatsManager.getStat(playerRef.getUuid(), StatType.PLAYER_SCALE);
+        float scale = StatsManager.getStat(resolvedId, StatType.PLAYER_SCALE);
         commandBuilder.set("#CurrentScaleLabel.Text", "Current size: " + format(scale));
     }
 
@@ -125,6 +124,17 @@ public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
                         new TalaniaRacesDebugMenuPage(playerRef, plugin));
             }
         });
+    }
+
+    private UUID resolvePlayerId(Ref ref, Store store) {
+        if (ref == null || store == null) {
+            return playerRef != null ? playerRef.getUuid() : null;
+        }
+        UUIDComponent uuidComponent = (UUIDComponent) store.getComponent(ref, UUIDComponent.getComponentType());
+        if (uuidComponent != null && uuidComponent.getUuid() != null) {
+            return uuidComponent.getUuid();
+        }
+        return playerRef != null ? playerRef.getUuid() : null;
     }
 
     public static final class TalaniaRacesDebugMenuEventData {

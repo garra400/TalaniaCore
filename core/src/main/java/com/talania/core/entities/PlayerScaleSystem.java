@@ -56,11 +56,11 @@ public final class PlayerScaleSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
 
-        boolean appliedModelScale = applyModelScale(ref, store, scale);
+        boolean appliedModelScale = applyModelScale(ref, store, commandBuffer, scale);
         if (!appliedModelScale) {
-            applyEntityScale(ref, store, scale);
+            applyEntityScale(ref, store, commandBuffer, scale);
         } else {
-            resetEntityScaleIfPresent(ref, store);
+            resetEntityScaleIfPresent(ref, store, commandBuffer);
         }
         lastScale.put(uuid, scale);
     }
@@ -72,7 +72,8 @@ public final class PlayerScaleSystem extends EntityTickingSystem<EntityStore> {
         lastScale.remove(playerId);
     }
 
-    private boolean applyModelScale(Ref<EntityStore> ref, Store<EntityStore> store, float scale) {
+    private boolean applyModelScale(Ref<EntityStore> ref, Store<EntityStore> store,
+                                    CommandBuffer<EntityStore> commandBuffer, float scale) {
         PlayerSkinComponent skinComponent =
                 (PlayerSkinComponent) store.getComponent(ref, PlayerSkinComponent.getComponentType());
         if (skinComponent == null) {
@@ -90,25 +91,32 @@ public final class PlayerScaleSystem extends EntityTickingSystem<EntityStore> {
         if (model == null) {
             return false;
         }
-        store.addComponent(ref, ModelComponent.getComponentType(), new ModelComponent(model));
+        commandBuffer.replaceComponent(ref, ModelComponent.getComponentType(), new ModelComponent(model));
+        PlayerSkinComponent refreshed = new PlayerSkinComponent(skin);
+        refreshed.setNetworkOutdated();
+        commandBuffer.replaceComponent(ref, PlayerSkinComponent.getComponentType(), refreshed);
         return true;
     }
 
-    private void applyEntityScale(Ref<EntityStore> ref, Store<EntityStore> store, float scale) {
+    private void applyEntityScale(Ref<EntityStore> ref, Store<EntityStore> store,
+                                  CommandBuffer<EntityStore> commandBuffer, float scale) {
         EntityScaleComponent scaleComponent =
                 (EntityScaleComponent) store.getComponent(ref, EntityScaleComponent.getComponentType());
         if (scaleComponent == null) {
-            store.addComponent(ref, EntityScaleComponent.getComponentType(), new EntityScaleComponent(scale));
+            commandBuffer.addComponent(ref, EntityScaleComponent.getComponentType(), new EntityScaleComponent(scale));
         } else {
-            scaleComponent.setScale(scale);
+            EntityScaleComponent next = new EntityScaleComponent(scale);
+            commandBuffer.replaceComponent(ref, EntityScaleComponent.getComponentType(), next);
         }
     }
 
-    private void resetEntityScaleIfPresent(Ref<EntityStore> ref, Store<EntityStore> store) {
+    private void resetEntityScaleIfPresent(Ref<EntityStore> ref, Store<EntityStore> store,
+                                           CommandBuffer<EntityStore> commandBuffer) {
         EntityScaleComponent scaleComponent =
                 (EntityScaleComponent) store.getComponent(ref, EntityScaleComponent.getComponentType());
         if (scaleComponent != null) {
-            scaleComponent.setScale(1.0f);
+            EntityScaleComponent next = new EntityScaleComponent(1.0f);
+            commandBuffer.replaceComponent(ref, EntityScaleComponent.getComponentType(), next);
         }
     }
 }

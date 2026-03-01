@@ -178,7 +178,7 @@ public enum RaceType {
         mods.add(new ModifierSpec(source, StatType.ARMOR, 0.10f, StatModifier.Operation.ADD));
         mods.add(new ModifierSpec(source, StatType.POISON_RESISTANCE, 0.10f, StatModifier.Operation.ADD));
         mods.add(new ModifierSpec(source, StatType.MOVE_SPEED, 0.90f, StatModifier.Operation.MULTIPLY_TOTAL));
-        mods.add(new ModifierSpec(source, StatType.PLAYER_SCALE, 0.60f, StatModifier.Operation.MULTIPLY_TOTAL));
+        mods.add(new ModifierSpec(source, StatType.PLAYER_SCALE, 0.65f, StatModifier.Operation.MULTIPLY_TOTAL));
         return mods;
     }
 

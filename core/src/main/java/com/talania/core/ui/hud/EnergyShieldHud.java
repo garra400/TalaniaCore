@@ -10,14 +10,16 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 public final class EnergyShieldHud extends CustomUIHud {
     private float current;
     private float max;
+    private boolean hidden;
 
     public EnergyShieldHud(PlayerRef playerRef) {
         super(playerRef);
     }
 
-    public void updateValues(float current, float max) {
+    public void updateValues(float current, float max, boolean hidden) {
         this.current = current;
         this.max = max;
+        this.hidden = hidden;
         UICommandBuilder builder = new UICommandBuilder();
         apply(builder);
         update(false, builder);
@@ -30,7 +32,7 @@ public final class EnergyShieldHud extends CustomUIHud {
     }
 
     private void apply(UICommandBuilder commandBuilder) {
-        boolean visible = max > 0.0f;
+        boolean visible = max > 0.0f && !hidden;
         float clampedMax = Math.max(0.0f, max);
         float clampedCurrent = Math.max(0.0f, Math.min(current, clampedMax));
         float percent = clampedMax <= 0.0f ? 0.0f : clampedCurrent / clampedMax;

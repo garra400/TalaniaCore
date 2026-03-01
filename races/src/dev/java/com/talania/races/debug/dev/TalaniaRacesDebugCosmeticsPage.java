@@ -8,10 +8,11 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.PlayerSkin;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticRegistry;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
+import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -28,10 +29,10 @@ import java.util.Random;
 
 public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPage {
     private static final int MAX_LABEL_LENGTH = 60;
-    private static final int MAX_TRIES = 10;
     private final PlayerRef playerRef;
     private final TalaniaRacesPlugin plugin;
     private final Random random = new Random();
+    private PlayerSkin baselineSkin;
 
     public TalaniaRacesDebugCosmeticsPage(PlayerRef playerRef, TalaniaRacesPlugin plugin) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaRacesDebugCosmeticsEventData.CODEC);
@@ -43,6 +44,7 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
     public void build(@Nonnull Ref ref, @Nonnull UICommandBuilder commandBuilder, @Nonnull UIEventBuilder eventBuilder,
                       @Nonnull Store store) {
         commandBuilder.append("Pages/TalaniaRacesDebugCosmeticsPage.ui");
+        baselineSkin = new PlayerSkin(getOrCreateSkin(ref, store));
         bindEvents(eventBuilder);
         applyState(ref, store, commandBuilder);
     }
@@ -59,10 +61,10 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
             TalaniaRacesDebugMenuPage.open(playerRef, ref, store, plugin);
             return;
         }
-        if ("Randomize".equals(eventData.action) && eventData.value != null) {
+        if ("SetSample".equals(eventData.action) && eventData.value != null) {
             SkinSlot slot = SkinSlot.fromId(eventData.value);
             if (slot != null) {
-                applyRandomCosmetic(ref, store, slot);
+                applySampleCosmetic(ref, store, slot);
             }
             refresh(ref, store);
         }
@@ -73,55 +75,61 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
                 new EventData().append("Action", "Return"), false);
         for (SkinSlot slot : SkinSlot.values()) {
             eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Slot" + slot.uiId + "Button",
-                    new EventData().append("Action", "Randomize").append("Value", slot.id), false);
+                    new EventData().append("Action", "SetSample").append("Value", slot.id), false);
         }
     }
 
     private void applyState(Ref<EntityStore> ref, Store<EntityStore> store, UICommandBuilder commandBuilder) {
         commandBuilder.set("#TitleLabel.Text", "Races: Cosmetics Debug");
-        commandBuilder.set("#SubtitleLabel.Text", "Shows current cosmetics and randomizes per slot.");
+        commandBuilder.set("#SubtitleLabel.Text", "Uses cosmetics registry to validate samples.");
 
         PlayerSkin skin = getOrCreateSkin(ref, store);
+        CosmeticsModule cosmetics = CosmeticsModule.get();
+        if (cosmetics == null || cosmetics.getRegistry() == null) {
+            commandBuilder.set("#SubtitleLabel.Text", "Cosmetics registry missing.");
+        }
         for (SkinSlot slot : SkinSlot.values()) {
             String current = getSlotValue(skin, slot);
+            String sample = sampleFor(cosmetics, skin, slot, current);
             commandBuilder.set("#Slot" + slot.uiId + "Name.Text", slot.label);
             commandBuilder.set("#Slot" + slot.uiId + "Value.Text", "Current: " + formatValue(current));
-            commandBuilder.set("#Slot" + slot.uiId + "Button.Text", "Randomize");
+            boolean enabled = sample != null;
+            commandBuilder.set("#Slot" + slot.uiId + "Button.Text",
+                    sample == null ? "No Valid" : "Change");
+            commandBuilder.set("#Slot" + slot.uiId + "Button.Enabled", enabled);
+            if (sample != null) {
+                commandBuilder.set("#Slot" + slot.uiId + "Button.TooltipText",
+                        "Sample: " + formatValue(sample));
+            } else {
+                commandBuilder.set("#Slot" + slot.uiId + "Button.TooltipText",
+                        "No valid alternative found for this slot.");
+            }
         }
     }
 
-    private void applyRandomCosmetic(Ref<EntityStore> ref, Store<EntityStore> store, SkinSlot slot) {
+    private void applySampleCosmetic(Ref<EntityStore> ref, Store<EntityStore> store, SkinSlot slot) {
         CosmeticsModule cosmetics = CosmeticsModule.get();
         if (cosmetics == null) {
             return;
         }
-        CosmeticRegistry registry = cosmetics.getRegistry();
-        if (registry == null) {
-            return;
-        }
         PlayerSkin currentSkin = getOrCreateSkin(ref, store);
         String currentValue = getSlotValue(currentSkin, slot);
-        List<String> candidates = new ArrayList<>(catalogFor(registry, slot).keySet());
-        candidates.removeIf(id -> id == null || id.isBlank());
-        if (candidates.isEmpty()) {
+        String sample = sampleFor(cosmetics, currentSkin, slot, currentValue);
+        if (sample == null) {
             return;
         }
-        java.util.Collections.shuffle(candidates, random);
-        int tries = 0;
-        for (String candidate : candidates) {
-            if (candidate.equals(currentValue)) {
-                continue;
-            }
-            PlayerSkin updated = new PlayerSkin(currentSkin);
-            setSlotValue(updated, slot, candidate);
-            if (isValidSkin(cosmetics, updated)) {
-                setPlayerSkin(ref, store, updated);
-                return;
-            }
-            tries++;
-            if (tries >= MAX_TRIES) {
-                break;
-            }
+        if (baselineSkin == null) {
+            baselineSkin = new PlayerSkin(currentSkin);
+        }
+        PlayerSkin updated = new PlayerSkin(currentSkin);
+        if (sample.equals(currentValue)) {
+            String baselineValue = getSlotValue(baselineSkin, slot);
+            setSlotValue(updated, slot, baselineValue);
+        } else {
+            setSlotValue(updated, slot, sample);
+        }
+        if (isValidSkin(cosmetics, updated)) {
+            setPlayerSkin(ref, store, updated);
         }
     }
 
@@ -138,9 +146,36 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
         if (ref == null || store == null || skin == null) {
             return;
         }
-        PlayerSkinComponent component = new PlayerSkinComponent(skin);
-        store.addComponent(ref, PlayerSkinComponent.getComponentType(), component);
-        component.setNetworkOutdated();
+        store.getExternalData().getWorld().execute(() -> {
+            if (ref == null || !ref.isValid()) {
+                return;
+            }
+            PlayerSkinComponent component = new PlayerSkinComponent(skin);
+            component.setNetworkOutdated();
+            store.replaceComponent(ref, PlayerSkinComponent.getComponentType(), component);
+
+            CosmeticsModule cosmetics = CosmeticsModule.get();
+            if (cosmetics == null) {
+                return;
+            }
+            float scale = 1.0f;
+            ModelComponent modelComponent =
+                    (ModelComponent) store.getComponent(ref, ModelComponent.getComponentType());
+            if (modelComponent != null && modelComponent.getModel() != null) {
+                scale = modelComponent.getModel().getScale();
+            } else {
+                EntityScaleComponent scaleComponent =
+                        (EntityScaleComponent) store.getComponent(ref, EntityScaleComponent.getComponentType());
+                if (scaleComponent != null) {
+                    scale = scaleComponent.getScale();
+                }
+            }
+            com.hypixel.hytale.server.core.asset.type.model.config.Model model =
+                    cosmetics.createModel(skin, scale);
+            if (model != null) {
+                store.replaceComponent(ref, ModelComponent.getComponentType(), new ModelComponent(model));
+            }
+        });
     }
 
     private PlayerSkin getOrCreateSkin(Ref<EntityStore> ref, Store<EntityStore> store) {
@@ -155,7 +190,7 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
         return skin;
     }
 
-    private Map<String, ?> catalogFor(CosmeticRegistry registry, SkinSlot slot) {
+    private Map<String, ?> catalogFor(com.hypixel.hytale.server.core.cosmetics.CosmeticRegistry registry, SkinSlot slot) {
         return switch (slot) {
             case BODY_CHARACTERISTIC -> registry.getBodyCharacteristics();
             case UNDERWEAR -> registry.getUnderwear();
@@ -178,6 +213,29 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
             case GLOVES -> registry.getGloves();
             case CAPE -> registry.getCapes();
         };
+    }
+
+    private String sampleFor(CosmeticsModule cosmetics, PlayerSkin baseSkin, SkinSlot slot, String currentValue) {
+        if (cosmetics == null || cosmetics.getRegistry() == null) {
+            return null;
+        }
+        List<String> ids = new ArrayList<>(catalogFor(cosmetics.getRegistry(), slot).keySet());
+        ids.removeIf(id -> id == null || id.isBlank());
+        if (ids.isEmpty()) {
+            return null;
+        }
+        ids.sort(String::compareToIgnoreCase);
+        for (String id : ids) {
+            if (id.equals(currentValue)) {
+                continue;
+            }
+            PlayerSkin candidate = new PlayerSkin(baseSkin);
+            setSlotValue(candidate, slot, id);
+            if (isValidSkin(cosmetics, candidate)) {
+                return id;
+            }
+        }
+        return null;
     }
 
     private String getSlotValue(PlayerSkin skin, SkinSlot slot) {

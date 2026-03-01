@@ -60,15 +60,6 @@ $C.@Panel {
         Anchor: (Width: 720, Height: 40, Top: 8);
         Padding: (Full: 6);
 
-        Label { Style: (...$C.@DefaultLabelStyle); Text: "Player size controls"; Anchor: (Width: 520); }
-        $C.@SecondaryTextButton #OpenSizeButton { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
-      }
-
-      Group {
-        LayoutMode: Left;
-        Anchor: (Width: 720, Height: 40, Top: 8);
-        Padding: (Full: 6);
-
         Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetics overrides"; Anchor: (Width: 520); }
         $C.@SecondaryTextButton #OpenCosmeticsButton { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
