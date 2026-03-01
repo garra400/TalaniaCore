@@ -16,6 +16,7 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.talania.core.events.CoreEvents;
 import com.talania.core.stats.StatType;
 import com.talania.core.stats.StatsManager;
 import com.talania.races.RaceType;
@@ -62,6 +63,11 @@ public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
         }
         if ("OpenCosmetics".equals(eventData.action)) {
             TalaniaRacesDebugCosmeticsPage.open(playerRef, ref, store, plugin);
+            return;
+        }
+        if ("OpenRaceSelectionPrompt".equals(eventData.action)) {
+            CoreEvents.promptRaceSelection(playerRef, ref, true);
+            return;
         }
     }
 
@@ -72,6 +78,8 @@ public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
                 new EventData().append("Action", "OpenRaceList"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenCosmeticsButton",
                 new EventData().append("Action", "OpenCosmetics"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenRaceSelectionButton",
+                new EventData().append("Action", "OpenRaceSelectionPrompt"), false);
     }
 
     private void applyState(UICommandBuilder commandBuilder) {

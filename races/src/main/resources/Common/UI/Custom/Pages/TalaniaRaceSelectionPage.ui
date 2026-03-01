@@ -1,0 +1,116 @@
+$C = "../Common.ui";
+
+$C.@Panel {
+  LayoutMode: Top;
+  Anchor: (Width: 920, Height: 680);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 888, Height: 648);
+    Padding: (Full: 12);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 22);
+      Anchor: (Width: 840);
+      Text: "Choose Your Race";
+      Padding: (Bottom: 6);
+    }
+
+    Label #SubtitleLabel {
+      Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #a9b4c0);
+      Anchor: (Width: 840);
+      Text: "Select a race to gain unique strengths.";
+      Padding: (Bottom: 8);
+    }
+
+    Label #CurrentRaceLabel {
+      Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #a9b4c0);
+      Anchor: (Width: 840);
+      Text: "Current race: None";
+      Padding: (Bottom: 12);
+    }
+
+    Group #RaceTabs {
+      LayoutMode: Top;
+      Anchor: (Width: 860, Height: 72);
+      Padding: (Full: 4);
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 860, Height: 32);
+        Padding: (Full: 4);
+
+        $C.@SecondaryTextButton #HumanTabButton { Text: "Human"; Anchor: (Width: 140, Height: 28); }
+        Label #HumanTabLabel { Visible: false; }
+        $C.@SecondaryTextButton #HighElfTabButton { Text: "High Elf"; Anchor: (Width: 140, Height: 28, Left: 6); }
+        Label #HighElfTabLabel { Visible: false; }
+        $C.@SecondaryTextButton #OrcTabButton { Text: "Orc"; Anchor: (Width: 140, Height: 28, Left: 6); }
+        Label #OrcTabLabel { Visible: false; }
+        $C.@SecondaryTextButton #DwarfTabButton { Text: "Dwarf"; Anchor: (Width: 140, Height: 28, Left: 6); }
+        Label #DwarfTabLabel { Visible: false; }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 860, Height: 32, Top: 8);
+        Padding: (Full: 4);
+
+        $C.@SecondaryTextButton #NightwalkerTabButton { Text: "Nightwalker"; Anchor: (Width: 160, Height: 28); }
+        Label #NightwalkerTabLabel { Visible: false; }
+        $C.@SecondaryTextButton #BeastkinTabButton { Text: "Beastkin"; Anchor: (Width: 140, Height: 28, Left: 6); }
+        Label #BeastkinTabLabel { Visible: false; }
+        $C.@SecondaryTextButton #StarbornTabButton { Text: "Starborn"; Anchor: (Width: 140, Height: 28, Left: 6); }
+        Label #StarbornTabLabel { Visible: false; }
+      }
+    }
+
+    Group #Separator {
+      Anchor: (Width: 860, Height: 2, Top: 8);
+      Background: #2A313C;
+    }
+
+    Group #RaceDetails {
+      LayoutMode: Top;
+      Anchor: (Width: 860, Height: 420, Top: 10);
+      Padding: (Full: 6);
+
+      Label #RaceName {
+        Style: (...$C.@DefaultLabelStyle, FontSize: 18);
+        Anchor: (Width: 820);
+        Text: "Race Name";
+        Padding: (Bottom: 2);
+      }
+      Label #RaceTheme {
+        Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #a9b4c0);
+        Anchor: (Width: 820);
+        Text: "Theme";
+        Padding: (Bottom: 8);
+      }
+      Label #RaceHistory {
+        Style: (...$C.@DefaultLabelStyle, FontSize: 12);
+        Anchor: (Width: 820);
+        Text: "History";
+        Padding: (Bottom: 10);
+      }
+      Label #RaceBuff {
+        Style: (...$C.@DefaultLabelStyle, FontSize: 12);
+        Anchor: (Width: 820);
+        Text: "Buff";
+        Padding: (Bottom: 6);
+      }
+      Label #RaceDebuff {
+        Style: (...$C.@DefaultLabelStyle, FontSize: 12);
+        Anchor: (Width: 820);
+        Text: "Debuff";
+      }
+    }
+
+    Group {
+      LayoutMode: Left;
+      Anchor: (Height: 32, Top: 10);
+      $C.@SecondaryTextButton #SelectButton { Text: "Choose"; Anchor: (Width: 120, Height: 28); }
+      $C.@SecondaryTextButton #CancelButton { Text: "Close"; Anchor: (Width: 120, Height: 28, Left: 8); }
+    }
+  }
+}

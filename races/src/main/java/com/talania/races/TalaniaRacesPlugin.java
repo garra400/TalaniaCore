@@ -6,10 +6,13 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.talania.core.profile.TalaniaPlayerProfile;
 import com.talania.core.profile.api.TalaniaApiRegistry;
 import com.talania.core.runtime.TalaniaCoreRuntime;
+import com.talania.core.events.EventBus;
+import com.talania.core.events.player.PromptRaceSelectionEvent;
 import com.talania.core.module.ModuleHooks;
 import com.talania.core.module.TalaniaModuleRegistry;
 import com.talania.races.api.TalaniaApiImpl;
 import com.talania.races.system.RaceConditionalEffectSystem;
+import com.talania.races.ui.TalaniaRaceSelectionPage;
 
 import javax.annotation.Nonnull;
 
@@ -31,6 +34,7 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
         TalaniaApiRegistry.register(api);
         this.conditionalEffectSystem = new RaceConditionalEffectSystem(raceService);
         getEntityStoreRegistry().registerSystem(conditionalEffectSystem);
+        EventBus.subscribe(PromptRaceSelectionEvent.class, this::handleRaceSelectionPrompt);
         TalaniaModuleRegistry.get().register("races", new ModuleHooks() {
             @Override
             public void onPlayerReady(PlayerRef playerRef, TalaniaPlayerProfile profile,
@@ -122,9 +126,8 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
         java.util.UUID playerId = playerRef.getUuid();
         RaceType race = RaceType.fromId(profile.raceId());
         if (race == null) {
-            race = RaceType.HUMAN;
-            profile.setRaceId(race.id());
-            core.profileRuntime().save(playerId);
+            raceService.clearRace(playerId);
+            return;
         }
         raceService.setRace(playerId, race);
     }
@@ -137,5 +140,43 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
             conditionalEffectSystem.clear(playerRef.getUuid());
         }
         raceService.clearRace(playerRef.getUuid());
+    }
+
+    private void handleRaceSelectionPrompt(PromptRaceSelectionEvent event) {
+        if (event == null || event.playerRef() == null || event.playerEntityRef() == null) {
+            return;
+        }
+        TalaniaCoreRuntime core = TalaniaCoreRuntime.get();
+        if (core == null) {
+            return;
+        }
+        java.util.UUID playerId = event.playerRef().getUuid();
+        TalaniaPlayerProfile profile = core.profileRuntime().load(playerId);
+        if (profile == null) {
+            return;
+        }
+        if (!event.respec()) {
+            RaceType existing = RaceType.fromId(profile.raceId());
+            if (existing != null) {
+                return;
+            }
+        } else {
+            clearRace(profile, playerId, core);
+        }
+        com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store =
+                event.playerEntityRef().getStore();
+        if (store == null) {
+            return;
+        }
+        TalaniaRaceSelectionPage.open(event.playerRef(), event.playerEntityRef(), store, this, event.respec());
+    }
+
+    private void clearRace(TalaniaPlayerProfile profile, java.util.UUID playerId, TalaniaCoreRuntime core) {
+        if (profile == null || playerId == null || core == null) {
+            return;
+        }
+        profile.setRaceId(null);
+        core.profileRuntime().save(playerId);
+        raceService.clearRace(playerId);
     }
 }

@@ -63,6 +63,15 @@ $C.@Panel {
         Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetics overrides"; Anchor: (Width: 520); }
         $C.@SecondaryTextButton #OpenCosmeticsButton { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
       }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 720, Height: 40, Top: 8);
+        Padding: (Full: 6);
+
+        Label { Style: (...$C.@DefaultLabelStyle); Text: "Race selection prompt"; Anchor: (Width: 520); }
+        $C.@SecondaryTextButton #OpenRaceSelectionButton { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
     }
 
     Group {
