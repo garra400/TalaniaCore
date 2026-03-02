@@ -16,8 +16,8 @@ $C.@Panel {
       Padding: (Bottom: 6);
 
       Label #TitleLabel {
-        Style: (...$C.@TitleStyle, FontSize: 28);
-        Anchor: (Width: 600);
+        Style: (...$C.@TitleStyle, FontSize: 28, HorizontalAlignment: Center);
+        Anchor: (Width: 860);
         Text: "Choose a race";
       }
     }
@@ -99,26 +99,26 @@ $C.@Panel {
         Anchor: (Width: 820, Height: 320);
 
         Label #RaceName {
-          Style: (...$C.@DefaultLabelStyle, FontSize: 26, RenderBold: true);
-          Anchor: (Width: 420, Left: 200);
+          Style: (...$C.@DefaultLabelStyle, FontSize: 26, RenderBold: true, HorizontalAlignment: Center);
+          Anchor: (Width: 820);
           Text: "Race Name";
           Padding: (Bottom: 2);
         }
         Label #RaceTheme {
-          Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #a9b4c0);
-          Anchor: (Width: 520, Left: 150, Top: 2);
+          Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #a9b4c0, HorizontalAlignment: Center);
+          Anchor: (Width: 820);
           Text: "Theme";
           Padding: (Bottom: 8);
         }
         Label #RaceHistory {
-          Style: (...$C.@DefaultLabelStyle, FontSize: 18);
-          Anchor: (Width: 820, Height: 96);
+          Style: (...$C.@DefaultLabelStyle, FontSize: 18, Wrap: true);
+          Anchor: (Width: 820, Height: 120);
           Text: "History";
           Padding: (Bottom: 10);
         }
         Group {
           LayoutMode: Left;
-          Anchor: (Width: 820, Height: 24);
+          Anchor: (Width: 820, Height: 48);
 
           Label #RaceBuffName {
             Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #ffffff);
@@ -126,14 +126,14 @@ $C.@Panel {
             Text: "Buff Name";
           }
           Label #RaceBuffDesc {
-            Style: (...$C.@DefaultLabelStyle, FontSize: 18);
-            Anchor: (Width: 600);
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18, Wrap: true);
+            Anchor: (Width: 600, Height: 48);
             Text: "Buff Description";
           }
         }
         Group {
           LayoutMode: Left;
-          Anchor: (Width: 820, Height: 24, Top: 6);
+          Anchor: (Width: 820, Height: 48, Top: 6);
 
           Label #RaceDebuffName {
             Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #ffffff);
@@ -141,8 +141,8 @@ $C.@Panel {
             Text: "Debuff Name";
           }
           Label #RaceDebuffDesc {
-            Style: (...$C.@DefaultLabelStyle, FontSize: 18);
-            Anchor: (Width: 600);
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18, Wrap: true);
+            Anchor: (Width: 600, Height: 48);
             Text: "Debuff Description";
           }
         }
