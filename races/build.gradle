@@ -2,10 +2,8 @@ plugins {
     id 'java-library'
 }
 
-if (project.hasProperty("devBuild")) {
-    sourceSets.main.java.srcDir 'src/dev/java'
-    sourceSets.main.resources.srcDir 'src/dev/resources'
-}
+sourceSets.main.java.srcDir 'src/dev/java'
+sourceSets.main.resources.srcDir 'src/dev/resources'
 
 tasks.named('processResources') {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -15,11 +13,3 @@ dependencies {
     implementation project(':core')
 }
 
-tasks.register('devJar', Jar) {
-    archiveBaseName.set('TalaniaRaces')
-    archiveClassifier.set('dev')
-    archiveVersion.set(project.version.toString())
-    dependsOn tasks.named('classes')
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from sourceSets.main.output
-}

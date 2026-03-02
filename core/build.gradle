@@ -10,10 +10,8 @@ java {
     withJavadocJar()
 }
 
-if (project.hasProperty("devBuild")) {
-    sourceSets.main.java.srcDir 'src/dev/java'
-    sourceSets.main.resources.srcDir 'src/dev/resources'
-}
+sourceSets.main.java.srcDir 'src/dev/java'
+sourceSets.main.resources.srcDir 'src/dev/resources'
 
 tasks.named('processResources') {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -25,13 +23,31 @@ dependencies {
     implementation 'org.mongodb:bson:4.11.1'
 }
 
+def devFlagFile = layout.buildDirectory.file("generated/talania-dev.flag")
+
+tasks.register('generateDevFlag') {
+    outputs.file(devFlagFile)
+    doLast {
+        def outFile = devFlagFile.get().asFile
+        outFile.parentFile.mkdirs()
+        outFile.text = "dev"
+    }
+}
+
 tasks.register('devJar', Jar) {
-    archiveBaseName.set('TalaniaCore')
-    archiveClassifier.set('dev')
+    archiveBaseName.set('TalaniaCoreDEV')
+    archiveClassifier.set('')
     archiveVersion.set(project.version.toString())
     dependsOn tasks.named('classes')
+    dependsOn tasks.named('generateDevFlag')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from sourceSets.main.output
+    from(sourceSets.main.output) {
+        exclude 'manifest.json'
+    }
+    from('src/dev/manifest.json') {
+        rename { 'manifest.json' }
+    }
+    from(devFlagFile)
 }
 
 publishing {

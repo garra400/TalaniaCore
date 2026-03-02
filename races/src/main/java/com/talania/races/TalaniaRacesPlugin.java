@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.talania.core.profile.TalaniaPlayerProfile;
 import com.talania.core.profile.api.TalaniaApiRegistry;
 import com.talania.core.runtime.TalaniaCoreRuntime;
+import com.talania.core.TalaniaDevMode;
 import com.talania.core.events.EventBus;
 import com.talania.core.events.player.PromptRaceSelectionEvent;
 import com.talania.core.utils.PlayerRefUtil;
@@ -51,6 +52,9 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
 
             @Override
             public void registerDebug(com.talania.core.debug.DebugRegistry registry) {
+                if (!TalaniaDevMode.isEnabled()) {
+                    return;
+                }
                 registry.registerModule("races", "Races", builder -> builder.section("main", "Races"));
             }
 
@@ -58,6 +62,9 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
             public void openDebugSection(String sectionId, PlayerRef playerRef,
                                          com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> ref,
                                          com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store) {
+                if (!TalaniaDevMode.isEnabled()) {
+                    return;
+                }
                 if (!"main".equalsIgnoreCase(sectionId)) {
                     return;
                 }
@@ -69,6 +76,9 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
     private void tryOpenRacesDebugUi(PlayerRef playerRef,
                                      com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> ref,
                                      com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store) {
+        if (!TalaniaDevMode.isEnabled()) {
+            return;
+        }
         if (playerRef == null || ref == null || store == null) {
             return;
         }

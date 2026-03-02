@@ -1,13 +1,13 @@
 ## Talania Dev Build
 
-This repo supports a dev-only build for debugging tools (commands + UI).
-Release builds do not include dev-only classes.
+This repo supports a core dev build that enables debugging tools (commands + UI).
+Release builds include debug assets, but they remain disabled unless dev mode is on.
 
 ### How It Works
 - Dev-only classes live under `core/src/dev/java`.
 - Dev-only UI assets live under `core/src/dev/resources`.
-- The dev jar is built with both `main` and `dev` sources.
-- The release jar includes only `main` sources.
+- All modules always compile `main` + `dev` sources, but debug entry points are gated by Talania dev mode.
+- Talania dev mode is enabled only when running the Core dev jar (`TalaniaCoreDEV`).
 
 ### Build Commands
 Build release jar (no dev tools):
@@ -15,18 +15,13 @@ Build release jar (no dev tools):
 ./gradlew :core:jar
 ```
 
-Build dev jar (includes debug commands + UI):
+Build core dev jar (enables debug commands + UI):
 ```bash
 ./gradlew :core:devJar
 ```
 
-Build races dev jar (includes races debug UI):
-```bash
-./gradlew :races:devJar
-```
-
 ### Notes
-- Dev tools are registered at runtime via reflection. Release builds skip this.
-- Debug commands are under `/talania debug ...` (dev jar only).
+- Dev tools are registered at runtime via reflection, but only when dev mode is enabled.
+- Debug commands are under `/talania debug ...` (core dev jar only).
 - Combat log and debug services exist in `src/main`, but are only exposed by dev commands/UI.
 - Custom UI pages should reference the game-provided `Common.ui`/`Sounds.ui` (`$C = "../Common.ui"`), but we do **not** ship those files in our asset packs.
