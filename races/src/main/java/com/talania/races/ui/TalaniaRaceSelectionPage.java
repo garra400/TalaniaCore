@@ -7,7 +7,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
-import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -125,14 +124,7 @@ public final class TalaniaRaceSelectionPage extends InteractiveCustomUIPage<Tala
     }
 
     private UUID resolvePlayerId(Ref ref, Store store) {
-        if (ref == null || store == null) {
-            return playerRef != null ? playerRef.getUuid() : null;
-        }
-        UUIDComponent uuidComponent = (UUIDComponent) store.getComponent(ref, UUIDComponent.getComponentType());
-        if (uuidComponent != null && uuidComponent.getUuid() != null) {
-            return uuidComponent.getUuid();
-        }
-        return playerRef != null ? playerRef.getUuid() : null;
+        return com.talania.core.utils.PlayerRefUtil.resolveUuid(ref, store, playerRef);
     }
 
     private static String uiId(String id) {

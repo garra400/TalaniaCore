@@ -9,8 +9,15 @@ public final class TalaniaDevMode {
 
     private TalaniaDevMode() {}
 
+    /**
+     * Initialize dev mode detection. This should only be called by the core plugin.
+     * Other modules should use {@link #isEnabled()}.
+     */
     public static void initialize(Class<?> anchor) {
         if (initialized) {
+            return;
+        }
+        if (anchor != null && !anchor.getName().startsWith("com.talania.core")) {
             return;
         }
         initialized = true;
