@@ -13,6 +13,7 @@ import com.talania.core.utils.PlayerRefUtil;
 import com.talania.core.module.ModuleHooks;
 import com.talania.core.module.TalaniaModuleRegistry;
 import com.talania.races.api.TalaniaApiImpl;
+import com.talania.races.cosmetics.RaceCosmeticOverrides;
 import com.talania.races.system.RaceConditionalEffectSystem;
 import com.talania.races.ui.TalaniaRaceSelectionPage;
 
@@ -36,6 +37,7 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
         TalaniaApiRegistry.register(api);
         this.conditionalEffectSystem = new RaceConditionalEffectSystem(raceService);
         getEntityStoreRegistry().registerSystem(conditionalEffectSystem);
+        RaceCosmeticOverrides.ensureRegistered();
         EventBus.subscribe(PromptRaceSelectionEvent.class, this::handleRaceSelectionPrompt);
         TalaniaModuleRegistry.get().register("races", new ModuleHooks() {
             @Override
@@ -123,6 +125,10 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
         profile.setRaceId(race.id());
         raceService.setRace(playerId, race);
         core.profileRuntime().save(playerId);
+        PlayerRef playerRef = com.hypixel.hytale.server.core.universe.Universe.get().getPlayer(playerId);
+        if (playerRef != null) {
+            RaceCosmeticOverrides.apply(playerRef, race);
+        }
     }
 
     private void handlePlayerReady(PlayerRef playerRef, TalaniaPlayerProfile profile) {
@@ -137,9 +143,11 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
         RaceType race = RaceType.fromId(profile.raceId());
         if (race == null) {
             raceService.clearRace(playerId);
+            RaceCosmeticOverrides.clear(playerRef);
             return;
         }
         raceService.setRace(playerId, race);
+        RaceCosmeticOverrides.apply(playerRef, race);
     }
 
     private void handlePlayerDisconnect(PlayerRef playerRef) {
@@ -194,5 +202,6 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
         profile.setRaceId(null);
         core.profileRuntime().save(playerId);
         raceService.clearRace(playerId);
+        RaceCosmeticOverrides.clear(playerId);
     }
 }
