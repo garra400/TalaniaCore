@@ -29,3 +29,4 @@ Build races dev jar (includes races debug UI):
 - Dev tools are registered at runtime via reflection. Release builds skip this.
 - Debug commands are under `/talania debug ...` (dev jar only).
 - Combat log and debug services exist in `src/main`, but are only exposed by dev commands/UI.
+- Custom UI pages should reference the game-provided `Common.ui`/`Sounds.ui` (`$C = "../Common.ui"`), but we do **not** ship those files in our asset packs.

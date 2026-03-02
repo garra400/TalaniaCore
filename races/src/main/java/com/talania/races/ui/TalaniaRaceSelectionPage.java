@@ -98,9 +98,6 @@ public final class TalaniaRaceSelectionPage extends InteractiveCustomUIPage<Tala
 
         for (RaceType race : RaceType.values()) {
             String label = tr("races." + race.id() + ".name", race.displayName());
-            if (race == selectedRace) {
-                label = "• " + label;
-            }
             commandBuilder.set("#" + uiId(race.id()) + "TabButton.Text", label);
         }
         applyRaceDetails(commandBuilder, selectedRace);

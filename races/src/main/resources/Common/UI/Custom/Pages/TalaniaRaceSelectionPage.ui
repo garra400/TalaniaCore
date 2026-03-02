@@ -1,5 +1,20 @@
 $C = "../Common.ui";
 
+@RaceTabLabelStyle = (
+  ...$C.@DefaultLabelStyle,
+  FontSize: 20,
+  RenderBold: true,
+  TextColor: #d3d6db,
+  HorizontalAlignment: Center,
+  VerticalAlignment: Center
+);
+
+@RaceTabStyle = TextButtonStyle(
+  Default: (LabelStyle: @RaceTabLabelStyle),
+  Hovered: (LabelStyle: (...@RaceTabLabelStyle, TextColor: #eaebee)),
+  Pressed: (LabelStyle: (...@RaceTabLabelStyle, TextColor: #b6bbc2))
+);
+
 $C.@Panel {
   LayoutMode: Top;
   Anchor: (Width: 920, Height: 680);
@@ -11,7 +26,7 @@ $C.@Panel {
     Padding: (Full: 12);
 
     Label #TitleLabel {
-      Style: (...$C.@TitleStyle, FontSize: 32, Alignment: Center);
+      Style: (...$C.@TitleStyle, FontSize: 32, HorizontalAlignment: Center);
       Anchor: (Width: 840);
       Text: "Choose a race";
       Padding: (Bottom: 6);
@@ -32,9 +47,9 @@ $C.@Panel {
         Anchor: (Width: 860, Height: 32);
         Padding: (Full: 4);
 
-        $C.@HeaderTextButton #HumanTabButton { Text: "Human"; Anchor: (Width: 140, Height: 28); }
-        $C.@HeaderTextButton #HighElfTabButton { Text: "High Elf"; Anchor: (Width: 160, Height: 28); }
-        $C.@HeaderTextButton #OrcTabButton { Text: "Orc"; Anchor: (Width: 120, Height: 28); }
+        TextButton #HumanTabButton { Text: "Human"; Style: @RaceTabStyle; Anchor: (Width: 140, Height: 28); }
+        TextButton #HighElfTabButton { Text: "High Elf"; Style: @RaceTabStyle; Anchor: (Width: 160, Height: 28); }
+        TextButton #OrcTabButton { Text: "Orc"; Style: @RaceTabStyle; Anchor: (Width: 120, Height: 28); }
       }
 
       Group {
@@ -42,9 +57,9 @@ $C.@Panel {
         Anchor: (Width: 860, Height: 32, Top: 8);
         Padding: (Full: 4);
 
-        $C.@HeaderTextButton #DwarfTabButton { Text: "Dwarf"; Anchor: (Width: 140, Height: 28); }
-        $C.@HeaderTextButton #NightwalkerTabButton { Text: "Nightwalker"; Anchor: (Width: 180, Height: 28); }
-        $C.@HeaderTextButton #BeastkinTabButton { Text: "Beastkin"; Anchor: (Width: 140, Height: 28); }
+        TextButton #DwarfTabButton { Text: "Dwarf"; Style: @RaceTabStyle; Anchor: (Width: 140, Height: 28); }
+        TextButton #NightwalkerTabButton { Text: "Nightwalker"; Style: @RaceTabStyle; Anchor: (Width: 180, Height: 28); }
+        TextButton #BeastkinTabButton { Text: "Beastkin"; Style: @RaceTabStyle; Anchor: (Width: 140, Height: 28); }
       }
 
       Group {
@@ -52,7 +67,7 @@ $C.@Panel {
         Anchor: (Width: 860, Height: 32, Top: 8);
         Padding: (Full: 4);
 
-        $C.@HeaderTextButton #StarbornTabButton { Text: "Starborn"; Anchor: (Width: 140, Height: 28); }
+        TextButton #StarbornTabButton { Text: "Starborn"; Style: @RaceTabStyle; Anchor: (Width: 140, Height: 28); }
       }
     }
 
@@ -111,7 +126,7 @@ $C.@Panel {
 
     Group {
       LayoutMode: Center;
-      Anchor: (Height: 32, Top: 20);
+      Anchor: (Height: 32, Top: 30);
       $C.@SecondaryTextButton #SelectButton { Text: "Confirm"; Anchor: (Width: 140, Height: 32); }
     }
   }
