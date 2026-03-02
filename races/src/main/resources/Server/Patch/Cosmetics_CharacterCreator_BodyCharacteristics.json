@@ -1,0 +1,13 @@
+{
+  "_BaseAssetPath": "Cosmetics/CharacterCreator/BodyCharacteristics.json",
+  "$": [
+    {
+      "_op": "add",
+      "Id": "Talania_Nightwalker_Body",
+      "Name": "talania.cosmetics.body.nightwalker",
+      "GradientSet": "Skin",
+      "Model": "Characters/Player.blockymodel",
+      "GreyscaleTexture": "Cosmetics/Talania/Body/Player_Greyscale_Nightwalker.png"
+    }
+  ]
+}

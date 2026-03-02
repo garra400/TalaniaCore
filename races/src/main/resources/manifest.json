@@ -15,7 +15,9 @@
   "Dependencies": {
     "Talania:TalaniaCore": "*"
   },
-  "OptionalDependencies": {},
+  "OptionalDependencies": {
+    "com.hypersonicsharkz:Hytalor": "*"
+  },
   "DisabledByDefault": false,
   "IncludesAssetPack": true,
   "Main": "com.talania.races.TalaniaRacesPlugin"

@@ -1,0 +1,19 @@
+{
+  "_BaseAssetPath": "Cosmetics/CharacterCreator/FaceAccessory.json",
+  "$": [
+    {
+      "_op": "add",
+      "Id": "Talania_Starborn_Gem",
+      "Name": "talania.cosmetics.face.starborn_gem",
+      "Model": "Cosmetics/Talania/Face/Starborn_Face_Gem.blockymodel",
+      "Textures": {
+        "Default": {
+          "Texture": "Cosmetics/Talania/Face/Starborn_Gem_Texture.png",
+          "BaseColor": [
+            "#ffffff"
+          ]
+        }
+      }
+    }
+  ]
+}

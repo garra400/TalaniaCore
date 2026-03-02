@@ -1,0 +1,13 @@
+{
+  "_BaseAssetPath": "Cosmetics/CharacterCreator/Ears.json",
+  "$": [
+    {
+      "_op": "add",
+      "Id": "Talania_Beastkin_Ears",
+      "Name": "talania.cosmetics.ears.beastkin",
+      "GradientSet": "Skin",
+      "Model": "Cosmetics/Talania/Head/Beastman_Ears_Feline.blockymodel",
+      "GreyscaleTexture": "Cosmetics/Talania/Head/Beastman_Ears_Brown.png"
+    }
+  ]
+}
