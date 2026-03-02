@@ -17,6 +17,7 @@ import com.talania.core.projectiles.ProjectileDetectSystem;
 import com.talania.core.projectiles.ProjectileOwnerDetectSystem;
 import com.talania.core.runtime.TalaniaCoreRuntime;
 import com.talania.core.debug.TalaniaDebug;
+import com.talania.core.localization.TranslationManager;
 import com.talania.core.module.TalaniaModuleRegistry;
 import com.talania.core.movement.MovementStatSystem;
 import com.talania.core.combat.healing.HealingStatScalingSystem;
@@ -38,6 +39,8 @@ public final class TalaniaCorePlugin extends JavaPlugin {
 
     @Override
     protected void setup() {
+        TranslationManager.initialize(getDataDirectory());
+        TranslationManager.registerBundledLanguages(TalaniaCorePlugin.class, "en");
         TalaniaCoreRuntime runtime = TalaniaCoreRuntime.init(getDataDirectory());
         ComponentRegistryProxy<EntityStore> registry = getEntityStoreRegistry();
         this.npcDeathHandledType = registry.registerComponent(

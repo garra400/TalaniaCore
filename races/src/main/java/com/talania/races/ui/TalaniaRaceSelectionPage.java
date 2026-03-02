@@ -53,15 +53,11 @@ public final class TalaniaRaceSelectionPage extends InteractiveCustomUIPage<Tala
     }
 
     @Override
-    public void handleDataEvent(@Nonnull Ref ref, @Nonnull Store store, @Nonnull Object data) {
-        if (!(data instanceof EventDataPayload payload)) {
+    public void handleDataEvent(@Nonnull Ref ref, @Nonnull Store store, @Nonnull EventDataPayload payload) {
+        if (payload == null) {
             return;
         }
         if (payload.action == null) {
-            return;
-        }
-        if ("Cancel".equals(payload.action)) {
-            close();
             return;
         }
         if ("ShowRace".equals(payload.action) && payload.value != null) {
@@ -88,8 +84,6 @@ public final class TalaniaRaceSelectionPage extends InteractiveCustomUIPage<Tala
     }
 
     private void bindEvents(UIEventBuilder eventBuilder) {
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CancelButton",
-                new EventData().append("Action", "Cancel"), false);
         for (RaceType race : RaceType.values()) {
             eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#" + uiId(race.id()) + "TabButton",
                     new EventData().append("Action", "ShowRace").append("Value", race.id()), false);
@@ -99,23 +93,15 @@ public final class TalaniaRaceSelectionPage extends InteractiveCustomUIPage<Tala
     }
 
     private void applyState(UICommandBuilder commandBuilder) {
-        commandBuilder.set("#TitleLabel.Text", T.t("ui.race_select.title"));
-        commandBuilder.set("#SubtitleLabel.Text",
-                respec ? T.t("ui.race_select.subtitle_respec") : T.t("ui.race_select.subtitle"));
-
-        String currentLabel = "None";
-        UUID resolvedId = playerId != null ? playerId : playerRef.getUuid();
-        if (resolvedId != null && plugin.raceService().getRace(resolvedId) != null) {
-            currentLabel = plugin.raceService().getRace(resolvedId).displayName();
-        } else if (T.has("ui.race_select.none")) {
-            currentLabel = T.t("ui.race_select.none");
-        }
-        commandBuilder.set("#CurrentRaceLabel.Text", T.t("ui.race_select.current", currentLabel));
-        commandBuilder.set("#CancelButton.Text", T.t("ui.race_select.cancel"));
-        commandBuilder.set("#SelectButton.Text", T.t("ui.race_select.choose"));
+        commandBuilder.set("#TitleLabel.Text", tr("ui.race_select.title", "Choose a race"));
+        commandBuilder.set("#SelectButton.Text", tr("ui.race_select.confirm", "Confirm"));
 
         for (RaceType race : RaceType.values()) {
-            commandBuilder.set("#" + uiId(race.id()) + "TabButton.Text", T.t("races." + race.id() + ".name"));
+            String label = tr("races." + race.id() + ".name", race.displayName());
+            if (race == selectedRace) {
+                label = "• " + label;
+            }
+            commandBuilder.set("#" + uiId(race.id()) + "TabButton.Text", label);
         }
         applyRaceDetails(commandBuilder, selectedRace);
     }
@@ -125,11 +111,20 @@ public final class TalaniaRaceSelectionPage extends InteractiveCustomUIPage<Tala
             return;
         }
         String key = "races." + race.id();
-        commandBuilder.set("#RaceName.Text", T.t(key + ".name"));
-        commandBuilder.set("#RaceTheme.Text", T.t(key + ".theme"));
-        commandBuilder.set("#RaceHistory.Text", T.t(key + ".history"));
-        commandBuilder.set("#RaceBuff.Text", T.t(key + ".buff"));
-        commandBuilder.set("#RaceDebuff.Text", T.t(key + ".debuff"));
+        commandBuilder.set("#RaceName.Text", tr(key + ".name", race.displayName()));
+        commandBuilder.set("#RaceTheme.Text", tr(key + ".theme", race.theme()));
+        commandBuilder.set("#RaceHistory.Text", tr(key + ".history", ""));
+        commandBuilder.set("#RaceBuffName.Text", tr(key + ".buff_name", ""));
+        commandBuilder.set("#RaceBuffDesc.Text", tr(key + ".buff_desc", ""));
+        commandBuilder.set("#RaceDebuffName.Text", tr(key + ".debuff_name", ""));
+        commandBuilder.set("#RaceDebuffDesc.Text", tr(key + ".debuff_desc", ""));
+    }
+
+    private String tr(String key, String fallback) {
+        if (T.has(key)) {
+            return T.t(key);
+        }
+        return fallback != null ? fallback : key;
     }
 
     private UUID resolvePlayerId(Ref ref, Store store) {
