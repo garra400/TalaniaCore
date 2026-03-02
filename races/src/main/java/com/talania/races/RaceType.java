@@ -199,7 +199,7 @@ public enum RaceType {
     private static List<ModifierSpec> modifiersForStarborn() {
         String source = "race:starborn";
         List<ModifierSpec> mods = new ArrayList<>();
-        mods.add(new ModifierSpec(source, StatType.ENERGY_SHIELD_MAX, 10.0f, StatModifier.Operation.ADD));
+        mods.add(new ModifierSpec(source, StatType.ENERGY_SHIELD_MAX, 20.0f, StatModifier.Operation.ADD));
         mods.add(new ModifierSpec(source, StatType.ENERGY_SHIELD_RECHARGE, 2.0f, StatModifier.Operation.ADD));
         mods.add(new ModifierSpec(source, StatType.ENERGY_SHIELD_RECHARGE_DELAY, 5.0f, StatModifier.Operation.ADD));
         return mods;
