@@ -1,6 +1,6 @@
 {
   "Group": "Talania",
-  "Name": "TalaniaRaces-Dev",
+  "Name": "TalaniaRacesDEV",
   "Version": "0.1.0",
   "Description": "Race definitions and modifiers for Talania. (Dev)",
   "Authors": [
@@ -13,7 +13,7 @@
   "Website": "",
   "ServerVersion": "2026.02.19-1a311a592",
   "Dependencies": {
-    "Talania:TalaniaCore-Dev": "*"
+    "Talania:TalaniaCoreDEV": "*"
   },
   "OptionalDependencies": {},
   "DisabledByDefault": false,

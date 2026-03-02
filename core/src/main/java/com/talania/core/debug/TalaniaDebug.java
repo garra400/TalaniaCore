@@ -4,6 +4,7 @@ import com.talania.core.config.ConfigManager;
 import com.talania.core.debug.combat.CombatLogManager;
 import com.talania.core.debug.events.CombatLogEvent;
 import com.talania.core.events.EventBus;
+import com.talania.core.TalaniaDevMode;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 
 import java.lang.reflect.Method;
@@ -81,6 +82,9 @@ public final class TalaniaDebug {
 
     public static void tryRegisterDev(JavaPlugin plugin) {
         if (plugin == null) {
+            return;
+        }
+        if (!TalaniaDevMode.isEnabled()) {
             return;
         }
         try {

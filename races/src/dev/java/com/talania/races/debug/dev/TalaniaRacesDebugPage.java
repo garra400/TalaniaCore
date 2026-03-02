@@ -8,7 +8,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -19,10 +18,12 @@ import com.talania.races.RaceType;
 import com.talania.races.TalaniaRacesPlugin;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
     private final PlayerRef playerRef;
     private final TalaniaRacesPlugin plugin;
+    private UUID playerId;
 
     public TalaniaRacesDebugPage(PlayerRef playerRef, TalaniaRacesPlugin plugin) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaRacesDebugEventData.CODEC);
@@ -35,6 +36,7 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
                       @Nonnull Store store) {
         commandBuilder.append("Pages/TalaniaRacesDebugPage.ui");
         bindEvents(eventBuilder);
+        playerId = resolvePlayerId(ref, store);
         applyState(commandBuilder);
     }
 
@@ -47,13 +49,17 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
             return;
         }
         if ("Return".equals(eventData.action)) {
-            openDebugMenu(ref, store);
+            TalaniaRacesDebugMenuPage.open(ref, store, plugin);
             return;
         }
         if ("SetRace".equals(eventData.action) && eventData.value != null) {
             RaceType race = RaceType.fromId(eventData.value);
             if (race != null) {
-                plugin.setRace(playerRef.getUuid(), race);
+                UUID resolvedId = resolvePlayerId(ref, store);
+                if (resolvedId != null) {
+                    playerId = resolvedId;
+                    plugin.setRace(resolvedId, race);
+                }
             }
         }
 
@@ -74,8 +80,9 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
     }
 
     private void applyState(UICommandBuilder commandBuilder) {
-        commandBuilder.set("#TitleLabel.Text", "Races Debug");
-        RaceType current = plugin.raceService().getRace(playerRef.getUuid());
+        commandBuilder.set("#TitleLabel.Text", "Races: Select Race");
+        UUID resolvedId = playerId != null ? playerId : playerRef.getUuid();
+        RaceType current = plugin.raceService().getRace(resolvedId);
         String currentLabel = current != null ? singularLabel(current) : "None";
         commandBuilder.set("#CurrentRaceLabel.Text", "Current: " + currentLabel);
         for (RaceType race : RaceType.values()) {
@@ -122,39 +129,32 @@ public final class TalaniaRacesDebugPage extends InteractiveCustomUIPage {
         };
     }
 
-    public static void open(PlayerRef playerRef, Ref<EntityStore> ref, Store<EntityStore> store,
-                            TalaniaRacesPlugin plugin) {
-        if (playerRef == null || ref == null || store == null || plugin == null) {
+    public static void open(Ref<EntityStore> ref, Store<EntityStore> store, TalaniaRacesPlugin plugin) {
+        if (ref == null || store == null || plugin == null) {
+            return;
+        }
+        PlayerRef resolved = com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
+        if (resolved == null) {
             return;
         }
         store.getExternalData().getWorld().execute(() -> {
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
                 player.getPageManager().openCustomPage(ref, store,
-                        new TalaniaRacesDebugPage(playerRef, plugin));
+                        new TalaniaRacesDebugPage(resolved, plugin));
             }
         });
     }
 
-    private void openDebugMenu(Ref<EntityStore> ref, Store<EntityStore> store) {
+    private void openRacesMenu(Ref<EntityStore> ref, Store<EntityStore> store) {
         if (ref == null || store == null) {
             return;
         }
-        Player player = (Player) store.getComponent(ref, Player.getComponentType());
-        if (player == null) {
-            return;
-        }
-        try {
-            Class<?> clazz = Class.forName("com.talania.core.debug.dev.TalaniaDebugMenuPage");
-            Object page = clazz.getDeclaredConstructor(PlayerRef.class).newInstance(playerRef);
-            if (page instanceof CustomUIPage customPage) {
-                player.getPageManager().openCustomPage(ref, store, customPage);
-            }
-        } catch (ClassNotFoundException ignored) {
-            // Dev-only classes not present in release build.
-        } catch (Exception ignored) {
-            // Swallow to avoid breaking debug UI flow.
-        }
+        TalaniaRacesDebugMenuPage.open(ref, store, plugin);
+    }
+
+    private UUID resolvePlayerId(Ref ref, Store store) {
+        return com.talania.core.utils.PlayerRefUtil.resolveUuid(ref, store, playerRef);
     }
 
     public static final class TalaniaRacesDebugEventData {

@@ -1,0 +1,83 @@
+$C = "../Common.ui";
+
+$C.@Panel {
+  LayoutMode: Top;
+  Anchor: (Width: 864, Height: 624);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 826, Height: 586);
+    Padding: (Full: 12);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 20);
+      Anchor: (Width: 768);
+      Text: "Races Debug";
+      Padding: (Bottom: 6);
+    }
+
+    Label #SubtitleLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 768);
+      Text: "Dev build only. Race tools and cosmetics testing.";
+      Padding: (Bottom: 10);
+    }
+
+    Label #CurrentRaceLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 768);
+      Text: "Current race: None";
+      Padding: (Bottom: 4);
+    }
+
+    Label #CurrentScaleLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 768);
+      Text: "Current size: 1.00";
+      Padding: (Bottom: 16);
+    }
+
+    Group {
+      LayoutMode: Top;
+      Anchor: (Width: 768, Height: 240);
+      Padding: (Full: 8);
+      Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+      Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Tools"; Padding: (Bottom: 10); }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 720, Height: 40);
+        Padding: (Full: 6);
+
+        Label { Style: (...$C.@DefaultLabelStyle); Text: "Race selection"; Anchor: (Width: 520); }
+        $C.@SecondaryTextButton #OpenRaceListButton { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 720, Height: 40, Top: 8);
+        Padding: (Full: 6);
+
+        Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetics overrides"; Anchor: (Width: 520); }
+        $C.@SecondaryTextButton #OpenCosmeticsButton { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+
+      Group {
+        LayoutMode: Left;
+        Anchor: (Width: 720, Height: 40, Top: 8);
+        Padding: (Full: 6);
+
+        Label { Style: (...$C.@DefaultLabelStyle); Text: "Race selection prompt"; Anchor: (Width: 520); }
+        $C.@SecondaryTextButton #OpenRaceSelectionButton { Text: "Open"; Anchor: (Width: 120, Height: 28, Left: 10); }
+      }
+    }
+
+    Group {
+      LayoutMode: Left;
+      Anchor: (Height: 32, Top: 12);
+      $C.@SecondaryTextButton #ReturnButton { Text: "Return"; Anchor: (Width: 120, Height: 28); }
+    }
+  }
+}

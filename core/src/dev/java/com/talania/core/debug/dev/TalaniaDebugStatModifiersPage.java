@@ -385,7 +385,7 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
                  MAGIC_DAMAGE_TAKEN_MULT -> StatCategory.DEFENSE;
             case FALL_RESISTANCE, FIRE_RESISTANCE, POISON_RESISTANCE, LIGHTNING_RESISTANCE,
                  HOLY_RESISTANCE, VOID_RESISTANCE -> StatCategory.RESISTANCE;
-            case MOVE_SPEED, JUMP_HEIGHT -> StatCategory.MOBILITY;
+            case MOVE_SPEED, JUMP_HEIGHT, PLAYER_SCALE -> StatCategory.MOBILITY;
             default -> StatCategory.UTILITY;
         };
     }

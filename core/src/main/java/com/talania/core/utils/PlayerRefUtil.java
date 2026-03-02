@@ -56,4 +56,26 @@ public final class PlayerRefUtil {
         }
         return Universe.get().getPlayer(uuidComponent.getUuid());
     }
+
+    /**
+     * Resolve a player UUID from an entity ref/store, or fall back to a known PlayerRef.
+     */
+    public static java.util.UUID resolveUuid(Ref<EntityStore> ref, Store<EntityStore> store, PlayerRef fallback) {
+        java.util.UUID resolved = resolveUuid(ref, store);
+        if (resolved != null) {
+            return resolved;
+        }
+        return fallback != null ? fallback.getUuid() : null;
+    }
+
+    /**
+     * Resolve a player UUID from an entity ref/store.
+     */
+    public static java.util.UUID resolveUuid(Ref<EntityStore> ref, Store<EntityStore> store) {
+        if (ref == null || store == null) {
+            return null;
+        }
+        UUIDComponent uuidComponent = (UUIDComponent) store.getComponent(ref, UUIDComponent.getComponentType());
+        return uuidComponent != null ? uuidComponent.getUuid() : null;
+    }
 }

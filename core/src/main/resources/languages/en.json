@@ -21,8 +21,77 @@
     "defense": "Defense"
   },
   "ui": {
-    "welcome": "Welcome to Orbis and Dungeons!",
+    "welcome": "Welcome to Talania!",
     "loading": "Loading...",
-    "select_option": "Select an option"
+    "select_option": "Select an option",
+    "race_select": {
+      "title": "Choose a race",
+      "confirm": "Confirm"
+    }
+  },
+  "races": {
+    "human": {
+      "name": "Human",
+      "theme": "Balance and Will",
+      "history": "The most common people of Talania. Obsessed with carving their own destiny after feeling abandoned by the Gods. Their cities are divided between technology and faith.",
+      "buff_name": "Rapid Adaptation",
+      "buff_desc": "Humans gain 10% more experience.",
+      "debuff_name": "Magic Susceptibility",
+      "debuff_desc": "Humans take slightly more damage from magical attacks."
+    },
+    "high_elf": {
+      "name": "High Elf",
+      "theme": "Magic and Hubris",
+      "history": "Graceful beings tied to Arcanis. Long-lived, they dwell in deep forests or among floating sky isles.",
+      "buff_name": "Mana Flow",
+      "buff_desc": "High Elves gain increased maximum mana.",
+      "debuff_name": "Glass Physique",
+      "debuff_desc": "High Elves have lower maximum health."
+    },
+    "orc": {
+      "name": "Orc",
+      "theme": "Strength and Honor",
+      "history": "Warriors of Gor'thul who thrive in barren wastelands. For them, diplomacy is silence; only steel speaks. Orcs are larger and physically imposing.",
+      "buff_name": "Savage Force",
+      "buff_desc": "Orcs get stronger melee strikes.",
+      "debuff_name": "Sluggish Intellect",
+      "debuff_desc": "Orcs get slower magic use and mana regeneration."
+    },
+    "dwarf": {
+      "name": "Dwarf",
+      "theme": "Stone and Metal",
+      "history": "Miners and blacksmiths in vast underground cities, devoted to Zentheros and Valdor. Dwarves are smaller and stockier.",
+      "buff_name": "Stone Skin",
+      "buff_desc": "Dwarves gain tougher armor and resistance to poisons.",
+      "debuff_name": "Heavy Steps",
+      "debuff_desc": "Dwarves have slower movement and swimming speed."
+    },
+    "nightwalker": {
+      "name": "Nightwalker",
+      "theme": "Shadow and Curse",
+      "history": "Rare survivors exposed to raw Void energy. Dark ichor flows in their veins, and they are believed blessed by Nocturne.",
+      "buff_name": "Shadow Meld",
+      "buff_desc": "Nightwalkers move faster at night or in darkness.",
+      "debuff_name": "Sun Curse",
+      "debuff_desc": "Nightwalkers have reduced health regeneration in sunlight."
+    },
+    "beastkin": {
+      "name": "Beastkin",
+      "theme": "Nature and Instinct",
+      "history": "Half-animal tribes who follow Sylvaris and Halcyon, guided by instinct and tradition.",
+      "buff_name": "Predator's Agility",
+      "buff_desc": "Beastkin jump higher and take reduced fall damage.",
+      "debuff_name": "Primitive Technology",
+      "debuff_desc": "Beastkin have lower accuracy with firearms and complex wands."
+    },
+    "starborn": {
+      "name": "Starborn",
+      "theme": "Cosmos and Mystery",
+      "history": "Crystalline beings born from meteors, with glowing energy veins instead of flesh.",
+      "buff_name": "Energy Shield",
+      "buff_desc": "Starborn have a natural shield that regenerates over time when not taking damage.",
+      "debuff_name": "Healing Difficulty",
+      "debuff_desc": "Food and potions are less effective for Starborn."
+    }
   }
 }

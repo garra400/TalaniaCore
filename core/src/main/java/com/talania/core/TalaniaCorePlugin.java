@@ -7,7 +7,9 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.talania.core.combat.damage.TalaniaDamageModifierSystem;
 import com.talania.core.combat.shield.EnergyShieldSystem;
+import com.talania.core.TalaniaDevMode;
 import com.talania.core.entities.EntityAnimationSystem;
+import com.talania.core.entities.PlayerScaleSystem;
 import com.talania.core.events.entity.npc.NpcDeathEventSystem;
 import com.talania.core.events.entity.npc.NpcDeathHandledComponent;
 import com.talania.core.input.InputPatternMovementSystem;
@@ -16,6 +18,7 @@ import com.talania.core.projectiles.ProjectileDetectSystem;
 import com.talania.core.projectiles.ProjectileOwnerDetectSystem;
 import com.talania.core.runtime.TalaniaCoreRuntime;
 import com.talania.core.debug.TalaniaDebug;
+import com.talania.core.localization.TranslationManager;
 import com.talania.core.module.TalaniaModuleRegistry;
 import com.talania.core.movement.MovementStatSystem;
 import com.talania.core.combat.healing.HealingStatScalingSystem;
@@ -37,6 +40,9 @@ public final class TalaniaCorePlugin extends JavaPlugin {
 
     @Override
     protected void setup() {
+        TranslationManager.initialize(getDataDirectory());
+        TranslationManager.registerBundledLanguages(TalaniaCorePlugin.class, "en");
+        TalaniaDevMode.initialize(TalaniaCorePlugin.class);
         TalaniaCoreRuntime runtime = TalaniaCoreRuntime.init(getDataDirectory());
         ComponentRegistryProxy<EntityStore> registry = getEntityStoreRegistry();
         this.npcDeathHandledType = registry.registerComponent(
@@ -47,6 +53,8 @@ public final class TalaniaCorePlugin extends JavaPlugin {
         registry.registerSystem(new ProjectileOwnerDetectSystem());
         registry.registerSystem(new NpcDeathEventSystem(npcDeathHandledType));
         registry.registerSystem(new EntityAnimationSystem());
+        PlayerScaleSystem playerScaleSystem = new PlayerScaleSystem();
+        registry.registerSystem(playerScaleSystem);
         registry.registerSystem(new InputPatternMovementSystem(runtime.inputPatternTracker()));
         registry.registerSystem(new InputPatternPlaceBlockSystem(runtime.inputPatternTracker()));
         MovementStatSystem movementStatSystem = new MovementStatSystem();
@@ -62,6 +70,7 @@ public final class TalaniaCorePlugin extends JavaPlugin {
                 java.util.UUID playerId = event.getPlayerRef().getUuid();
                 movementStatSystem.clear(playerId);
                 energyShieldSystem.clear(playerId);
+                playerScaleSystem.clear(playerId);
             }
         });
         getEventRegistry().registerGlobal(PlayerMouseButtonEvent.class, runtime::handleMouseButton);

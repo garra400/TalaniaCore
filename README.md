@@ -283,16 +283,19 @@ This project is released into the **Public Domain** under the [Unlicense](LICENS
   Part of the <strong>Orbis and Dungeons</strong> ecosystem
 </p>
 
-## Dev Build
+## Dev Mode
 
-TalaniaCore supports a dev build with extra debug tools (commands + UI) for testing.
+TalaniaCore supports a dev mode that enables debug tools (commands + UI) across all modules.
+Only the Core dev jar needs to be used to activate dev mode; other modules stay on their normal builds.
 
-Build dev jars:
+Enable dev mode (Core only):
 ```bash
-./gradlew :core:devJar :races:devJar
+./gradlew :core:devJar
 ```
 
-Build release jars (no dev tools):
+Build normal jars:
 ```bash
 ./gradlew :core:jar :races:jar
 ```
+
+When dev mode is **off**, debug commands like `/talania debug` are not registered and behave as if they do not exist.

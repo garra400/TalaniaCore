@@ -1,0 +1,158 @@
+$C = "../Common.ui";
+
+$C.@Panel {
+  LayoutMode: Top;
+  Anchor: (Width: 920, Height: 680);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 888, Height: 648);
+    Padding: (Full: 12);
+
+    Group {
+      LayoutMode: Center;
+      Anchor: (Width: 860, Height: 32);
+      Padding: (Bottom: 6);
+
+      Label #TitleLabel {
+        Style: (...$C.@TitleStyle, FontSize: 28, HorizontalAlignment: Center);
+        Anchor: (Width: 860);
+        Text: "Choose a race";
+      }
+    }
+
+    Group #TitleSeparator {
+      Anchor: (Width: 860, Height: 2, Top: 6);
+      Background: #2A313C;
+    }
+
+    Group #RaceTabs {
+      LayoutMode: Top;
+      Anchor: (Width: 860, Height: 108);
+      Padding: (Full: 4);
+
+      Group {
+        LayoutMode: Center;
+        Anchor: (Width: 860, Height: 32);
+        Padding: (Full: 4);
+
+        Group {
+          Anchor: (Width: 220, Height: 28);
+          $C.@HeaderTextButton #HumanTabButton { Text: "Human"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #HighElfTabButton { Text: "High Elf"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #OrcTabButton { Text: "Orc"; Anchor: (Width: 220, Height: 28); }
+        }
+      }
+
+      Group {
+        LayoutMode: Center;
+        Anchor: (Width: 860, Height: 32, Top: 8);
+        Padding: (Full: 4);
+
+        Group {
+          Anchor: (Width: 220, Height: 28);
+          $C.@HeaderTextButton #DwarfTabButton { Text: "Dwarf"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #NightwalkerTabButton { Text: "Nightwalker"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #BeastkinTabButton { Text: "Beastkin"; Anchor: (Width: 220, Height: 28); }
+        }
+      }
+
+      Group {
+        LayoutMode: Center;
+        Anchor: (Width: 860, Height: 32, Top: 8);
+        Padding: (Full: 4);
+
+        Group { Anchor: (Width: 220, Height: 28); }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #StarbornTabButton { Text: "Starborn"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group { Anchor: (Width: 220, Height: 28, Left: 12); }
+      }
+    }
+
+    Group #Separator {
+      Anchor: (Width: 860, Height: 2, Top: 8);
+      Background: #2A313C;
+    }
+
+    Group #RaceDetails {
+      LayoutMode: Center;
+      Anchor: (Width: 860, Height: 340, Top: 10);
+      Padding: (Full: 6);
+
+      Group {
+        LayoutMode: Top;
+        Anchor: (Width: 820, Height: 320);
+
+        Label #RaceName {
+          Style: (...$C.@DefaultLabelStyle, FontSize: 26, RenderBold: true, HorizontalAlignment: Center);
+          Anchor: (Width: 820);
+          Text: "Race Name";
+          Padding: (Bottom: 2);
+        }
+        Label #RaceTheme {
+          Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #a9b4c0, HorizontalAlignment: Center);
+          Anchor: (Width: 820);
+          Text: "Theme";
+          Padding: (Bottom: 8);
+        }
+        Label #RaceHistory {
+          Style: (...$C.@DefaultLabelStyle, FontSize: 18, Wrap: true);
+          Anchor: (Width: 820, Height: 120);
+          Text: "History";
+          Padding: (Bottom: 10);
+        }
+        Group {
+          LayoutMode: Left;
+          Anchor: (Width: 820, Height: 48);
+
+          Label #RaceBuffName {
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #ffffff);
+            Anchor: (Width: 220);
+            Text: "Buff Name";
+          }
+          Label #RaceBuffDesc {
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18, Wrap: true);
+            Anchor: (Width: 600, Height: 48);
+            Text: "Buff Description";
+          }
+        }
+        Group {
+          LayoutMode: Left;
+          Anchor: (Width: 820, Height: 48, Top: 6);
+
+          Label #RaceDebuffName {
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #ffffff);
+            Anchor: (Width: 220);
+            Text: "Debuff Name";
+          }
+          Label #RaceDebuffDesc {
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18, Wrap: true);
+            Anchor: (Width: 600, Height: 48);
+            Text: "Debuff Description";
+          }
+        }
+      }
+    }
+
+    Group {
+      LayoutMode: Center;
+      Anchor: (Height: 32, Top: 30);
+      $C.@SecondaryTextButton #SelectButton { Text: "Confirm"; Anchor: (Width: 140, Height: 32); }
+    }
+  }
+}

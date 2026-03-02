@@ -39,7 +39,7 @@ public final class TalaniaDebugCommand extends AbstractPlayerCommand {
             return;
         }
 
-        openMenu(context, playerRef, ref, store);
+        openMenu(context, ref, store);
     }
 
     private void showHelp(CommandContext context) {
@@ -47,7 +47,8 @@ public final class TalaniaDebugCommand extends AbstractPlayerCommand {
         context.sendMessage(Message.raw("Usage: /talania debug"));
     }
 
-    private void openMenu(CommandContext context, PlayerRef playerRef, Ref<EntityStore> ref, Store<EntityStore> store) {
+    private void openMenu(CommandContext context, Ref<EntityStore> ref, Store<EntityStore> store) {
+        PlayerRef playerRef = com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
         if (playerRef == null) {
             context.sendMessage(Message.raw("Unable to resolve player ref."));
             return;

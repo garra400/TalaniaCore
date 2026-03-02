@@ -1,7 +1,7 @@
 $C = "../Common.ui";
 
 Group #EnergyShieldRoot {
-  Anchor: (Left: 0, Right: 0, Bottom: 110, Height: 12);
+  Anchor: (Left: 0, Right: 0, Bottom: 140, Height: 12);
   LayoutMode: Center;
 
   Group #EnergyShieldFrame {
@@ -15,5 +15,9 @@ Group #EnergyShieldRoot {
       Bar: #4D7CFF;
       Value: 1.0;
     }
+  }
+
+  Group #EnergyShieldSpacer {
+    Anchor: (Width: 340, Height: 1);
   }
 }
