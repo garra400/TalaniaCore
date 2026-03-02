@@ -35,7 +35,7 @@ tasks.register('generateDevFlag') {
 }
 
 tasks.register('devJar', Jar) {
-    archiveBaseName.set('TalaniaCore')
+    archiveBaseName.set('TalaniaCoreDEV')
     archiveClassifier.set('')
     archiveVersion.set(project.version.toString())
     dependsOn tasks.named('classes')
