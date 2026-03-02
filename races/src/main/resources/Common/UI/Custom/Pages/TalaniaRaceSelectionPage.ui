@@ -10,11 +10,16 @@ $C.@Panel {
     Anchor: (Width: 888, Height: 648);
     Padding: (Full: 12);
 
-    Label #TitleLabel {
-      Style: (...$C.@TitleStyle, FontSize: 28);
-      Anchor: (Width: 840);
-      Text: "Choose a race";
+    Group {
+      LayoutMode: Center;
+      Anchor: (Width: 860, Height: 32);
       Padding: (Bottom: 6);
+
+      Label #TitleLabel {
+        Style: (...$C.@TitleStyle, FontSize: 28);
+        Anchor: (Width: 600);
+        Text: "Choose a race";
+      }
     }
 
     Group #TitleSeparator {
@@ -28,31 +33,54 @@ $C.@Panel {
       Padding: (Full: 4);
 
       Group {
-        LayoutMode: Left;
+        LayoutMode: Center;
         Anchor: (Width: 860, Height: 32);
         Padding: (Full: 4);
 
-        $C.@SecondaryTextButton #HumanTabButton { Text: "Human"; Anchor: (Width: 140, Height: 28); }
-        $C.@SecondaryTextButton #HighElfTabButton { Text: "High Elf"; Anchor: (Width: 140, Height: 28, Left: 6); }
-        $C.@SecondaryTextButton #OrcTabButton { Text: "Orc"; Anchor: (Width: 140, Height: 28, Left: 6); }
+        Group {
+          Anchor: (Width: 220, Height: 28);
+          $C.@HeaderTextButton #HumanTabButton { Text: "Human"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #HighElfTabButton { Text: "High Elf"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #OrcTabButton { Text: "Orc"; Anchor: (Width: 220, Height: 28); }
+        }
       }
 
       Group {
-        LayoutMode: Left;
+        LayoutMode: Center;
         Anchor: (Width: 860, Height: 32, Top: 8);
         Padding: (Full: 4);
 
-        $C.@SecondaryTextButton #DwarfTabButton { Text: "Dwarf"; Anchor: (Width: 140, Height: 28); }
-        $C.@SecondaryTextButton #NightwalkerTabButton { Text: "Nightwalker"; Anchor: (Width: 160, Height: 28, Left: 6); }
-        $C.@SecondaryTextButton #BeastkinTabButton { Text: "Beastkin"; Anchor: (Width: 140, Height: 28, Left: 6); }
+        Group {
+          Anchor: (Width: 220, Height: 28);
+          $C.@HeaderTextButton #DwarfTabButton { Text: "Dwarf"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #NightwalkerTabButton { Text: "Nightwalker"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #BeastkinTabButton { Text: "Beastkin"; Anchor: (Width: 220, Height: 28); }
+        }
       }
 
       Group {
-        LayoutMode: Left;
+        LayoutMode: Center;
         Anchor: (Width: 860, Height: 32, Top: 8);
         Padding: (Full: 4);
 
-        $C.@SecondaryTextButton #StarbornTabButton { Text: "Starborn"; Anchor: (Width: 140, Height: 28); }
+        Group { Anchor: (Width: 220, Height: 28); }
+        Group {
+          Anchor: (Width: 220, Height: 28, Left: 12);
+          $C.@HeaderTextButton #StarbornTabButton { Text: "Starborn"; Anchor: (Width: 220, Height: 28); }
+        }
+        Group { Anchor: (Width: 220, Height: 28, Left: 12); }
       }
     }
 
@@ -62,55 +90,67 @@ $C.@Panel {
     }
 
     Group #RaceDetails {
-      LayoutMode: Top;
+      LayoutMode: Center;
       Anchor: (Width: 860, Height: 340, Top: 10);
       Padding: (Full: 6);
 
-      Label #RaceName {
-        Style: (...$C.@DefaultLabelStyle, FontSize: 26, RenderBold: true);
-        Anchor: (Width: 820);
-        Text: "Race Name";
-        Padding: (Bottom: 2);
-      }
-      Label #RaceTheme {
-        Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #a9b4c0);
-        Anchor: (Width: 820);
-        Text: "Theme";
-        Padding: (Bottom: 8);
-      }
-      Label #RaceHistory {
-        Style: (...$C.@DefaultLabelStyle, FontSize: 18);
-        Anchor: (Width: 820);
-        Text: "History";
-        Padding: (Bottom: 10);
-      }
-      Label #RaceBuffName {
-        Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #ffffff);
-        Anchor: (Width: 820);
-        Text: "Buff Name";
-        Padding: (Bottom: 2);
-      }
-      Label #RaceBuffDesc {
-        Style: (...$C.@DefaultLabelStyle, FontSize: 18);
-        Anchor: (Width: 820);
-        Text: "Buff Description";
-        Padding: (Bottom: 10);
-      }
-      Label #RaceDebuffName {
-        Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #ffffff);
-        Anchor: (Width: 820);
-        Text: "Debuff Name";
-        Padding: (Bottom: 2);
-      }
-      Label #RaceDebuffDesc {
-        Style: (...$C.@DefaultLabelStyle, FontSize: 18);
-        Anchor: (Width: 820);
-        Text: "Debuff Description";
+      Group {
+        LayoutMode: Top;
+        Anchor: (Width: 820, Height: 320);
+
+        Label #RaceName {
+          Style: (...$C.@DefaultLabelStyle, FontSize: 26, RenderBold: true);
+          Anchor: (Width: 420, Left: 200);
+          Text: "Race Name";
+          Padding: (Bottom: 2);
+        }
+        Label #RaceTheme {
+          Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #a9b4c0);
+          Anchor: (Width: 520, Left: 150, Top: 2);
+          Text: "Theme";
+          Padding: (Bottom: 8);
+        }
+        Label #RaceHistory {
+          Style: (...$C.@DefaultLabelStyle, FontSize: 18);
+          Anchor: (Width: 820, Height: 96);
+          Text: "History";
+          Padding: (Bottom: 10);
+        }
+        Group {
+          LayoutMode: Left;
+          Anchor: (Width: 820, Height: 24);
+
+          Label #RaceBuffName {
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #ffffff);
+            Anchor: (Width: 220);
+            Text: "Buff Name";
+          }
+          Label #RaceBuffDesc {
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18);
+            Anchor: (Width: 600);
+            Text: "Buff Description";
+          }
+        }
+        Group {
+          LayoutMode: Left;
+          Anchor: (Width: 820, Height: 24, Top: 6);
+
+          Label #RaceDebuffName {
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #ffffff);
+            Anchor: (Width: 220);
+            Text: "Debuff Name";
+          }
+          Label #RaceDebuffDesc {
+            Style: (...$C.@DefaultLabelStyle, FontSize: 18);
+            Anchor: (Width: 600);
+            Text: "Debuff Description";
+          }
+        }
       }
     }
 
     Group {
-      LayoutMode: Left;
+      LayoutMode: Center;
       Anchor: (Height: 32, Top: 30);
       $C.@SecondaryTextButton #SelectButton { Text: "Confirm"; Anchor: (Width: 140, Height: 32); }
     }
