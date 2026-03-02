@@ -7,7 +7,7 @@ Release builds include debug assets, but they remain disabled unless dev mode is
 - Dev-only classes live under `core/src/dev/java`.
 - Dev-only UI assets live under `core/src/dev/resources`.
 - All modules always compile `main` + `dev` sources, but debug entry points are gated by Talania dev mode.
-- Talania dev mode is enabled only when running the Core dev jar (`TalaniaCoreDEV`).
+- Talania dev mode is enabled only when running the Core dev jar.
 
 ### Build Commands
 Build release jar (no dev tools):
