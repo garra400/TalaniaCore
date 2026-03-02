@@ -89,30 +89,35 @@ public final class TalaniaCoreRuntime {
         if (store == null) {
             return;
         }
-        com.hypixel.hytale.server.core.entity.UUIDComponent uuidComponent =
-                store.getComponent(ref, com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
-        if (uuidComponent == null) {
-            return;
-        }
-        UUID playerId = uuidComponent.getUuid();
-        TalaniaDebug.handlePlayerReady(playerId);
-        TalaniaPlayerProfile profile = profileRuntime.load(playerId);
-        if (profile == null) {
-            return;
-        }
-        EntityStats stats = StatsManager.getOrCreate(playerId);
-        for (StatType stat : StatType.values()) {
-            stats.setBase(stat, profile.getBaseStat(stat, stat.getDefaultValue()));
-        }
-        stats.recalculate();
-        TalaniaDebug.statModifiers().applyToStats(playerId, stats);
-        statSyncService.applyAll(ref, store, playerId, stats);
+        store.getExternalData().getWorld().execute(() -> {
+            if (!ref.isValid()) {
+                return;
+            }
+            com.hypixel.hytale.server.core.entity.UUIDComponent uuidComponent =
+                    store.getComponent(ref, com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+            if (uuidComponent == null) {
+                return;
+            }
+            UUID playerId = uuidComponent.getUuid();
+            TalaniaDebug.handlePlayerReady(playerId);
+            TalaniaPlayerProfile profile = profileRuntime.load(playerId);
+            if (profile == null) {
+                return;
+            }
+            EntityStats stats = StatsManager.getOrCreate(playerId);
+            for (StatType stat : StatType.values()) {
+                stats.setBase(stat, profile.getBaseStat(stat, stat.getDefaultValue()));
+            }
+            stats.recalculate();
+            TalaniaDebug.statModifiers().applyToStats(playerId, stats);
+            statSyncService.applyAll(ref, store, playerId, stats);
 
-        com.hypixel.hytale.server.core.universe.PlayerRef playerRef =
-                com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
-        if (playerRef != null) {
-            TalaniaModuleRegistry.get().handlePlayerReady(playerRef, profile, ref, store);
-        }
+            com.hypixel.hytale.server.core.universe.PlayerRef playerRef =
+                    com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
+            if (playerRef != null) {
+                TalaniaModuleRegistry.get().handlePlayerReady(playerRef, profile, ref, store);
+            }
+        });
     }
 
     /**
