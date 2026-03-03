@@ -13,11 +13,10 @@
   "Website": "",
   "ServerVersion": "2026.02.19-1a311a592",
   "Dependencies": {
-    "Talania:TalaniaCore": "*"
+    "Talania:TalaniaCore": "*",
+    "GoodWitchLalya:Lalyan Cosmetic Core": "*"
   },
-  "OptionalDependencies": {
-    "com.hypersonicsharkz:Hytalor": "*"
-  },
+  "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,
   "Main": "com.talania.races.TalaniaRacesPlugin"
