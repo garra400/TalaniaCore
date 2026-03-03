@@ -21,6 +21,10 @@ races.setRace(playerUuid, RaceType.HUMAN);
 RaceType race = races.getRace(playerUuid);
 ```
 
+## Assets
+
+Race cosmetic assets are **not** committed to git. They are packaged locally during build from the `.local` asset pipeline.
+
 ## API Reference
 
 See the main [API Reference](../../docs/API_REFERENCE.md) for detailed documentation.

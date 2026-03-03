@@ -64,6 +64,10 @@ public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
             TalaniaRacesDebugCosmeticsPage.open(ref, store, plugin);
             return;
         }
+        if ("OpenCosmeticsStatus".equals(eventData.action)) {
+            TalaniaRacesDebugCosmeticsStatusPage.open(ref, store, plugin);
+            return;
+        }
         if ("OpenRaceSelectionPrompt".equals(eventData.action)) {
             CoreEvents.promptRaceSelection(ref, true);
             return;
@@ -77,6 +81,8 @@ public final class TalaniaRacesDebugMenuPage extends InteractiveCustomUIPage {
                 new EventData().append("Action", "OpenRaceList"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenCosmeticsButton",
                 new EventData().append("Action", "OpenCosmetics"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenCosmeticsStatusButton",
+                new EventData().append("Action", "OpenCosmeticsStatus"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenRaceSelectionButton",
                 new EventData().append("Action", "OpenRaceSelectionPrompt"), false);
     }

@@ -3,7 +3,7 @@
 > **Version:** 0.1.0  
 > **License:** Public Domain (Unlicense)
 
-Welcome to the TalaniaCore documentation, the shared library for the Orbis and Dungeons ecosystem.
+Welcome to the TalaniaCore documentation, the shared library for the Talania ecosystem.
 
 ---
 
@@ -55,6 +55,10 @@ Fluent API for interfaces.
 ```java
 UIFactory.button().text("OK").onClick(() -> {}).build();
 ```
+
+### Cosmetics Core
+Server-side cosmetics registry and rebuild pipeline used by Talania races.
+Includes a dev UI for toggling active cosmetics and isolating attachments.
 
 ---
 

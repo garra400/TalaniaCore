@@ -1,0 +1,46 @@
+$C = "../Common.ui";
+
+$C.@Panel {
+  LayoutMode: Top;
+  Anchor: (Width: 864, Height: 624);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 826, Height: 586);
+    Padding: (Full: 12);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 20);
+      Anchor: (Width: 768);
+      Text: "Races: Cosmetics Status";
+      Padding: (Bottom: 6);
+    }
+
+    Label #SubtitleLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 768);
+      Text: "Talania cosmetics registry and active overrides.";
+      Padding: (Bottom: 10);
+    }
+
+    Group {
+      LayoutMode: Top;
+      Anchor: (Width: 768, Height: 448);
+      Padding: (Full: 10);
+      Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+      Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Registered"; Padding: (Bottom: 6); }
+      Label #RegisteredList { Style: (...$C.@DefaultLabelStyle, Wrap: true); Anchor: (Width: 736, Height: 140); Text: "none"; Padding: (Bottom: 12); }
+
+      Label { Style: (...$C.@DefaultLabelStyle, RenderBold: true); Text: "Active (Player)"; Padding: (Bottom: 6); }
+      Label #ActiveList { Style: (...$C.@DefaultLabelStyle, Wrap: true); Anchor: (Width: 736, Height: 140); Text: "none"; }
+    }
+
+    Group {
+      LayoutMode: Left;
+      Anchor: (Height: 32, Top: 12);
+      $C.@SecondaryTextButton #ReturnButton { Text: "Return"; Anchor: (Width: 120, Height: 28); }
+    }
+  }
+}

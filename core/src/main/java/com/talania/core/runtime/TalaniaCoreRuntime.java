@@ -13,6 +13,8 @@ import com.talania.core.hytale.stats.EntityStatSyncService;
 import com.talania.core.input.InputPatternTracker;
 import com.talania.core.combat.shield.EnergyShieldService;
 import com.talania.core.debug.TalaniaDebug;
+import com.talania.core.cosmetics.TalaniaCosmeticCore;
+import com.talania.core.cosmetics.TalaniaCosmetics;
 import com.talania.core.module.TalaniaModuleRegistry;
 import com.talania.core.profile.TalaniaPlayerProfile;
 import com.talania.core.profile.TalaniaProfileRuntime;
@@ -43,6 +45,7 @@ public final class TalaniaCoreRuntime {
         this.statModifierService = new EntityStatModifierService(statModifierRegistry);
         this.statSyncService = new EntityStatSyncService(statModifierService);
         this.inputPatternTracker = new InputPatternTracker();
+        TalaniaCosmeticCore.init();
     }
 
     /**
@@ -89,30 +92,36 @@ public final class TalaniaCoreRuntime {
         if (store == null) {
             return;
         }
-        com.hypixel.hytale.server.core.entity.UUIDComponent uuidComponent =
-                store.getComponent(ref, com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
-        if (uuidComponent == null) {
-            return;
-        }
-        UUID playerId = uuidComponent.getUuid();
-        TalaniaDebug.handlePlayerReady(playerId);
-        TalaniaPlayerProfile profile = profileRuntime.load(playerId);
-        if (profile == null) {
-            return;
-        }
-        EntityStats stats = StatsManager.getOrCreate(playerId);
-        for (StatType stat : StatType.values()) {
-            stats.setBase(stat, profile.getBaseStat(stat, stat.getDefaultValue()));
-        }
-        stats.recalculate();
-        TalaniaDebug.statModifiers().applyToStats(playerId, stats);
-        statSyncService.applyAll(ref, store, playerId, stats);
+        store.getExternalData().getWorld().execute(() -> {
+            if (!ref.isValid()) {
+                return;
+            }
+            com.hypixel.hytale.server.core.entity.UUIDComponent uuidComponent =
+                    store.getComponent(ref, com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+            if (uuidComponent == null) {
+                return;
+            }
+            UUID playerId = uuidComponent.getUuid();
+            TalaniaDebug.handlePlayerReady(playerId);
+            TalaniaPlayerProfile profile = profileRuntime.load(playerId);
+            if (profile == null) {
+                return;
+            }
+            EntityStats stats = StatsManager.getOrCreate(playerId);
+            for (StatType stat : StatType.values()) {
+                stats.setBase(stat, profile.getBaseStat(stat, stat.getDefaultValue()));
+            }
+            stats.recalculate();
+            TalaniaDebug.statModifiers().applyToStats(playerId, stats);
+            statSyncService.applyAll(ref, store, playerId, stats);
 
-        com.hypixel.hytale.server.core.universe.PlayerRef playerRef =
-                com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
-        if (playerRef != null) {
-            TalaniaModuleRegistry.get().handlePlayerReady(playerRef, profile, ref, store);
-        }
+            com.hypixel.hytale.server.core.universe.PlayerRef playerRef =
+                    com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
+            if (playerRef != null) {
+                TalaniaCosmetics.handlePlayerReady(playerRef, ref, store);
+                TalaniaModuleRegistry.get().handlePlayerReady(playerRef, profile, ref, store);
+            }
+        });
     }
 
     /**
@@ -132,6 +141,7 @@ public final class TalaniaCoreRuntime {
         profileRuntime.unload(playerId, true);
         StatsManager.unregister(playerId);
         inputPatternTracker.clear(playerId);
+        TalaniaCosmetics.handlePlayerDisconnect(playerRef);
         TalaniaModuleRegistry.get().handlePlayerDisconnect(playerRef);
     }
 

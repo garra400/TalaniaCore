@@ -1,11 +1,10 @@
 # TalaniaCore
 
 <p align="center">
-  <strong>Shared Library for Orbis and Dungeons Ecosystem</strong>
+  <strong>Shared Library for Talania Ecosystem</strong>
 </p>
 
 <p align="center">
-  <a href="#modules">Modules</a> •
   <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
   <a href="#contributing">Contributing</a>
@@ -17,34 +16,29 @@
 
 TalaniaCore is a **public domain shared library** designed for the Hytale modding ecosystem. It provides reusable utilities and systems that serve as the foundation for the Talania server mods. The repo is now a Gradle multi-project with a shared `core` module and optional gameplay modules.
 
-## Modules
-
-| Module | Description                                                                                         | Status |
-|--------|-----------------------------------------------------------------------------------------------------|--------|
-| **core** | Shared library with stats, combat, events, input, movement, projectiles, entity utilities, profiles | ✅ Active |
-| **races** | Race definitions and modifiers                                                                      | ✅ Active |
-| **boss-fights** | Placeholder module for future boss systems                                                          | 🚧 Planned |
-
 ### Core Submodules
 
-| Submodule | Description | Status |
-|-----------|-------------|--------|
-| **stats** | Base stats + modifiers | ✅ Active |
-| **combat** | Damage modifiers, attack/damage typing, settings | 🧪 In Progress |
-| **events** | Event bus + entity events | ✅ Active |
-| **input** | Input patterns + action events | ✅ Active |
-| **progression** | Leveling system (XP curves, level progress) | ✅ Active |
-| **movement** | Movement utilities (jump, flight) | 🧪 In Progress |
-| **projectiles** | Projectile helpers + detection systems | 🧪 In Progress |
-| **entities** | Temporary entity effects + animation manager | 🧪 In Progress |
-| **profile** | Player profile storage + class progress + API | ✅ Active |
-| **hytale** | Hytale API bridges (stats sync, teleport, effects) | ✅ Active |
-| **localization** | Translation system | ✅ Active |
-| **config** | JSON config + hot-reload | ✅ Active |
-| **ui** | UI wrapper abstractions | ✅ Active |
-| **utils** | Animation/model/text helpers | ✅ Active |
+| Submodule | Description |
+|-----------|-------------|
+| **stats** | Base stats, modifiers, and derived values |
+| **combat** | Damage handling, attack/damage typing, combat settings |
+| **events** | Event bus + entity event helpers |
+| **input** | Input patterns + action events |
+| **progression** | Leveling system (XP curves, level progress) |
+| **movement** | Movement helpers (jump, flight, speed) |
+| **projectiles** | Projectile helpers + detection systems |
+| **entities** | Temporary entity effects + animation helpers |
+| **profile** | Player profile storage + class progress + API |
+| **hytale** | Hytale API bridges (stats sync, teleport, effects) |
+| **localization** | Translation system |
+| **config** | JSON config + hot-reload |
+| **ui** | UI wrapper abstractions |
+| **cosmetics** | Cosmetic registry + model rebuild pipeline |
+| **utils** | Animation/model/text helpers |
 
 ## Installation
+
+For full integration steps, see `docs/GETTING_STARTED.md`.
 
 ### Gradle (Recommended)
 
@@ -252,7 +246,6 @@ TalaniaCore/
 │   │   └── schemas/            # JSON validation schemas
 │   └── tests/                  # Test suite
 ├── races/                      # Races module
-├── boss-fights/                # Boss fights module
 ├── docs/                       # Documentation
 └── examples/                   # Usage examples
 ```
@@ -280,7 +273,7 @@ This project is released into the **Public Domain** under the [Unlicense](LICENS
 ---
 
 <p align="center">
-  Part of the <strong>Orbis and Dungeons</strong> ecosystem
+  Part of the <strong>Talania</strong> ecosystem
 </p>
 
 ## Dev Mode

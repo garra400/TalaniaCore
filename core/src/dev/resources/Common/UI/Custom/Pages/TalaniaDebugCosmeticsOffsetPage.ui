@@ -1,0 +1,82 @@
+$C = "../Common.ui";
+
+$C.@Panel {
+  LayoutMode: Top;
+  Anchor: (Width: 360, Height: 672, Right: 80, Top: 90);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 328, Height: 634);
+    Padding: (Full: 12);
+    Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 18);
+      Anchor: (Width: 300);
+      Text: "Cosmetic Offset";
+      Padding: (Bottom: 6);
+    }
+
+    Label #SelectedLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 300);
+      Text: "Selected:";
+      Padding: (Bottom: 4);
+    }
+
+    Label #SelectedNameLabel {
+      Style: (...$C.@DefaultLabelStyle, Wrap: true);
+      Anchor: (Width: 300, Height: 48);
+      Text: "none";
+      Padding: (Bottom: 6);
+    }
+
+    Group #ViewToggleRow { LayoutMode: Left; Anchor: (Height: 32); 
+      $C.@SecondaryTextButton #ViewToggleButton { Text: "View: Back"; Anchor: (Width: 140, Height: 28); }
+    }
+
+    Group #BaseToggleColumn { LayoutMode: Top; Anchor: (Height: 68, Top: 6); 
+      $C.@SecondaryTextButton #HideBaseButton { Text: "Hide Base: Off"; Anchor: (Width: 180, Height: 28); }
+      $C.@SecondaryTextButton #StripBaseButton { Text: "Strip Base: Off"; Anchor: (Width: 180, Height: 28, Top: 6); }
+    }
+
+    Label #OffsetValue {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 300);
+      Text: "X: 0  Y: 0  Z: 0";
+      Padding: (Bottom: 10);
+    }
+
+    Group #OffsetRowX { LayoutMode: Left; Anchor: (Height: 32); 
+      Label { Style: (...$C.@DefaultLabelStyle); Text: "X:"; Anchor: (Width: 24, Height: 28); }
+      $C.@SecondaryTextButton #OffsetXMinus5 { Text: "--"; Anchor: (Width: 68, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetXMinus { Text: "-"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetXPlus { Text: "+"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetXPlus5 { Text: "++"; Anchor: (Width: 68, Height: 28, Left: 6); }
+    }
+
+    Group #OffsetRowY { LayoutMode: Left; Anchor: (Height: 32, Top: 8); 
+      Label { Style: (...$C.@DefaultLabelStyle); Text: "Y:"; Anchor: (Width: 24, Height: 28); }
+      $C.@SecondaryTextButton #OffsetYMinus5 { Text: "--"; Anchor: (Width: 68, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetYMinus { Text: "-"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetYPlus { Text: "+"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetYPlus5 { Text: "++"; Anchor: (Width: 68, Height: 28, Left: 6); }
+    }
+
+    Group #OffsetRowZ { LayoutMode: Left; Anchor: (Height: 32, Top: 8); 
+      Label { Style: (...$C.@DefaultLabelStyle); Text: "Z:"; Anchor: (Width: 24, Height: 28); }
+      $C.@SecondaryTextButton #OffsetZMinus5 { Text: "--"; Anchor: (Width: 68, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetZMinus { Text: "-"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetZPlus { Text: "+"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetZPlus5 { Text: "++"; Anchor: (Width: 68, Height: 28, Left: 6); }
+    }
+
+    Group #OffsetResetRow { LayoutMode: Left; Anchor: (Height: 32, Top: 8); 
+      $C.@SecondaryTextButton #OffsetReset { Text: "Reset"; Anchor: (Width: 140, Height: 28); }
+    }
+
+
+    $C.@SecondaryTextButton #BackButton { Text: "Back"; Anchor: (Width: 140, Height: 28); }
+  }
+}

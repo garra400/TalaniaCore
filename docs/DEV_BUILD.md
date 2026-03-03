@@ -25,3 +25,4 @@ Build core dev jar (enables debug commands + UI):
 - Debug commands are under `/talania debug ...` (core dev jar only).
 - Combat log and debug services exist in `src/main`, but are only exposed by dev commands/UI.
 - Custom UI pages should reference the game-provided `Common.ui`/`Sounds.ui` (`$C = "../Common.ui"`), but we do **not** ship those files in our asset packs.
+- Cosmetics dev UI lives under `core/src/dev/java/.../TalaniaDebugCosmeticsPage.java`.

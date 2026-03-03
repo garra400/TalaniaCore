@@ -93,10 +93,8 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
             String sample = sampleFor(cosmetics, skin, slot, current);
             commandBuilder.set("#Slot" + slot.uiId + "Name.Text", slot.label);
             commandBuilder.set("#Slot" + slot.uiId + "Value.Text", "Current: " + formatValue(current));
-            boolean enabled = sample != null;
             commandBuilder.set("#Slot" + slot.uiId + "Button.Text",
                     sample == null ? "No Valid" : "Change");
-            commandBuilder.set("#Slot" + slot.uiId + "Button.Enabled", enabled);
             if (sample != null) {
                 commandBuilder.set("#Slot" + slot.uiId + "Button.TooltipText",
                         "Sample: " + formatValue(sample));
@@ -295,6 +293,7 @@ public final class TalaniaRacesDebugCosmeticsPage extends InteractiveCustomUIPag
         applyState(ref, store, commandBuilder);
         sendUpdate(commandBuilder, eventBuilder, false);
     }
+
 
     private String formatValue(String value) {
         if (value == null || value.isBlank()) {

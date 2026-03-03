@@ -4,7 +4,7 @@
 > **License:** Public Domain (Unlicense)  
 > **Last updated:** February 2026
 
-Complete API reference for the TalaniaCore library for the Orbis and Dungeons ecosystem.
+Complete API reference for the TalaniaCore library for the Talania ecosystem.
 
 ---
 
@@ -717,7 +717,7 @@ HytaleBridge.syncFromHytale(playerRef, store, stats);
 
 TalaniaCore has no required external dependencies. Works standalone or integrated with:
 
-- **Orbis and Dungeons** - Race and class mod
+- **Talania** - Race and class mod
 - **Hytale Server API** - For native integration
 
 ---
