@@ -5,7 +5,6 @@
 </p>
 
 <p align="center">
-  <a href="#modules">Modules</a> •
   <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
   <a href="#contributing">Contributing</a>
@@ -16,14 +15,6 @@
 ## Overview
 
 TalaniaCore is a **public domain shared library** designed for the Hytale modding ecosystem. It provides reusable utilities and systems that serve as the foundation for the Talania server mods. The repo is now a Gradle multi-project with a shared `core` module and optional gameplay modules.
-
-## Modules
-
-| Module | Description                                                                                         | Status |
-|--------|-----------------------------------------------------------------------------------------------------|--------|
-| **core** | Shared library with stats, combat, events, input, movement, projectiles, entity utilities, profiles | ✅ Active |
-| **races** | Race definitions and modifiers                                                                      | ✅ Active |
-| **boss-fights** | Placeholder module for future boss systems                                                          | 🚧 Planned |
 
 ### Core Submodules
 
@@ -42,9 +33,12 @@ TalaniaCore is a **public domain shared library** designed for the Hytale moddin
 | **localization** | Translation system | ✅ Active |
 | **config** | JSON config + hot-reload | ✅ Active |
 | **ui** | UI wrapper abstractions | ✅ Active |
+| **cosmetics** | Cosmetic registry + model rebuild pipeline | ✅ Active |
 | **utils** | Animation/model/text helpers | ✅ Active |
 
 ## Installation
+
+For full integration steps, see `docs/GETTING_STARTED.md`.
 
 ### Gradle (Recommended)
 
@@ -252,7 +246,6 @@ TalaniaCore/
 │   │   └── schemas/            # JSON validation schemas
 │   └── tests/                  # Test suite
 ├── races/                      # Races module
-├── boss-fights/                # Boss fights module
 ├── docs/                       # Documentation
 └── examples/                   # Usage examples
 ```

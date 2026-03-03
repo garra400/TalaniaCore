@@ -36,6 +36,7 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
     private Ref<EntityStore> lastRef;
     private Store<EntityStore> lastStore;
     private volatile boolean active;
+    private volatile long refreshNonce = 0L;
 
     public TalaniaDebugStatModifiersPage(PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaDebugStatModifiersEventData.CODEC);
@@ -54,13 +55,17 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
         lastRef = ref;
         lastStore = store;
         active = true;
+        refreshNonce = System.nanoTime();
         startAutoRefresh();
     }
 
     @Override
     public void onDismiss(@Nonnull Ref ref, @Nonnull Store store) {
         active = false;
+        refreshNonce = 0L;
         stopAutoRefresh();
+        lastRef = null;
+        lastStore = null;
     }
 
     @Override
@@ -73,7 +78,10 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
         }
         if ("Return".equals(eventData.action)) {
             active = false;
+            refreshNonce = 0L;
             stopAutoRefresh();
+            lastRef = null;
+            lastStore = null;
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
                 player.getPageManager().openCustomPage(ref, store, new TalaniaDebugMenuPage(playerRef));
@@ -101,6 +109,9 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
     }
 
     private void refresh() {
+        if (!active) {
+            return;
+        }
         UICommandBuilder commandBuilder = new UICommandBuilder();
         UIEventBuilder eventBuilder = new UIEventBuilder();
         bindEvents(eventBuilder);
@@ -113,13 +124,18 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
             stopAutoRefresh();
             return;
         }
+        long nonce = refreshNonce;
+        if (nonce == 0L) {
+            stopAutoRefresh();
+            return;
+        }
         Ref<EntityStore> ref = lastRef;
         Store<EntityStore> store = lastStore;
         if (ref == null || store == null) {
             return;
         }
         store.getExternalData().getWorld().execute(() -> {
-            if (!active) {
+            if (!active || refreshNonce != nonce) {
                 stopAutoRefresh();
                 return;
             }
