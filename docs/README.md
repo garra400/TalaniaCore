@@ -3,7 +3,7 @@
 > **Version:** 0.1.0  
 > **License:** Public Domain (Unlicense)
 
-Welcome to the TalaniaCore documentation, the shared library for the Orbis and Dungeons ecosystem.
+Welcome to the TalaniaCore documentation, the shared library for the Talania ecosystem.
 
 ---
 

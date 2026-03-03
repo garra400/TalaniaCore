@@ -1,7 +1,7 @@
 # TalaniaCore
 
 <p align="center">
-  <strong>Shared Library for Orbis and Dungeons Ecosystem</strong>
+  <strong>Shared Library for Talania Ecosystem</strong>
 </p>
 
 <p align="center">
@@ -273,7 +273,7 @@ This project is released into the **Public Domain** under the [Unlicense](LICENS
 ---
 
 <p align="center">
-  Part of the <strong>Orbis and Dungeons</strong> ecosystem
+  Part of the <strong>Talania</strong> ecosystem
 </p>
 
 ## Dev Mode

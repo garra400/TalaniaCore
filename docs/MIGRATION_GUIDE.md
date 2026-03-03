@@ -11,7 +11,7 @@ This guide documents changes between versions and how to migrate your code.
 
 ### Overview
 
-This is the first public release of TalaniaCore. If you were using internal code from Orbis and Dungeons, follow these changes:
+This is the first public release of TalaniaCore. If you were using internal code from Talania, follow these changes:
 
 ### Package Changes
 
@@ -27,7 +27,7 @@ import com.talania.core.stats.StatsManager;
 
 ### Stats System
 
-#### Before (Orbis internal)
+#### Before (Talania internal)
 
 ```java
 // Direct modifiers
@@ -93,7 +93,7 @@ TalaniaCore uses its own `StatType` internally but syncs with Hytale:
 
 ### Automatic Synchronization
 
-When using the Orbis and Dungeons integration, stats are synchronized automatically.
+When using the Talania integration, stats are synchronized automatically.
 
 For manual synchronization:
 
