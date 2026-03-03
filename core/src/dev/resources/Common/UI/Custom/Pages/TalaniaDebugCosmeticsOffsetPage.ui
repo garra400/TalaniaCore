@@ -2,7 +2,7 @@ $C = "../Common.ui";
 
 $C.@Panel {
   LayoutMode: Top;
-  Anchor: (Width: 360, Height: 672, Right: 20, Top: 20);
+  Anchor: (Width: 360, Height: 672, Right: 80, Top: 90);
   Padding: (Full: 16);
 
   Group {
@@ -32,6 +32,8 @@ $C.@Panel {
       Padding: (Bottom: 6);
     }
 
+    $C.@SecondaryTextButton #ViewToggleButton { Text: "View: Back"; Anchor: (Width: 180, Height: 28); }
+
     Label #OffsetValue {
       Style: (...$C.@DefaultLabelStyle);
       Anchor: (Width: 300);
@@ -40,16 +42,31 @@ $C.@Panel {
     }
 
     Group { LayoutMode: Left; Anchor: (Height: 32); 
-      $C.@SecondaryTextButton #OffsetXMinus { Text: "X -"; Anchor: (Width: 90, Height: 28); }
-      $C.@SecondaryTextButton #OffsetXPlus { Text: "X +"; Anchor: (Width: 90, Height: 28, Left: 8); }
-      $C.@SecondaryTextButton #OffsetYMinus { Text: "Y -"; Anchor: (Width: 90, Height: 28, Left: 8); }
-      $C.@SecondaryTextButton #OffsetYPlus { Text: "Y +"; Anchor: (Width: 90, Height: 28, Left: 8); }
+      Label { Style: (...$C.@DefaultLabelStyle); Text: "X:"; Anchor: (Width: 24, Height: 28); }
+      $C.@SecondaryTextButton #OffsetXMinus5 { Text: "--"; Anchor: (Width: 56, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetXMinus { Text: "-"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetXPlus { Text: "+"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetXPlus5 { Text: "++"; Anchor: (Width: 56, Height: 28, Left: 6); }
     }
 
     Group { LayoutMode: Left; Anchor: (Height: 32, Top: 8); 
-      $C.@SecondaryTextButton #OffsetZMinus { Text: "Z -"; Anchor: (Width: 90, Height: 28); }
-      $C.@SecondaryTextButton #OffsetZPlus { Text: "Z +"; Anchor: (Width: 90, Height: 28, Left: 8); }
-      $C.@SecondaryTextButton #OffsetReset { Text: "Reset"; Anchor: (Width: 140, Height: 28, Left: 8); }
+      Label { Style: (...$C.@DefaultLabelStyle); Text: "Y:"; Anchor: (Width: 24, Height: 28); }
+      $C.@SecondaryTextButton #OffsetYMinus5 { Text: "--"; Anchor: (Width: 56, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetYMinus { Text: "-"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetYPlus { Text: "+"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetYPlus5 { Text: "++"; Anchor: (Width: 56, Height: 28, Left: 6); }
+    }
+
+    Group { LayoutMode: Left; Anchor: (Height: 32, Top: 8); 
+      Label { Style: (...$C.@DefaultLabelStyle); Text: "Z:"; Anchor: (Width: 24, Height: 28); }
+      $C.@SecondaryTextButton #OffsetZMinus5 { Text: "--"; Anchor: (Width: 56, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetZMinus { Text: "-"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetZPlus { Text: "+"; Anchor: (Width: 40, Height: 28, Left: 6); }
+      $C.@SecondaryTextButton #OffsetZPlus5 { Text: "++"; Anchor: (Width: 56, Height: 28, Left: 6); }
+    }
+
+    Group { LayoutMode: Left; Anchor: (Height: 32, Top: 8); 
+      $C.@SecondaryTextButton #OffsetReset { Text: "Reset"; Anchor: (Width: 140, Height: 28); }
     }
 
     Label { Style: (...$C.@DefaultLabelStyle); Text: "Offsets are temporary."; Padding: (Top: 10, Bottom: 8); }

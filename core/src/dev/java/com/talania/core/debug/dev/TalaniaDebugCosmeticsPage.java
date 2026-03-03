@@ -36,7 +36,7 @@ public final class TalaniaDebugCosmeticsPage extends InteractiveCustomUIPage {
     public void build(@Nonnull Ref ref, @Nonnull UICommandBuilder commandBuilder, @Nonnull UIEventBuilder eventBuilder,
                       @Nonnull Store store) {
         commandBuilder.append("Pages/TalaniaDebugCosmeticsPage.ui");
-        cosmeticIds = new ArrayList<>(TalaniaCosmetics.getRegisteredIds());
+        cosmeticIds = new ArrayList<>(TalaniaCosmetics.getOverrides(playerRef));
         bindEvents(eventBuilder);
         applyState(commandBuilder);
     }

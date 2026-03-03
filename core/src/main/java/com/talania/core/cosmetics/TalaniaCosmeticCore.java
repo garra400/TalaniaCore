@@ -325,14 +325,16 @@ public final class TalaniaCosmeticCore {
                 }
                 continue;
             }
-            String slot = normalizeSlot(def.slot());
-            if (!slot.isEmpty()) {
-                overrides.put(slot, true);
-            }
-            for (String extra : def.slotOverrides()) {
-                String normalized = normalizeSlot(extra);
-                if (!normalized.isEmpty()) {
-                    overrides.put(normalized, true);
+            if (def.overrideSlot()) {
+                String slot = normalizeSlot(def.slot());
+                if (!slot.isEmpty()) {
+                    overrides.put(slot, true);
+                }
+                for (String extra : def.slotOverrides()) {
+                    String normalized = normalizeSlot(extra);
+                    if (!normalized.isEmpty()) {
+                        overrides.put(normalized, true);
+                    }
                 }
             }
 
@@ -393,11 +395,13 @@ public final class TalaniaCosmeticCore {
             return;
         }
         String gradientId = skinGradientId(baseSkin);
-        String[] bodyCharacteristicParts = splitParts(baseSkin.bodyCharacteristic);
-        if (bodyCharacteristicParts.length > 0) {
-            var bodyCharacteristic = registry.getBodyCharacteristics().get(bodyCharacteristicParts[0]);
-            if (bodyCharacteristic != null) {
-                attachments.add(ModelUtils.resolveAttachment(bodyCharacteristic, bodyCharacteristicParts, gradientId));
+        if (!isOverridden(overrides, "BodyCharacteristics")) {
+            String[] bodyCharacteristicParts = splitParts(baseSkin.bodyCharacteristic);
+            if (bodyCharacteristicParts.length > 0) {
+                var bodyCharacteristic = registry.getBodyCharacteristics().get(bodyCharacteristicParts[0]);
+                if (bodyCharacteristic != null) {
+                    attachments.add(ModelUtils.resolveAttachment(bodyCharacteristic, bodyCharacteristicParts, gradientId));
+                }
             }
         }
 
@@ -623,11 +627,12 @@ public final class TalaniaCosmeticCore {
     private PlayerSkin stripBaseSkin(PlayerSkin skin) {
         PlayerSkin stripped = new PlayerSkin(skin);
         stripped.underwear = null;
-        stripped.face = null;
-        stripped.eyes = null;
-        stripped.ears = null;
-        stripped.mouth = null;
-        stripped.eyebrows = null;
+        // Keep core facial features so the face doesn't disappear when stripped.
+        stripped.face = skin.face;
+        stripped.eyes = skin.eyes;
+        stripped.ears = skin.ears;
+        stripped.mouth = skin.mouth;
+        stripped.eyebrows = skin.eyebrows;
         stripped.haircut = null;
         stripped.facialHair = null;
         stripped.pants = null;

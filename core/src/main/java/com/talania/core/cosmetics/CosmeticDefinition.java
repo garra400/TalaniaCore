@@ -14,6 +14,7 @@ public final class CosmeticDefinition {
     private final String gradientSet;
     private final Map<String, CosmeticVariant> variants;
     private final List<String> slotOverrides;
+    private final boolean overrideSlot;
 
     private CosmeticDefinition(Builder builder) {
         this.id = builder.id;
@@ -24,6 +25,7 @@ public final class CosmeticDefinition {
         this.gradientSet = builder.gradientSet;
         this.variants = builder.variants != null ? builder.variants : Collections.emptyMap();
         this.slotOverrides = builder.slotOverrides != null ? builder.slotOverrides : List.of();
+        this.overrideSlot = builder.overrideSlot;
     }
 
     public String id() {
@@ -58,6 +60,10 @@ public final class CosmeticDefinition {
         return slotOverrides;
     }
 
+    public boolean overrideSlot() {
+        return overrideSlot;
+    }
+
     public static Builder builder(String id, String slot, String model, String texture) {
         return new Builder(id, slot, model, texture);
     }
@@ -71,6 +77,7 @@ public final class CosmeticDefinition {
         private String gradientSet = "";
         private Map<String, CosmeticVariant> variants;
         private List<String> slotOverrides;
+        private boolean overrideSlot = false;
 
         private Builder(String id, String slot, String model, String texture) {
             this.id = Objects.requireNonNull(id, "id");
@@ -96,6 +103,11 @@ public final class CosmeticDefinition {
 
         public Builder slotOverrides(List<String> slotOverrides) {
             this.slotOverrides = slotOverrides;
+            return this;
+        }
+
+        public Builder overrideSlot(boolean overrideSlot) {
+            this.overrideSlot = overrideSlot;
             return this;
         }
 

@@ -18,6 +18,7 @@ public final class RaceCosmeticOverrides {
     public static final String ID_BEASTKIN_EARS = "Talania_Beastkin_Ears";
     public static final String ID_ORC_TEETH = "Talania_Orc_Teeth";
     public static final String ID_STARBORN_GEM = "Talania_Starborn_Gem";
+    public static final String ID_NIGHTWALKER_SKIN = "Talania_Nightwalker_Skin";
 
     private RaceCosmeticOverrides() {}
 
@@ -44,6 +45,14 @@ public final class RaceCosmeticOverrides {
                 "Resources/Characters/Face_Details/Talania_Starborn_Gem/Talania_Starborn_Gem.blockymodel",
                 "Resources/Characters/Face_Details/Talania_Starborn_Gem/Talania_Starborn_Gem.png")
                 .icon("Resources/Characters/Face_Details/Talania_Starborn_Gem/Icon/Talania_Starborn_Gem.png")
+                .build());
+        TalaniaCosmetics.register(CosmeticDefinition.builder(
+                ID_NIGHTWALKER_SKIN,
+                "BodyCharacteristics",
+                "Common/Characters/Player.blockymodel",
+                "Resources/Characters/Player_Textures/Player_Greyscale_Nightwalker.png")
+                .overrideSlot(true)
+                .gradientSet("Skin")
                 .build());
     }
 
@@ -84,6 +93,8 @@ public final class RaceCosmeticOverrides {
             overrides.add(ID_ORC_TEETH);
         } else if (race == RaceType.STARBORN) {
             overrides.add(ID_STARBORN_GEM);
+        } else if (race == RaceType.NIGHTWALKER) {
+            overrides.add(ID_NIGHTWALKER_SKIN);
         }
         TalaniaCosmetics.setOverrides(playerRef, overrides);
     }

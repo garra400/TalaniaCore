@@ -46,3 +46,7 @@ local.properties
 *.local.json
 .local/
 .metadata/
+
+# Local-only cosmetic assets (keep UI tracked)
+races/src/main/resources/Common/Resources/**
+races/src/main/resources/Resources/**
