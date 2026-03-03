@@ -18,23 +18,23 @@ TalaniaCore is a **public domain shared library** designed for the Hytale moddin
 
 ### Core Submodules
 
-| Submodule | Description | Status |
-|-----------|-------------|--------|
-| **stats** | Base stats + modifiers | ✅ Active |
-| **combat** | Damage modifiers, attack/damage typing, settings | 🧪 In Progress |
-| **events** | Event bus + entity events | ✅ Active |
-| **input** | Input patterns + action events | ✅ Active |
-| **progression** | Leveling system (XP curves, level progress) | ✅ Active |
-| **movement** | Movement utilities (jump, flight) | 🧪 In Progress |
-| **projectiles** | Projectile helpers + detection systems | 🧪 In Progress |
-| **entities** | Temporary entity effects + animation manager | 🧪 In Progress |
-| **profile** | Player profile storage + class progress + API | ✅ Active |
-| **hytale** | Hytale API bridges (stats sync, teleport, effects) | ✅ Active |
-| **localization** | Translation system | ✅ Active |
-| **config** | JSON config + hot-reload | ✅ Active |
-| **ui** | UI wrapper abstractions | ✅ Active |
-| **cosmetics** | Cosmetic registry + model rebuild pipeline | ✅ Active |
-| **utils** | Animation/model/text helpers | ✅ Active |
+| Submodule | Description |
+|-----------|-------------|
+| **stats** | Base stats, modifiers, and derived values |
+| **combat** | Damage handling, attack/damage typing, combat settings |
+| **events** | Event bus + entity event helpers |
+| **input** | Input patterns + action events |
+| **progression** | Leveling system (XP curves, level progress) |
+| **movement** | Movement helpers (jump, flight, speed) |
+| **projectiles** | Projectile helpers + detection systems |
+| **entities** | Temporary entity effects + animation helpers |
+| **profile** | Player profile storage + class progress + API |
+| **hytale** | Hytale API bridges (stats sync, teleport, effects) |
+| **localization** | Translation system |
+| **config** | JSON config + hot-reload |
+| **ui** | UI wrapper abstractions |
+| **cosmetics** | Cosmetic registry + model rebuild pipeline |
+| **utils** | Animation/model/text helpers |
 
 ## Installation
 
