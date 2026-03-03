@@ -19,9 +19,19 @@ public final class WorldContextUtil {
         if (time == null) {
             return true;
         }
-        double start = WorldTimeResource.SUNRISE_SECONDS;
-        double end = start + WorldTimeResource.DAYTIME_SECONDS;
-        return time.isDayTimeWithinRange(start, end);
+        double daySeconds = WorldTimeResource.DAYTIME_SECONDS;
+        double nightSeconds = resolveNightSeconds(daySeconds);
+        double totalSeconds = daySeconds + nightSeconds;
+        if (totalSeconds <= 0) {
+            return true;
+        }
+        double dayStart = WorldTimeResource.SUNRISE_SECONDS / totalSeconds;
+        double dayEnd = dayStart + (daySeconds / totalSeconds);
+        double progress = time.getDayProgress();
+        if (dayEnd >= 1.0) {
+            return progress >= dayStart || progress <= (dayEnd - 1.0);
+        }
+        return progress >= dayStart && progress <= dayEnd;
     }
 
     /**
@@ -44,5 +54,13 @@ public final class WorldContextUtil {
             return null;
         }
         return (WorldTimeResource) store.getResource(WorldTimeResource.getResourceType());
+    }
+
+    private static double resolveNightSeconds(double daySeconds) {
+        try {
+            return WorldTimeResource.class.getField("NIGHTTIME_SECONDS").getDouble(null);
+        } catch (ReflectiveOperationException ignored) {
+            return daySeconds * (2.0 / 3.0);
+        }
     }
 }

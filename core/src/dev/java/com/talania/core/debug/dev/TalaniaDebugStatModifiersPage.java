@@ -29,8 +29,12 @@ import java.util.List;
 public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage {
     private static final DecimalFormat FORMAT = new DecimalFormat("0.##");
     private static final int UI_ROW_COUNT = 25;
+    private static final long REFRESH_INTERVAL_MS = 100L;
     private final PlayerRef playerRef;
     private final List<RowPair> rowPairs;
+    private java.util.Timer refreshTimer;
+    private Ref<EntityStore> lastRef;
+    private Store<EntityStore> lastStore;
 
     public TalaniaDebugStatModifiersPage(PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaDebugStatModifiersEventData.CODEC);
@@ -46,6 +50,14 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
         applyModifiersToStats(ref, store);
         bindEvents(eventBuilder);
         applyState(commandBuilder, true);
+        lastRef = ref;
+        lastStore = store;
+        startAutoRefresh();
+    }
+
+    @Override
+    public void onDismiss(@Nonnull Ref ref, @Nonnull Store store) {
+        stopAutoRefresh();
     }
 
     @Override
@@ -89,6 +101,41 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
         bindEvents(eventBuilder);
         applyState(commandBuilder, false);
         sendUpdate(commandBuilder, eventBuilder, false);
+    }
+
+    private void refreshAsync() {
+        Ref<EntityStore> ref = lastRef;
+        Store<EntityStore> store = lastStore;
+        if (ref == null || store == null) {
+            return;
+        }
+        store.getExternalData().getWorld().execute(() -> {
+            if (!ref.isValid()) {
+                stopAutoRefresh();
+                return;
+            }
+            refresh();
+        });
+    }
+
+    private void startAutoRefresh() {
+        if (refreshTimer != null) {
+            return;
+        }
+        refreshTimer = new java.util.Timer("TalaniaDebugStatsRefresh", true);
+        refreshTimer.scheduleAtFixedRate(new java.util.TimerTask() {
+            @Override
+            public void run() {
+                refreshAsync();
+            }
+        }, REFRESH_INTERVAL_MS, REFRESH_INTERVAL_MS);
+    }
+
+    private void stopAutoRefresh() {
+        if (refreshTimer != null) {
+            refreshTimer.cancel();
+            refreshTimer = null;
+        }
     }
 
     private void bindEvents(UIEventBuilder eventBuilder) {
@@ -179,9 +226,13 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
         String baseLabel = row.modKind == ModKind.ADD
                 ? "Base: " + formatSigned(baseValue)
                 : "Base: x" + format(baseValue);
-        String modLabel = row.modKind == ModKind.ADD
-                ? "Mod: " + formatSigned(modValue)
-                : "Mod: x" + format(modValue);
+        String modLabel;
+        if (row.modKind == ModKind.ADD) {
+            modLabel = "Mod: " + formatSigned(modValue);
+        } else {
+            float effective = baseValue * modValue;
+            modLabel = "Mod: x" + format(effective);
+        }
 
         commandBuilder.set("#Row" + index + "Header.Visible", false);
         setStatRowVisible(commandBuilder, index, suffix, true);
@@ -202,7 +253,7 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
                 commandBuilder.set("#Row" + index + suffix + "Mod.TooltipText", addHint);
             } else {
                 commandBuilder.set("#Row" + index + suffix + "Mod.TooltipText",
-                        "Multiplicative modifier (1.0 = no change).\nExample: 1.10 = +10%.");
+                        "Final multiplier (base × debug multiplier).\nDebug multiplier: 1.0 = no change.");
             }
         }
     }
