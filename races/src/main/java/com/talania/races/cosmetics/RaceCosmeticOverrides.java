@@ -26,25 +26,25 @@ public final class RaceCosmeticOverrides {
         TalaniaCosmetics.register(CosmeticDefinition.builder(
                 ID_BEASTKIN_EARS,
                 "Ears",
-                "Resources/Characters/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.blockymodel",
-                "Resources/Characters/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.png")
-                .icon("Resources/Characters/Ears/Talania_Beastkin_Ears/Icon/Talania_Beastkin_Ears.png")
+                "Characters/Body_Attachments/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.blockymodel",
+                "Characters/Body_Attachments/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.png")
+                .icon("Characters/Body_Attachments/Ears/Talania_Beastkin_Ears/Icon/Talania_Beastkin_Ears.png")
                 .gradientSet("Skin")
                 .build());
         TalaniaCosmetics.register(CosmeticDefinition.builder(
                 ID_ORC_TEETH,
                 "Mouths",
-                "Resources/Characters/Mouth/Talania_Orc_Teeth/Talania_Orc_Teeth.blockymodel",
-                "Resources/Characters/Mouth/Talania_Orc_Teeth/Talania_Orc_Teeth.png")
-                .icon("Resources/Characters/Mouth/Talania_Orc_Teeth/Icon/Talania_Orc_Teeth.png")
+                "Characters/Body_Attachments/Mouths/Talania_Orc_Teeth/Talania_Orc_Teeth.blockymodel",
+                "Characters/Body_Attachments/Mouths/Talania_Orc_Teeth/Talania_Orc_Teeth.png")
+                .icon("Characters/Body_Attachments/Mouths/Talania_Orc_Teeth/Icon/Talania_Orc_Teeth.png")
                 .gradientSet("Skin")
                 .build());
         TalaniaCosmetics.register(CosmeticDefinition.builder(
                 ID_STARBORN_GEM,
                 "Face_Accessories",
-                "Resources/Characters/Face_Details/Talania_Starborn_Gem/Talania_Starborn_Gem.blockymodel",
-                "Resources/Characters/Face_Details/Talania_Starborn_Gem/Talania_Starborn_Gem.png")
-                .icon("Resources/Characters/Face_Details/Talania_Starborn_Gem/Icon/Talania_Starborn_Gem.png")
+                "Characters/Body_Attachments/Faces/Talania_Starborn_Gem/Talania_Starborn_Gem.blockymodel",
+                "Characters/Body_Attachments/Faces/Talania_Starborn_Gem/Talania_Starborn_Gem.png")
+                .icon("Characters/Body_Attachments/Faces/Talania_Starborn_Gem/Icon/Talania_Starborn_Gem.png")
                 .build());
         TalaniaCosmetics.register(CosmeticDefinition.builder(
                 ID_NIGHTWALKER_SKIN,
