@@ -1,19 +1,19 @@
 package com.talania.races.cosmetics;
 
-import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.PlayerSkin;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.talania.core.cosmetics.CosmeticDefinition;
+import com.talania.core.cosmetics.TalaniaCosmetics;
 import com.talania.races.RaceType;
 
+import java.util.List;
 import java.util.UUID;
 
 public final class RaceCosmeticOverrides {
-    private static final java.util.logging.Logger LOG =
-            java.util.logging.Logger.getLogger("TalaniaRaces/Cosmetics");
 
     public static final String ID_BEASTKIN_EARS = "Talania_Beastkin_Ears";
     public static final String ID_ORC_TEETH = "Talania_Orc_Teeth";
@@ -22,7 +22,29 @@ public final class RaceCosmeticOverrides {
     private RaceCosmeticOverrides() {}
 
     public static void ensureRegistered() {
-        // Lalyan loads cosmetics from asset folders; nothing to register here.
+        TalaniaCosmetics.register(CosmeticDefinition.builder(
+                ID_BEASTKIN_EARS,
+                "Ears",
+                "Resources/Characters/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.blockymodel",
+                "Resources/Characters/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.png")
+                .icon("Resources/Characters/Ears/Talania_Beastkin_Ears/Icon/Talania_Beastkin_Ears.png")
+                .gradientSet("Skin")
+                .build());
+        TalaniaCosmetics.register(CosmeticDefinition.builder(
+                ID_ORC_TEETH,
+                "Mouths",
+                "Resources/Characters/Mouth/Talania_Orc_Teeth/Talania_Orc_Teeth.blockymodel",
+                "Resources/Characters/Mouth/Talania_Orc_Teeth/Talania_Orc_Teeth.png")
+                .icon("Resources/Characters/Mouth/Talania_Orc_Teeth/Icon/Talania_Orc_Teeth.png")
+                .gradientSet("Skin")
+                .build());
+        TalaniaCosmetics.register(CosmeticDefinition.builder(
+                ID_STARBORN_GEM,
+                "Face_Accessories",
+                "Resources/Characters/Face_Details/Talania_Starborn_Gem/Talania_Starborn_Gem.blockymodel",
+                "Resources/Characters/Face_Details/Talania_Starborn_Gem/Talania_Starborn_Gem.png")
+                .icon("Resources/Characters/Face_Details/Talania_Starborn_Gem/Icon/Talania_Starborn_Gem.png")
+                .build());
     }
 
     public static void apply(PlayerRef playerRef, RaceType race) {
@@ -49,66 +71,47 @@ public final class RaceCosmeticOverrides {
         }
     }
 
-    public static void refreshBase(PlayerRef playerRef) {
-        // No-op for Lalyan path.
-    }
-
-    public static void restoreBase(PlayerRef playerRef) {
-        // No-op for Lalyan path.
-    }
-
-    public static void clearBase(PlayerRef playerRef) {
-        // No-op for Lalyan path.
-    }
-
-    public static void clearBase(UUID playerId) {
-        // No-op for Lalyan path.
-    }
-
     private static void applyInternal(PlayerRef playerRef, RaceType race) {
         Ref<EntityStore> ref = playerRef.getReference();
         Store<EntityStore> store = ref != null ? ref.getStore() : null;
         if (ref == null || store == null) {
             return;
         }
-        store.getExternalData().getWorld().execute(() -> {
-            AttachmentsRegistry registry = AttachmentsRegistry.get();
-            if (registry == null) {
-                LOG.warning("Lalyan Cosmetic Core not available; cannot apply race cosmetics.");
-                return;
-            }
-
-            removeCosmetic(registry, ref, ID_BEASTKIN_EARS);
-            removeCosmetic(registry, ref, ID_ORC_TEETH);
-            removeCosmetic(registry, ref, ID_STARBORN_GEM);
-
-            if (race == RaceType.BEASTKIN) {
-                addCosmetic(registry, ref, ID_BEASTKIN_EARS);
-            } else if (race == RaceType.ORC) {
-                addCosmetic(registry, ref, ID_ORC_TEETH);
-            } else if (race == RaceType.STARBORN) {
-                addCosmetic(registry, ref, ID_STARBORN_GEM);
-            }
-        });
-    }
-
-    private static void addCosmetic(AttachmentsRegistry registry, Ref<EntityStore> ref, String id) {
-        if (registry.getAttachmentsRegistry().get(id) == null) {
-            LOG.warning("Lalyan cosmetic not found: " + id);
-            return;
+        List<String> overrides = new java.util.ArrayList<>();
+        if (race == RaceType.BEASTKIN) {
+            overrides.add(ID_BEASTKIN_EARS);
+        } else if (race == RaceType.ORC) {
+            overrides.add(ID_ORC_TEETH);
+        } else if (race == RaceType.STARBORN) {
+            overrides.add(ID_STARBORN_GEM);
         }
-        registry.addCosmetic(ref, id, false);
+        TalaniaCosmetics.setOverrides(playerRef, overrides);
     }
 
-    private static void removeCosmetic(AttachmentsRegistry registry, Ref<EntityStore> ref, String id) {
-        if (registry.getAttachmentsRegistry().get(id) == null) {
-            return;
-        }
-        registry.removeCosmetic(ref, id);
-    }
-
-    // Kept for dev UI compatibility; Lalyan handles model rebuild internally.
+    // Kept for dev UI compatibility; TalaniaCosmeticCore rebuilds models on overrides.
     public static void applySkinAttachments(Ref<EntityStore> ref, Store<EntityStore> store, PlayerSkin skin) {
-        // No-op in Lalyan-only mode.
+        // No-op in TalaniaCosmeticCore mode.
+    }
+
+    public static void refreshBase(PlayerRef playerRef) {
+        TalaniaCosmetics.refreshBase(playerRef);
+    }
+
+    public static void restoreBase(PlayerRef playerRef) {
+        TalaniaCosmetics.clearOverrides(playerRef);
+    }
+
+    public static void clearBase(PlayerRef playerRef) {
+        TalaniaCosmetics.refreshBase(playerRef);
+    }
+
+    public static void clearBase(UUID playerId) {
+        if (playerId == null) {
+            return;
+        }
+        PlayerRef playerRef = Universe.get().getPlayer(playerId);
+        if (playerRef != null) {
+            clearBase(playerRef);
+        }
     }
 }

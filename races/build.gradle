@@ -11,6 +11,5 @@ tasks.named('processResources') {
 
 dependencies {
     implementation project(':core')
-    compileOnly files(rootProject.file('.local/LalyanCosmeticCore-2.0.3.jar'))
 }
 
