@@ -87,14 +87,6 @@ public final class TalaniaCosmetics {
         return core.isDebugHideBase(playerRef.getUuid());
     }
 
-    public static boolean isDebugOnlySelected(PlayerRef playerRef) {
-        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
-        if (core == null || playerRef == null) {
-            return false;
-        }
-        return core.isDebugOnlySelected(playerRef.getUuid());
-    }
-
     public static boolean isDebugStripBase(PlayerRef playerRef) {
         TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
         if (core == null || playerRef == null) {
@@ -123,13 +115,6 @@ public final class TalaniaCosmetics {
         TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
         if (core != null) {
             core.setDebugHideBase(playerRef, hideBase);
-        }
-    }
-
-    public static void setDebugOnlySelected(PlayerRef playerRef, boolean onlySelected) {
-        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
-        if (core != null) {
-            core.setDebugOnlySelected(playerRef, onlySelected);
         }
     }
 

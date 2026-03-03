@@ -74,6 +74,12 @@ public final class PlayerScaleSystem extends EntityTickingSystem<EntityStore> {
 
     private boolean applyModelScale(Ref<EntityStore> ref, Store<EntityStore> store,
                                     CommandBuffer<EntityStore> commandBuffer, float scale) {
+        com.hypixel.hytale.server.core.universe.PlayerRef playerRef =
+                com.talania.core.utils.PlayerRefUtil.resolve(ref, store);
+        if (playerRef != null && !com.talania.core.cosmetics.TalaniaCosmetics.getOverrides(playerRef).isEmpty()) {
+            // Avoid rebuilding the base model when cosmetics overrides are active.
+            return false;
+        }
         PlayerSkinComponent skinComponent =
                 (PlayerSkinComponent) store.getComponent(ref, PlayerSkinComponent.getComponentType());
         if (skinComponent == null) {

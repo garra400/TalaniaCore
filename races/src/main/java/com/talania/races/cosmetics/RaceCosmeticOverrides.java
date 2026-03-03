@@ -49,8 +49,8 @@ public final class RaceCosmeticOverrides {
         TalaniaCosmetics.register(CosmeticDefinition.builder(
                 ID_NIGHTWALKER_SKIN,
                 "BodyCharacteristics",
-                "Common/Characters/Player.blockymodel",
-                "Resources/Characters/Player_Textures/Player_Greyscale_Nightwalker.png")
+                "Characters/Player.blockymodel",
+                "Characters/Player_Textures/Player_Greyscale_Nightwalker.png")
                 .overrideSlot(true)
                 .gradientSet("Skin")
                 .build());

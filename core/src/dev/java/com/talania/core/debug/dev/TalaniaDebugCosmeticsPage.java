@@ -22,10 +22,8 @@ import java.util.List;
 
 public final class TalaniaDebugCosmeticsPage extends InteractiveCustomUIPage {
     private static final int ROWS = 10;
-    private static final float OFFSET_STEP = 1.0f;
     private final PlayerRef playerRef;
     private List<String> cosmeticIds = List.of();
-    private String selectedCosmeticId;
 
     public TalaniaDebugCosmeticsPage(PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaDebugCosmeticsEventData.CODEC);
@@ -50,11 +48,16 @@ public final class TalaniaDebugCosmeticsPage extends InteractiveCustomUIPage {
             return;
         }
         switch (eventData.action) {
-            case "Return" -> openMenu(ref, store);
+            case "Return" -> {
+                openMenu(ref, store);
+                return;
+            }
+            case "OpenView" -> {
+                openView(ref, store);
+                return;
+            }
             case "ToggleHideBase" -> TalaniaCosmetics.setDebugHideBase(playerRef,
                     !TalaniaCosmetics.isDebugHideBase(playerRef));
-            case "ToggleOnlySelected" -> TalaniaCosmetics.setDebugOnlySelected(playerRef,
-                    !TalaniaCosmetics.isDebugOnlySelected(playerRef));
             case "ToggleStripBase" -> TalaniaCosmetics.setDebugStripBase(playerRef,
                     !TalaniaCosmetics.isDebugStripBase(playerRef));
             case "ToggleVisible" -> {
@@ -62,11 +65,6 @@ public final class TalaniaDebugCosmeticsPage extends InteractiveCustomUIPage {
                 if (id != null) {
                     TalaniaCosmetics.toggleDebugVisible(playerRef, id);
                 }
-            }
-            case "SelectOffset" -> {
-                selectedCosmeticId = cosmeticIdForIndex(eventData.value);
-                openOffsetEditor(ref, store, selectedCosmeticId);
-                return;
             }
             default -> {
             }
@@ -77,17 +75,15 @@ public final class TalaniaDebugCosmeticsPage extends InteractiveCustomUIPage {
     private void bindEvents(UIEventBuilder eventBuilder) {
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ReturnButton",
                 new EventData().append("Action", "Return"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ViewModeButton",
+                new EventData().append("Action", "OpenView"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#HideBaseButton",
                 new EventData().append("Action", "ToggleHideBase"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OnlySelectedButton",
-                new EventData().append("Action", "ToggleOnlySelected"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#StripBaseButton",
                 new EventData().append("Action", "ToggleStripBase"), false);
         for (int i = 1; i <= ROWS; i++) {
             eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Cosmetic" + i + "Toggle",
                     new EventData().append("Action", "ToggleVisible").append("Value", String.valueOf(i)), false);
-            eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Cosmetic" + i + "Offset",
-                    new EventData().append("Action", "SelectOffset").append("Value", String.valueOf(i)), false);
         }
     }
 
@@ -96,10 +92,8 @@ public final class TalaniaDebugCosmeticsPage extends InteractiveCustomUIPage {
         commandBuilder.set("#SubtitleLabel.Text", "Dev build only. Toggle cosmetics and isolate attachments.");
 
         boolean hideBase = TalaniaCosmetics.isDebugHideBase(playerRef);
-        boolean onlySelected = TalaniaCosmetics.isDebugOnlySelected(playerRef);
         boolean stripBase = TalaniaCosmetics.isDebugStripBase(playerRef);
         commandBuilder.set("#HideBaseButton.Text", hideBase ? "Hide Base: On" : "Hide Base: Off");
-        commandBuilder.set("#OnlySelectedButton.Text", onlySelected ? "Only Selected: On" : "Only Selected: Off");
         commandBuilder.set("#StripBaseButton.Text", stripBase ? "Strip Base: On" : "Strip Base: Off");
 
         List<String> visible = TalaniaCosmetics.getDebugVisible(playerRef);
@@ -114,7 +108,6 @@ public final class TalaniaDebugCosmeticsPage extends InteractiveCustomUIPage {
             commandBuilder.set("#Cosmetic" + i + "Label.Text", id);
             boolean active = visible.contains(id);
             commandBuilder.set("#Cosmetic" + i + "Toggle.Text", active ? "Hide" : "Show");
-            commandBuilder.set("#Cosmetic" + i + "Offset.Text", "Offset");
         }
 
     }
@@ -153,15 +146,15 @@ public final class TalaniaDebugCosmeticsPage extends InteractiveCustomUIPage {
         return null;
     }
 
-    private void openOffsetEditor(Ref<EntityStore> ref, Store<EntityStore> store, String cosmeticId) {
-        if (cosmeticId == null || ref == null || store == null) {
+    private void openView(Ref<EntityStore> ref, Store<EntityStore> store) {
+        if (ref == null || store == null) {
             return;
         }
         store.getExternalData().getWorld().execute(() -> {
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
                 player.getPageManager().openCustomPage(ref, store,
-                        new TalaniaDebugCosmeticsOffsetPage(playerRef, cosmeticId));
+                        new TalaniaDebugCosmeticsOffsetPage(playerRef, true));
             }
         });
     }

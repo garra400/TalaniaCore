@@ -29,8 +29,8 @@ $C.@Panel {
       Anchor: (Height: 32);
 
       $C.@SecondaryTextButton #HideBaseButton { Text: "Hide Base: Off"; Anchor: (Width: 160, Height: 28); }
-      $C.@SecondaryTextButton #OnlySelectedButton { Text: "Only Selected: Off"; Anchor: (Width: 180, Height: 28, Left: 10); }
       $C.@SecondaryTextButton #StripBaseButton { Text: "Strip Base: Off"; Anchor: (Width: 160, Height: 28, Left: 10); }
+      $C.@SecondaryTextButton #ViewModeButton { Text: "View Mode"; Anchor: (Width: 140, Height: 28, Left: 10); }
     }
 
     Group #CosmeticsScroll {
@@ -45,9 +45,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic1Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 1"; Anchor: (Width: 420); }
+        Label #Cosmetic1Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 1"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic1Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic1Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
 
       Group #Cosmetic2Container {
@@ -56,9 +55,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic2Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 2"; Anchor: (Width: 420); }
+        Label #Cosmetic2Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 2"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic2Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic2Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
 
       Group #Cosmetic3Container {
@@ -67,9 +65,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic3Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 3"; Anchor: (Width: 420); }
+        Label #Cosmetic3Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 3"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic3Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic3Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
 
       Group #Cosmetic4Container {
@@ -78,9 +75,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic4Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 4"; Anchor: (Width: 420); }
+        Label #Cosmetic4Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 4"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic4Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic4Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
 
       Group #Cosmetic5Container {
@@ -89,9 +85,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic5Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 5"; Anchor: (Width: 420); }
+        Label #Cosmetic5Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 5"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic5Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic5Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
 
       Group #Cosmetic6Container {
@@ -100,9 +95,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic6Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 6"; Anchor: (Width: 420); }
+        Label #Cosmetic6Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 6"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic6Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic6Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
 
       Group #Cosmetic7Container {
@@ -111,9 +105,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic7Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 7"; Anchor: (Width: 420); }
+        Label #Cosmetic7Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 7"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic7Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic7Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
 
       Group #Cosmetic8Container {
@@ -122,9 +115,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic8Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 8"; Anchor: (Width: 420); }
+        Label #Cosmetic8Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 8"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic8Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic8Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
 
       Group #Cosmetic9Container {
@@ -133,9 +125,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic9Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 9"; Anchor: (Width: 420); }
+        Label #Cosmetic9Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 9"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic9Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic9Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
 
       Group #Cosmetic10Container {
@@ -144,9 +135,8 @@ $C.@Panel {
         Padding: (Full: 6);
         Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
 
-        Label #Cosmetic10Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 10"; Anchor: (Width: 420); }
+        Label #Cosmetic10Label { Style: (...$C.@DefaultLabelStyle); Text: "Cosmetic 10"; Anchor: (Width: 540); }
         $C.@SecondaryTextButton #Cosmetic10Toggle { Text: "Show"; Anchor: (Width: 110, Height: 28, Left: 10); }
-        $C.@SecondaryTextButton #Cosmetic10Offset { Text: "Offset"; Anchor: (Width: 110, Height: 28, Left: 10); }
       }
     }
 

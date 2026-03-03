@@ -95,11 +95,6 @@ public final class TalaniaCosmeticCore {
         return state != null && state.debugHideBase;
     }
 
-    public boolean isDebugOnlySelected(UUID playerId) {
-        PlayerCosmeticState state = playerState.get(playerId);
-        return state != null && state.debugOnlySelected;
-    }
-
     public boolean isDebugStripBase(UUID playerId) {
         PlayerCosmeticState state = playerState.get(playerId);
         return state != null && state.debugStripBase;
@@ -125,10 +120,6 @@ public final class TalaniaCosmeticCore {
 
     public void setDebugHideBase(PlayerRef playerRef, boolean hideBase) {
         updateDebugState(playerRef, state -> state.debugHideBase = hideBase);
-    }
-
-    public void setDebugOnlySelected(PlayerRef playerRef, boolean onlySelected) {
-        updateDebugState(playerRef, state -> state.debugOnlySelected = onlySelected);
     }
 
     public void setDebugStripBase(PlayerRef playerRef, boolean stripBase) {
@@ -306,13 +297,6 @@ public final class TalaniaCosmeticCore {
         Map<String, Boolean> overrides = new HashMap<>();
 
         List<String> cosmeticIds = state.overrides;
-        if (state.debugOnlySelected) {
-            if (!state.debugVisible.isEmpty()) {
-                cosmeticIds = new ArrayList<>(state.debugVisible);
-            } else {
-                cosmeticIds = List.of();
-            }
-        }
 
         for (String cosmeticId : cosmeticIds) {
             if (cosmeticId == null || cosmeticId.isBlank()) {
@@ -358,14 +342,21 @@ public final class TalaniaCosmeticCore {
             restoreBaseAttachments(cosmetics.getRegistry(), state.baseSkin, attachments, overrides);
         }
 
+        String baseModel = model.getModel();
+        String baseTexture = model.getTexture();
+        if (state.debugHideBase) {
+            // Use a transparent debug texture to hide the base model without breaking attachment anchors.
+            baseTexture = "Blocks/_Debug/TextureEmpty.png";
+        }
+
         Model newModel = new Model(
                 player.getDisplayName() + "_TalaniaCosmetics",
                 model.getScale(),
                 model.getRandomAttachmentIds(),
                 attachments.toArray(new ModelAttachment[0]),
                 model.getBoundingBox(),
-                model.getModel(),
-                model.getTexture(),
+                baseModel,
+                baseTexture,
                 model.getGradientSet(),
                 model.getGradientId(),
                 model.getEyeHeight(),
@@ -812,7 +803,6 @@ public final class TalaniaCosmeticCore {
         private PlayerSkin baseSkin;
         private List<String> overrides = new ArrayList<>();
         private boolean debugHideBase = false;
-        private boolean debugOnlySelected = false;
         private final Set<String> debugVisible = new HashSet<>();
         private final Map<String, Offset> debugOffsets = new HashMap<>();
         private boolean debugStripBase = false;

@@ -56,6 +56,10 @@ Fluent API for interfaces.
 UIFactory.button().text("OK").onClick(() -> {}).build();
 ```
 
+### Cosmetics Core
+Server-side cosmetics registry and rebuild pipeline used by Talania races.
+Includes a dev UI for toggling active cosmetics and isolating attachments.
+
 ---
 
 ## Links

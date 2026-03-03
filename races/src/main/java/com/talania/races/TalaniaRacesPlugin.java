@@ -189,8 +189,6 @@ public final class TalaniaRacesPlugin extends JavaPlugin {
             if (existing != null) {
                 return;
             }
-        } else {
-            clearRace(profile, playerId, core);
         }
         TalaniaRaceSelectionPage.open(ref, store, this, event.respec());
     }

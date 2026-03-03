@@ -29,17 +29,27 @@ import com.talania.core.cosmetics.TalaniaCosmetics;
 import javax.annotation.Nonnull;
 
 public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPage {
+    // Offset editor is disabled in the main menu. Runtime offsets require model patching.
     private static final float OFFSET_STEP = 1.0f;
     private static final float OFFSET_STEP_LARGE = 5.0f;
     private static final float FRONT_YAW = 3.1415927f;
     private final PlayerRef playerRef;
     private final String cosmeticId;
     private boolean frontView = false;
+    private final boolean viewOnly;
 
     public TalaniaDebugCosmeticsOffsetPage(PlayerRef playerRef, String cosmeticId) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaDebugCosmeticsOffsetEventData.CODEC);
         this.playerRef = playerRef;
         this.cosmeticId = cosmeticId;
+        this.viewOnly = false;
+    }
+
+    public TalaniaDebugCosmeticsOffsetPage(PlayerRef playerRef, boolean viewOnly) {
+        super(playerRef, CustomPageLifetime.CanDismiss, TalaniaDebugCosmeticsOffsetEventData.CODEC);
+        this.playerRef = playerRef;
+        this.cosmeticId = null;
+        this.viewOnly = viewOnly;
     }
 
     @Override
@@ -49,6 +59,11 @@ public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPa
         bindEvents(eventBuilder);
         applyState(commandBuilder);
         forceThirdPerson(ref, store, frontView);
+    }
+
+    @Override
+    public void onDismiss(@Nonnull Ref ref, @Nonnull Store store) {
+        resetCamera(ref, store);
     }
 
     @Override
@@ -69,6 +84,10 @@ public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPa
                 frontView = !frontView;
                 forceThirdPerson(ref, store, frontView);
             }
+            case "ToggleHideBase" -> TalaniaCosmetics.setDebugHideBase(playerRef,
+                    !TalaniaCosmetics.isDebugHideBase(playerRef));
+            case "ToggleStripBase" -> TalaniaCosmetics.setDebugStripBase(playerRef,
+                    !TalaniaCosmetics.isDebugStripBase(playerRef));
             case "OffsetXMinus5" -> adjustOffset(-OFFSET_STEP_LARGE, 0, 0);
             case "OffsetXMinus" -> adjustOffset(-OFFSET_STEP, 0, 0);
             case "OffsetXPlus" -> adjustOffset(OFFSET_STEP, 0, 0);
@@ -93,6 +112,13 @@ public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPa
                 new EventData().append("Action", "Back"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ViewToggleButton",
                 new EventData().append("Action", "ToggleView"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#HideBaseButton",
+                new EventData().append("Action", "ToggleHideBase"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#StripBaseButton",
+                new EventData().append("Action", "ToggleStripBase"), false);
+        if (viewOnly) {
+            return;
+        }
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OffsetXMinus",
                 new EventData().append("Action", "OffsetXMinus"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OffsetXPlus",
@@ -126,6 +152,20 @@ public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPa
         commandBuilder.set("#SelectedLabel.Text", "Selected:");
         commandBuilder.set("#SelectedNameLabel.Text", cosmeticId == null ? "none" : cosmeticId);
         commandBuilder.set("#ViewToggleButton.Text", frontView ? "View: Front" : "View: Back");
+        boolean hideBase = TalaniaCosmetics.isDebugHideBase(playerRef);
+        boolean stripBase = TalaniaCosmetics.isDebugStripBase(playerRef);
+        commandBuilder.set("#HideBaseButton.Text", hideBase ? "Hide Base: On" : "Hide Base: Off");
+        commandBuilder.set("#StripBaseButton.Text", stripBase ? "Strip Base: On" : "Strip Base: Off");
+        if (viewOnly) {
+            commandBuilder.set("#TitleLabel.Text", "Cosmetics View");
+            commandBuilder.set("#SelectedLabel.Visible", false);
+            commandBuilder.set("#SelectedNameLabel.Visible", false);
+            commandBuilder.set("#OffsetValue.Visible", false);
+            commandBuilder.set("#OffsetRowX.Visible", false);
+            commandBuilder.set("#OffsetRowY.Visible", false);
+            commandBuilder.set("#OffsetRowZ.Visible", false);
+            commandBuilder.set("#OffsetResetRow.Visible", false);
+        }
         TalaniaCosmeticCore.Offset offset = TalaniaCosmetics.getDebugOffset(playerRef, cosmeticId);
         commandBuilder.set("#OffsetValue.Text",
                 "X: " + format(offset.x) + "  Y: " + format(offset.y) + "  Z: " + format(offset.z));
@@ -170,10 +210,12 @@ public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPa
             settings.attachedToType = AttachedToType.LocalPlayer;
             settings.positionType = PositionType.AttachedToPlusOffset;
             settings.rotationType = RotationType.AttachedToPlusOffset;
-            settings.positionDistanceOffsetType = PositionDistanceOffsetType.DistanceOffsetRaycast;
-            settings.distance = 3.5f;
+            settings.positionDistanceOffsetType = PositionDistanceOffsetType.DistanceOffset;
+            settings.distance = 1.4f;
             settings.eyeOffset = true;
             settings.rotationOffset = new Direction(front ? FRONT_YAW : 0.0f, 0.0f, 0.0f);
+            settings.sendMouseMotion = false;
+            settings.displayCursor = false;
             handler.writeNoCache(new SetServerCamera(ClientCameraView.Custom, true, settings));
         });
     }
