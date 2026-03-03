@@ -76,7 +76,6 @@ $C.@Panel {
       $C.@SecondaryTextButton #OffsetReset { Text: "Reset"; Anchor: (Width: 140, Height: 28); }
     }
 
-    Label { Style: (...$C.@DefaultLabelStyle); Text: "Offsets are temporary."; Padding: (Top: 10, Bottom: 8); }
 
     $C.@SecondaryTextButton #BackButton { Text: "Back"; Anchor: (Width: 140, Height: 28); }
   }

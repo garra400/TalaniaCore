@@ -342,8 +342,8 @@ public final class TalaniaCosmeticCore {
             restoreBaseAttachments(cosmetics.getRegistry(), state.baseSkin, attachments, overrides);
         }
 
-        String baseModel = model.getModel();
-        String baseTexture = model.getTexture();
+        String baseModel = state.originalBaseModel != null ? state.originalBaseModel : model.getModel();
+        String baseTexture = state.originalBaseTexture != null ? state.originalBaseTexture : model.getTexture();
         if (state.debugHideBase && !state.debugStripBase) {
             baseModel = "Characters/Empty_Cube.blockymodel";
             baseTexture = "Characters/Empty_Cube_Texture.png";
@@ -720,6 +720,9 @@ public final class TalaniaCosmeticCore {
             if (!ref.isValid()) {
                 return;
             }
+            if (state.originalBaseModel == null || state.originalBaseTexture == null) {
+                captureBaseModel(store, ref, state);
+            }
             if (state.baseSkin == null) {
                 state.baseSkin = readCurrentSkin(store, ref, playerRef.getUuid());
             }
@@ -728,9 +731,30 @@ public final class TalaniaCosmeticCore {
                     state.originalBaseSkin = new PlayerSkin(state.baseSkin);
                 }
                 state.baseSkin = stripBaseSkin(state.baseSkin);
+            } else if (!state.debugStripBase && state.originalBaseSkin != null) {
+                state.baseSkin = new PlayerSkin(state.originalBaseSkin);
             }
             rebuild(ref, store, state);
         });
+    }
+
+    private void captureBaseModel(Store<EntityStore> store, Ref<EntityStore> ref, PlayerCosmeticState state) {
+        if (store == null || ref == null || state == null) {
+            return;
+        }
+        ModelComponent modelComponent = store.getComponent(ref, ModelComponent.getComponentType());
+        if (modelComponent == null || modelComponent.getModel() == null) {
+            return;
+        }
+        Model model = modelComponent.getModel();
+        String baseModel = model.getModel();
+        String baseTexture = model.getTexture();
+        if (baseModel != null && !baseModel.isBlank() && !baseModel.contains("Empty_Cube")) {
+            state.originalBaseModel = baseModel;
+        }
+        if (baseTexture != null && !baseTexture.isBlank() && !baseTexture.contains("Empty_Cube")) {
+            state.originalBaseTexture = baseTexture;
+        }
     }
 
     private void scheduleBaseCaptureRetry(Ref<EntityStore> ref, Store<EntityStore> store, UUID playerId,
@@ -807,6 +831,8 @@ public final class TalaniaCosmeticCore {
         private final Map<String, Offset> debugOffsets = new HashMap<>();
         private boolean debugStripBase = false;
         private PlayerSkin originalBaseSkin;
+        private String originalBaseModel;
+        private String originalBaseTexture;
         private int pendingBaseCaptureAttempts = 0;
         private int pendingRebuildAttempts = 0;
     }
