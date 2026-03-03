@@ -8,6 +8,11 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
  * Shared world context utilities (time, environment, terrain).
  */
 public final class WorldContextUtil {
+    /**
+     * Cached value for nighttime seconds to avoid reflective lookup on the hot path.
+     */
+    private static final double NIGHT_SECONDS = initNightSeconds();
+
     private WorldContextUtil() {
     }
 
@@ -56,11 +61,15 @@ public final class WorldContextUtil {
         return (WorldTimeResource) store.getResource(WorldTimeResource.getResourceType());
     }
 
-    private static double resolveNightSeconds(double daySeconds) {
+    private static double initNightSeconds() {
         try {
             return WorldTimeResource.class.getField("NIGHTTIME_SECONDS").getDouble(null);
         } catch (ReflectiveOperationException ignored) {
-            return daySeconds * (2.0 / 3.0);
+            return WorldTimeResource.DAYTIME_SECONDS * (2.0 / 3.0);
         }
+    }
+
+    private static double resolveNightSeconds(double daySeconds) {
+        return NIGHT_SECONDS;
     }
 }

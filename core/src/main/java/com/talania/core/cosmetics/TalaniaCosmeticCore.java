@@ -324,11 +324,7 @@ public final class TalaniaCosmeticCore {
 
             String gradientSet = def.gradientSet();
             String gradientId = resolveGradientId(cosmetics, state.baseSkin, gradientSet);
-            Offset offset = state.debugOffsets.getOrDefault(cosmeticId, Offset.ZERO);
             String modelPath = def.model();
-            if (!offset.isZero()) {
-                modelPath = def.model();
-            }
             attachments.add(new ModelAttachment(
                     modelPath,
                     def.texture(),
