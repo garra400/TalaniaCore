@@ -344,9 +344,9 @@ public final class TalaniaCosmeticCore {
 
         String baseModel = model.getModel();
         String baseTexture = model.getTexture();
-        if (state.debugHideBase) {
-            // Use a transparent debug texture to hide the base model without breaking attachment anchors.
-            baseTexture = "Blocks/_Debug/TextureEmpty.png";
+        if (state.debugHideBase && !state.debugStripBase) {
+            baseModel = "Characters/Empty_Cube.blockymodel";
+            baseTexture = "Characters/Empty_Cube_Texture.png";
         }
 
         Model newModel = new Model(

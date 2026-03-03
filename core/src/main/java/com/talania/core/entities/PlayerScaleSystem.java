@@ -57,11 +57,7 @@ public final class PlayerScaleSystem extends EntityTickingSystem<EntityStore> {
         }
 
         boolean appliedModelScale = applyModelScale(ref, store, commandBuffer, scale);
-        if (!appliedModelScale) {
-            applyEntityScale(ref, store, commandBuffer, scale);
-        } else {
-            resetEntityScaleIfPresent(ref, store, commandBuffer);
-        }
+        applyEntityScale(ref, store, commandBuffer, scale);
         lastScale.put(uuid, scale);
     }
 
@@ -116,13 +112,4 @@ public final class PlayerScaleSystem extends EntityTickingSystem<EntityStore> {
         }
     }
 
-    private void resetEntityScaleIfPresent(Ref<EntityStore> ref, Store<EntityStore> store,
-                                           CommandBuffer<EntityStore> commandBuffer) {
-        EntityScaleComponent scaleComponent =
-                (EntityScaleComponent) store.getComponent(ref, EntityScaleComponent.getComponentType());
-        if (scaleComponent != null) {
-            EntityScaleComponent next = new EntityScaleComponent(1.0f);
-            commandBuffer.replaceComponent(ref, EntityScaleComponent.getComponentType(), next);
-        }
-    }
 }

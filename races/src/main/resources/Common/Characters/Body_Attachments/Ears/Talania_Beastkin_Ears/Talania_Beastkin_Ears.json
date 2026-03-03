@@ -1,8 +1,0 @@
-{
-  "model": "Resources/Characters/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.blockymodel",
-  "texture": "Resources/Characters/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.png",
-  "icon": "Resources/Characters/Ears/Talania_Beastkin_Ears/Icon/Talania_Beastkin_Ears.png",
-  "alternatives": {
-    "gradient_set": "Skin"
-  }
-}

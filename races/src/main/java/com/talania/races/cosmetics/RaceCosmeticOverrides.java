@@ -29,6 +29,7 @@ public final class RaceCosmeticOverrides {
                 "Characters/Body_Attachments/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.blockymodel",
                 "Characters/Body_Attachments/Ears/Talania_Beastkin_Ears/Talania_Beastkin_Ears.png")
                 .icon("Characters/Body_Attachments/Ears/Talania_Beastkin_Ears/Icon/Talania_Beastkin_Ears.png")
+                .overrideSlot(true)
                 .gradientSet("Skin")
                 .build());
         TalaniaCosmetics.register(CosmeticDefinition.builder(

@@ -35,6 +35,7 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
     private java.util.Timer refreshTimer;
     private Ref<EntityStore> lastRef;
     private Store<EntityStore> lastStore;
+    private volatile boolean active;
 
     public TalaniaDebugStatModifiersPage(PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaDebugStatModifiersEventData.CODEC);
@@ -52,11 +53,13 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
         applyState(commandBuilder, true);
         lastRef = ref;
         lastStore = store;
+        active = true;
         startAutoRefresh();
     }
 
     @Override
     public void onDismiss(@Nonnull Ref ref, @Nonnull Store store) {
+        active = false;
         stopAutoRefresh();
     }
 
@@ -69,6 +72,8 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
             return;
         }
         if ("Return".equals(eventData.action)) {
+            active = false;
+            stopAutoRefresh();
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
                 player.getPageManager().openCustomPage(ref, store, new TalaniaDebugMenuPage(playerRef));
@@ -104,12 +109,20 @@ public final class TalaniaDebugStatModifiersPage extends InteractiveCustomUIPage
     }
 
     private void refreshAsync() {
+        if (!active) {
+            stopAutoRefresh();
+            return;
+        }
         Ref<EntityStore> ref = lastRef;
         Store<EntityStore> store = lastStore;
         if (ref == null || store == null) {
             return;
         }
         store.getExternalData().getWorld().execute(() -> {
+            if (!active) {
+                stopAutoRefresh();
+                return;
+            }
             if (!ref.isValid()) {
                 stopAutoRefresh();
                 return;

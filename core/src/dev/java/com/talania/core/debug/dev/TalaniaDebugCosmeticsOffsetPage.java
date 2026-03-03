@@ -37,6 +37,8 @@ public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPa
     private final String cosmeticId;
     private boolean frontView = false;
     private final boolean viewOnly;
+    private java.util.Timer cameraTimer;
+    private volatile boolean cameraActive;
 
     public TalaniaDebugCosmeticsOffsetPage(PlayerRef playerRef, String cosmeticId) {
         super(playerRef, CustomPageLifetime.CanDismiss, TalaniaDebugCosmeticsOffsetEventData.CODEC);
@@ -58,11 +60,15 @@ public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPa
         commandBuilder.append("Pages/TalaniaDebugCosmeticsOffsetPage.ui");
         bindEvents(eventBuilder);
         applyState(commandBuilder);
+        cameraActive = true;
         forceThirdPerson(ref, store, frontView);
+        startCameraLock();
     }
 
     @Override
     public void onDismiss(@Nonnull Ref ref, @Nonnull Store store) {
+        cameraActive = false;
+        stopCameraLock();
         resetCamera(ref, store);
     }
 
@@ -77,6 +83,8 @@ public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPa
         switch (eventData.action) {
             case "Back" -> {
                 openMain(ref, store);
+                cameraActive = false;
+                stopCameraLock();
                 resetCamera(ref, store);
                 return;
             }
@@ -231,6 +239,51 @@ public final class TalaniaDebugCosmeticsOffsetPage extends InteractiveCustomUIPa
             }
             handler.writeNoCache(new SetServerCamera(ClientCameraView.Custom, false, null));
         });
+    }
+
+    private void startCameraLock() {
+        if (cameraTimer != null) {
+            return;
+        }
+        cameraTimer = new java.util.Timer("TalaniaDebugCameraLock", true);
+        cameraTimer.scheduleAtFixedRate(new java.util.TimerTask() {
+            @Override
+            public void run() {
+                if (!cameraActive) {
+                    stopCameraLock();
+                    return;
+                }
+                Ref<EntityStore> ref = getRef();
+                Store<EntityStore> store = getStore();
+                if (ref == null || store == null) {
+                    return;
+                }
+                store.getExternalData().getWorld().execute(() -> {
+                    if (!cameraActive || !ref.isValid()) {
+                        stopCameraLock();
+                        return;
+                    }
+                    forceThirdPerson(ref, store, frontView);
+                });
+            }
+        }, 250L, 250L);
+    }
+
+    private void stopCameraLock() {
+        if (cameraTimer != null) {
+            cameraTimer.cancel();
+            cameraTimer = null;
+        }
+    }
+
+
+    private Ref<EntityStore> getRef() {
+        return playerRef != null ? playerRef.getReference() : null;
+    }
+
+    private Store<EntityStore> getStore() {
+        Ref<EntityStore> ref = getRef();
+        return ref != null ? ref.getStore() : null;
     }
 
     private String format(float value) {

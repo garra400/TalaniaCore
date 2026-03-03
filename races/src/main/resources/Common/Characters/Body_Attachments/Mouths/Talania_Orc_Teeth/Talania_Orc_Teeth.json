@@ -1,8 +1,0 @@
-{
-  "model": "Resources/Characters/Mouth/Talania_Orc_Teeth/Talania_Orc_Teeth.blockymodel",
-  "texture": "Resources/Characters/Mouth/Talania_Orc_Teeth/Talania_Orc_Teeth.png",
-  "icon": "Resources/Characters/Mouth/Talania_Orc_Teeth/Icon/Talania_Orc_Teeth.png",
-  "alternatives": {
-    "gradient_set": "Skin"
-  }
-}
