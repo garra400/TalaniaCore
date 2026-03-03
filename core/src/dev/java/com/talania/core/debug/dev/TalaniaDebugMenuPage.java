@@ -60,6 +60,10 @@ public final class TalaniaDebugMenuPage extends InteractiveCustomUIPage {
             openStatModifiers(ref, store);
             return;
         }
+        if ("OpenCosmetics".equals(eventData.action)) {
+            openCosmetics(ref, store);
+            return;
+        }
         if ("OpenModule".equals(eventData.action) && eventData.value != null) {
             runOnWorldThread(ref, () ->
                     TalaniaModuleRegistry.get().openDebugSection(eventData.value, "main", playerRef, ref, store));
@@ -74,6 +78,8 @@ public final class TalaniaDebugMenuPage extends InteractiveCustomUIPage {
                 new EventData().append("Action", "OpenCombatLog"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenStatModifiersButton",
                 new EventData().append("Action", "OpenStatModifiers"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#OpenCosmeticsButton",
+                new EventData().append("Action", "OpenCosmetics"), false);
         for (int i = 1; i <= 4; i++) {
             int index = i - 1;
             if (index >= modules.size()) {
@@ -135,6 +141,15 @@ public final class TalaniaDebugMenuPage extends InteractiveCustomUIPage {
             Player player = (Player) store.getComponent(ref, Player.getComponentType());
             if (player != null) {
                 player.getPageManager().openCustomPage(ref, store, new TalaniaDebugStatModifiersPage(playerRef));
+            }
+        });
+    }
+
+    private void openCosmetics(Ref ref, Store store) {
+        runOnWorldThread(ref, () -> {
+            Player player = (Player) store.getComponent(ref, Player.getComponentType());
+            if (player != null) {
+                player.getPageManager().openCustomPage(ref, store, new TalaniaDebugCosmeticsPage(playerRef));
             }
         });
     }

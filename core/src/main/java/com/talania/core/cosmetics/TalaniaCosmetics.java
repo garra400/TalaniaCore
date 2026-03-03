@@ -59,4 +59,105 @@ public final class TalaniaCosmetics {
             core.refreshBase(playerRef);
         }
     }
+
+    public static java.util.List<String> getRegisteredIds() {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core == null) {
+            return java.util.List.of();
+        }
+        return core.getRegisteredIds();
+    }
+
+    public static java.util.List<String> getOverrides(PlayerRef playerRef) {
+        if (playerRef == null) {
+            return java.util.List.of();
+        }
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core == null) {
+            return java.util.List.of();
+        }
+        return core.getOverrides(playerRef.getUuid());
+    }
+
+    public static boolean isDebugHideBase(PlayerRef playerRef) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core == null || playerRef == null) {
+            return false;
+        }
+        return core.isDebugHideBase(playerRef.getUuid());
+    }
+
+    public static boolean isDebugOnlySelected(PlayerRef playerRef) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core == null || playerRef == null) {
+            return false;
+        }
+        return core.isDebugOnlySelected(playerRef.getUuid());
+    }
+
+    public static boolean isDebugStripBase(PlayerRef playerRef) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core == null || playerRef == null) {
+            return false;
+        }
+        return core.isDebugStripBase(playerRef.getUuid());
+    }
+
+    public static java.util.List<String> getDebugVisible(PlayerRef playerRef) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core == null || playerRef == null) {
+            return java.util.List.of();
+        }
+        return core.getDebugVisible(playerRef.getUuid());
+    }
+
+    public static TalaniaCosmeticCore.Offset getDebugOffset(PlayerRef playerRef, String cosmeticId) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core == null || playerRef == null) {
+            return TalaniaCosmeticCore.Offset.ZERO;
+        }
+        return core.getDebugOffset(playerRef.getUuid(), cosmeticId);
+    }
+
+    public static void setDebugHideBase(PlayerRef playerRef, boolean hideBase) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core != null) {
+            core.setDebugHideBase(playerRef, hideBase);
+        }
+    }
+
+    public static void setDebugOnlySelected(PlayerRef playerRef, boolean onlySelected) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core != null) {
+            core.setDebugOnlySelected(playerRef, onlySelected);
+        }
+    }
+
+    public static void setDebugStripBase(PlayerRef playerRef, boolean stripBase) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core != null) {
+            core.setDebugStripBase(playerRef, stripBase);
+        }
+    }
+
+    public static void toggleDebugVisible(PlayerRef playerRef, String cosmeticId) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core != null) {
+            core.toggleDebugVisible(playerRef, cosmeticId);
+        }
+    }
+
+    public static void setDebugOffset(PlayerRef playerRef, String cosmeticId, TalaniaCosmeticCore.Offset offset) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core != null) {
+            core.setDebugOffset(playerRef, cosmeticId, offset);
+        }
+    }
+
+    public static void resetDebugOffset(PlayerRef playerRef, String cosmeticId) {
+        TalaniaCosmeticCore core = TalaniaCosmeticCore.get();
+        if (core != null) {
+            core.resetDebugOffset(playerRef, cosmeticId);
+        }
+    }
 }

@@ -103,6 +103,7 @@ public final class TalaniaDebug {
         REGISTRY.registerModule("core", "Core", builder -> {
             builder.section("core-log", "Logging");
             builder.section("core-combat", "Combat");
+            builder.section("core-cosmetics", "Cosmetics");
         });
     }
 

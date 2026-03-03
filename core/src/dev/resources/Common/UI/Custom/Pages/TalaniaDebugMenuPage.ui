@@ -45,6 +45,12 @@ $C.@Panel {
         TooltipText: "Adjust Talania stat modifiers for this player.";
         Anchor: (Width: 160, Height: 28, Left: 10);
       }
+
+      $C.@SecondaryTextButton #OpenCosmeticsButton {
+        Text: "Cosmetics";
+        TooltipText: "Inspect Talania cosmetics and debug offsets.";
+        Anchor: (Width: 160, Height: 28, Left: 10);
+      }
     }
 
     Label {

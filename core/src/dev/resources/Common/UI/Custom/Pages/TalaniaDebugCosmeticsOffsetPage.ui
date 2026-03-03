@@ -1,0 +1,59 @@
+$C = "../Common.ui";
+
+$C.@Panel {
+  LayoutMode: Top;
+  Anchor: (Width: 360, Height: 672, Right: 20, Top: 20);
+  Padding: (Full: 16);
+
+  Group {
+    LayoutMode: Top;
+    Anchor: (Width: 328, Height: 634);
+    Padding: (Full: 12);
+    Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4);
+
+    Label #TitleLabel {
+      Style: (...$C.@TitleStyle, FontSize: 18);
+      Anchor: (Width: 300);
+      Text: "Cosmetic Offset";
+      Padding: (Bottom: 6);
+    }
+
+    Label #SelectedLabel {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 300);
+      Text: "Selected:";
+      Padding: (Bottom: 4);
+    }
+
+    Label #SelectedNameLabel {
+      Style: (...$C.@DefaultLabelStyle, Wrap: true);
+      Anchor: (Width: 300, Height: 48);
+      Text: "none";
+      Padding: (Bottom: 6);
+    }
+
+    Label #OffsetValue {
+      Style: (...$C.@DefaultLabelStyle);
+      Anchor: (Width: 300);
+      Text: "X: 0  Y: 0  Z: 0";
+      Padding: (Bottom: 10);
+    }
+
+    Group { LayoutMode: Left; Anchor: (Height: 32); 
+      $C.@SecondaryTextButton #OffsetXMinus { Text: "X -"; Anchor: (Width: 90, Height: 28); }
+      $C.@SecondaryTextButton #OffsetXPlus { Text: "X +"; Anchor: (Width: 90, Height: 28, Left: 8); }
+      $C.@SecondaryTextButton #OffsetYMinus { Text: "Y -"; Anchor: (Width: 90, Height: 28, Left: 8); }
+      $C.@SecondaryTextButton #OffsetYPlus { Text: "Y +"; Anchor: (Width: 90, Height: 28, Left: 8); }
+    }
+
+    Group { LayoutMode: Left; Anchor: (Height: 32, Top: 8); 
+      $C.@SecondaryTextButton #OffsetZMinus { Text: "Z -"; Anchor: (Width: 90, Height: 28); }
+      $C.@SecondaryTextButton #OffsetZPlus { Text: "Z +"; Anchor: (Width: 90, Height: 28, Left: 8); }
+      $C.@SecondaryTextButton #OffsetReset { Text: "Reset"; Anchor: (Width: 140, Height: 28, Left: 8); }
+    }
+
+    Label { Style: (...$C.@DefaultLabelStyle); Text: "Offsets are temporary."; Padding: (Top: 10, Bottom: 8); }
+
+    $C.@SecondaryTextButton #BackButton { Text: "Back"; Anchor: (Width: 140, Height: 28); }
+  }
+}

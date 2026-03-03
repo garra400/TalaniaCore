@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkinGradientSet;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -71,6 +73,110 @@ public final class TalaniaCosmeticCore {
         return registry.get(id);
     }
 
+    public List<String> getRegisteredIds() {
+        List<String> ids = new ArrayList<>(registry.keySet());
+        ids.sort(String::compareToIgnoreCase);
+        return ids;
+    }
+
+    public List<String> getOverrides(UUID playerId) {
+        if (playerId == null) {
+            return List.of();
+        }
+        PlayerCosmeticState state = playerState.get(playerId);
+        if (state == null || state.overrides == null || state.overrides.isEmpty()) {
+            return List.of();
+        }
+        return new ArrayList<>(state.overrides);
+    }
+
+    public boolean isDebugHideBase(UUID playerId) {
+        PlayerCosmeticState state = playerState.get(playerId);
+        return state != null && state.debugHideBase;
+    }
+
+    public boolean isDebugOnlySelected(UUID playerId) {
+        PlayerCosmeticState state = playerState.get(playerId);
+        return state != null && state.debugOnlySelected;
+    }
+
+    public boolean isDebugStripBase(UUID playerId) {
+        PlayerCosmeticState state = playerState.get(playerId);
+        return state != null && state.debugStripBase;
+    }
+
+    public List<String> getDebugVisible(UUID playerId) {
+        PlayerCosmeticState state = playerState.get(playerId);
+        if (state == null || state.debugVisible.isEmpty()) {
+            return List.of();
+        }
+        List<String> ids = new ArrayList<>(state.debugVisible);
+        ids.sort(String::compareToIgnoreCase);
+        return ids;
+    }
+
+    public Offset getDebugOffset(UUID playerId, String cosmeticId) {
+        PlayerCosmeticState state = playerState.get(playerId);
+        if (state == null || cosmeticId == null) {
+            return Offset.ZERO;
+        }
+        return state.debugOffsets.getOrDefault(cosmeticId, Offset.ZERO);
+    }
+
+    public void setDebugHideBase(PlayerRef playerRef, boolean hideBase) {
+        updateDebugState(playerRef, state -> state.debugHideBase = hideBase);
+    }
+
+    public void setDebugOnlySelected(PlayerRef playerRef, boolean onlySelected) {
+        updateDebugState(playerRef, state -> state.debugOnlySelected = onlySelected);
+    }
+
+    public void setDebugStripBase(PlayerRef playerRef, boolean stripBase) {
+        updateDebugState(playerRef, state -> {
+            if (stripBase) {
+                if (state.originalBaseSkin == null && state.baseSkin != null) {
+                    state.originalBaseSkin = new PlayerSkin(state.baseSkin);
+                }
+                if (state.baseSkin != null) {
+                    state.baseSkin = stripBaseSkin(state.baseSkin);
+                }
+                state.debugStripBase = true;
+            } else {
+                if (state.originalBaseSkin != null) {
+                    state.baseSkin = state.originalBaseSkin;
+                }
+                state.debugStripBase = false;
+            }
+        });
+    }
+
+    public void toggleDebugVisible(PlayerRef playerRef, String cosmeticId) {
+        if (playerRef == null || cosmeticId == null) {
+            return;
+        }
+        updateDebugState(playerRef, state -> {
+            if (state.debugVisible.contains(cosmeticId)) {
+                state.debugVisible.remove(cosmeticId);
+            } else {
+                state.debugVisible.add(cosmeticId);
+            }
+        });
+    }
+
+    public void setDebugOffset(PlayerRef playerRef, String cosmeticId, Offset offset) {
+        if (playerRef == null || cosmeticId == null || offset == null) {
+            return;
+        }
+        updateDebugState(playerRef, state -> state.debugOffsets.put(cosmeticId, offset));
+    }
+
+    public void resetDebugOffset(PlayerRef playerRef, String cosmeticId) {
+        if (playerRef == null || cosmeticId == null) {
+            return;
+        }
+        updateDebugState(playerRef, state -> state.debugOffsets.remove(cosmeticId));
+    }
+
     public void handlePlayerReady(PlayerRef playerRef, Ref<EntityStore> ref, Store<EntityStore> store) {
         if (playerRef == null || ref == null || store == null) {
             return;
@@ -98,14 +204,16 @@ public final class TalaniaCosmeticCore {
                 return;
             }
             PlayerSkin baseSkin = readCurrentSkin(store, ref, playerId);
+            PlayerCosmeticState state = playerState.computeIfAbsent(playerId, id -> new PlayerCosmeticState());
             if (baseSkin == null) {
+                scheduleBaseCaptureRetry(ref, store, playerId, state, "PlayerSkinComponent not ready");
                 return;
             }
-            PlayerCosmeticState state = playerState.computeIfAbsent(playerId, id -> new PlayerCosmeticState());
             if (state.baseSkin != null && !force) {
                 return;
             }
             state.baseSkin = baseSkin;
+            state.pendingBaseCaptureAttempts = 0;
             playerState.put(playerId, state);
             if (!state.overrides.isEmpty()) {
                 rebuild(ref, store, state);
@@ -138,6 +246,11 @@ public final class TalaniaCosmeticCore {
                 state.baseSkin = readCurrentSkin(store, ref, playerRef.getUuid());
             }
             state.overrides = cosmeticIds == null ? new ArrayList<>() : new ArrayList<>(cosmeticIds);
+            if (state.baseSkin == null) {
+                scheduleBaseCaptureRetry(ref, store, playerRef.getUuid(), state, "Base skin missing during override set");
+                return;
+            }
+            state.pendingBaseCaptureAttempts = 0;
             rebuild(ref, store, state);
         });
     }
@@ -164,7 +277,7 @@ public final class TalaniaCosmeticCore {
         }
         CosmeticsModule cosmetics = CosmeticsModule.get();
         if (cosmetics == null || cosmetics.getRegistry() == null) {
-            LOG.warning("CosmeticsModule not ready; cannot rebuild cosmetics.");
+            scheduleRebuildRetry(ref, store, state, "CosmeticsModule not ready");
             return;
         }
         ModelComponent modelComponent =
@@ -173,17 +286,35 @@ public final class TalaniaCosmeticCore {
                 (PlayerSkinComponent) store.getComponent(ref, PlayerSkinComponent.getComponentType());
         Player player = (Player) store.getComponent(ref, Player.getComponentType());
         if (modelComponent == null || skinComponent == null || player == null) {
-            return;
+            modelComponent = ensureModelComponent(store, ref, cosmetics, state.baseSkin);
+            if (modelComponent == null || skinComponent == null || player == null) {
+                scheduleRebuildRetry(ref, store, state, "ModelComponent not ready");
+                return;
+            }
         }
         Model model = modelComponent.getModel();
         if (model == null) {
-            return;
+            modelComponent = ensureModelComponent(store, ref, cosmetics, state.baseSkin);
+            if (modelComponent == null || modelComponent.getModel() == null) {
+                scheduleRebuildRetry(ref, store, state, "Model not ready");
+                return;
+            }
+            model = modelComponent.getModel();
         }
 
         List<ModelAttachment> attachments = new ArrayList<>();
         Map<String, Boolean> overrides = new HashMap<>();
 
-        for (String cosmeticId : state.overrides) {
+        List<String> cosmeticIds = state.overrides;
+        if (state.debugOnlySelected) {
+            if (!state.debugVisible.isEmpty()) {
+                cosmeticIds = new ArrayList<>(state.debugVisible);
+            } else {
+                cosmeticIds = List.of();
+            }
+        }
+
+        for (String cosmeticId : cosmeticIds) {
             if (cosmeticId == null || cosmeticId.isBlank()) {
                 continue;
             }
@@ -207,8 +338,13 @@ public final class TalaniaCosmeticCore {
 
             String gradientSet = def.gradientSet();
             String gradientId = resolveGradientId(cosmetics, state.baseSkin, gradientSet);
+            Offset offset = state.debugOffsets.getOrDefault(cosmeticId, Offset.ZERO);
+            String modelPath = def.model();
+            if (!offset.isZero()) {
+                modelPath = def.model();
+            }
             attachments.add(new ModelAttachment(
-                    def.model(),
+                    modelPath,
                     def.texture(),
                     gradientSet == null ? "" : gradientSet,
                     gradientId,
@@ -216,7 +352,9 @@ public final class TalaniaCosmeticCore {
             ));
         }
 
-        restoreBaseAttachments(cosmetics.getRegistry(), state.baseSkin, attachments, overrides);
+        if (!state.debugHideBase) {
+            restoreBaseAttachments(cosmetics.getRegistry(), state.baseSkin, attachments, overrides);
+        }
 
         Model newModel = new Model(
                 player.getDisplayName() + "_TalaniaCosmetics",
@@ -462,6 +600,50 @@ public final class TalaniaCosmeticCore {
         return skinComponent.getPlayerSkin();
     }
 
+    private ModelComponent ensureModelComponent(Store<EntityStore> store, Ref<EntityStore> ref,
+                                               CosmeticsModule cosmetics, PlayerSkin baseSkin) {
+        if (store == null || ref == null || cosmetics == null || baseSkin == null) {
+            return null;
+        }
+        float scale = 1.0f;
+        EntityScaleComponent scaleComponent =
+                (EntityScaleComponent) store.getComponent(ref, EntityScaleComponent.getComponentType());
+        if (scaleComponent != null) {
+            scale = scaleComponent.getScale();
+        }
+        Model model = cosmetics.createModel(baseSkin, scale);
+        if (model == null) {
+            return null;
+        }
+        ModelComponent component = new ModelComponent(model);
+        store.replaceComponent(ref, ModelComponent.getComponentType(), component);
+        return component;
+    }
+
+    private PlayerSkin stripBaseSkin(PlayerSkin skin) {
+        PlayerSkin stripped = new PlayerSkin(skin);
+        stripped.underwear = null;
+        stripped.face = null;
+        stripped.eyes = null;
+        stripped.ears = null;
+        stripped.mouth = null;
+        stripped.eyebrows = null;
+        stripped.haircut = null;
+        stripped.facialHair = null;
+        stripped.pants = null;
+        stripped.overpants = null;
+        stripped.undertop = null;
+        stripped.overtop = null;
+        stripped.shoes = null;
+        stripped.headAccessory = null;
+        stripped.faceAccessory = null;
+        stripped.earAccessory = null;
+        stripped.skinFeature = null;
+        stripped.gloves = null;
+        stripped.cape = null;
+        return stripped;
+    }
+
     private static String[] splitParts(String value) {
         if (value == null || value.isBlank()) {
             return new String[] { "" };
@@ -527,8 +709,110 @@ public final class TalaniaCosmeticCore {
         return Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
 
+    private void updateDebugState(PlayerRef playerRef, java.util.function.Consumer<PlayerCosmeticState> update) {
+        if (playerRef == null || update == null) {
+            return;
+        }
+        Ref<EntityStore> ref = playerRef.getReference();
+        Store<EntityStore> store = ref != null ? ref.getStore() : null;
+        if (ref == null || store == null) {
+            return;
+        }
+        PlayerCosmeticState state = playerState.computeIfAbsent(playerRef.getUuid(), id -> new PlayerCosmeticState());
+        update.accept(state);
+        store.getExternalData().getWorld().execute(() -> {
+            if (!ref.isValid()) {
+                return;
+            }
+            if (state.baseSkin == null) {
+                state.baseSkin = readCurrentSkin(store, ref, playerRef.getUuid());
+            }
+            if (state.debugStripBase && state.baseSkin != null) {
+                if (state.originalBaseSkin == null) {
+                    state.originalBaseSkin = new PlayerSkin(state.baseSkin);
+                }
+                state.baseSkin = stripBaseSkin(state.baseSkin);
+            }
+            rebuild(ref, store, state);
+        });
+    }
+
+    private void scheduleBaseCaptureRetry(Ref<EntityStore> ref, Store<EntityStore> store, UUID playerId,
+                                          PlayerCosmeticState state, String reason) {
+        if (ref == null || store == null || state == null || playerId == null) {
+            return;
+        }
+        if (state.pendingBaseCaptureAttempts >= 5) {
+            LOG.warning("Cosmetics base capture failed after retries for " + playerId + ": " + reason);
+            return;
+        }
+        state.pendingBaseCaptureAttempts++;
+        store.getExternalData().getWorld().execute(() -> {
+            if (!ref.isValid()) {
+                return;
+            }
+            PlayerSkin baseSkin = readCurrentSkin(store, ref, playerId);
+            if (baseSkin == null) {
+                scheduleBaseCaptureRetry(ref, store, playerId, state, reason);
+                return;
+            }
+            state.baseSkin = baseSkin;
+            state.pendingBaseCaptureAttempts = 0;
+            if (!state.overrides.isEmpty()) {
+                rebuild(ref, store, state);
+            }
+        });
+    }
+
+    private void scheduleRebuildRetry(Ref<EntityStore> ref, Store<EntityStore> store,
+                                      PlayerCosmeticState state, String reason) {
+        if (ref == null || store == null || state == null) {
+            return;
+        }
+        if (state.pendingRebuildAttempts >= 3) {
+            return;
+        }
+        state.pendingRebuildAttempts++;
+        LOG.fine("Scheduling cosmetics rebuild retry (" + state.pendingRebuildAttempts + "): " + reason);
+        store.getExternalData().getWorld().execute(() -> {
+            if (!ref.isValid()) {
+                return;
+            }
+            rebuild(ref, store, state);
+        });
+    }
+
+    public static final class Offset {
+        public static final Offset ZERO = new Offset(0, 0, 0);
+        public final float x;
+        public final float y;
+        public final float z;
+
+        public Offset(float x, float y, float z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public Offset add(float dx, float dy, float dz) {
+            return new Offset(x + dx, y + dy, z + dz);
+        }
+
+        public boolean isZero() {
+            return x == 0 && y == 0 && z == 0;
+        }
+    }
+
     private static final class PlayerCosmeticState {
         private PlayerSkin baseSkin;
         private List<String> overrides = new ArrayList<>();
+        private boolean debugHideBase = false;
+        private boolean debugOnlySelected = false;
+        private final Set<String> debugVisible = new HashSet<>();
+        private final Map<String, Offset> debugOffsets = new HashMap<>();
+        private boolean debugStripBase = false;
+        private PlayerSkin originalBaseSkin;
+        private int pendingBaseCaptureAttempts = 0;
+        private int pendingRebuildAttempts = 0;
     }
 }
